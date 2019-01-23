@@ -69,7 +69,7 @@ class KNLandingPageViewController: KNBaseViewController {
     )
     self.termAndConditionButton.setTitleColor(.white, for: .normal)
     self.termAndConditionButton.addTextSpacing()
-    self.debugButton.isHidden = false
+    self.debugButton.isHidden = true
   }
 
   override func viewDidLayoutSubviews() {

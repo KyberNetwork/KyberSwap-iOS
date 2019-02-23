@@ -306,7 +306,9 @@
 "edit.wallet" = "Chỉnh sử ví";
 "backup.keystore" = "Sao lưu Keystore";
 "backup.private.key" = "Sao lưu khoá cá nhân";
+"backup.mnemonic" = "Sao lưu Mnemonic";
 "copy.address" = "Sao chép địa chỉ";
+"export.at.your.own.risk" = "Bạn phải tự chịu rủi ro khi xuất ví!";
 "backup" = "Sao lưu";
 "share.with.friends.text" = "Tôi vừa tìm thấy một ứng dụng ví tuyệt vời. Kiểm tra ở đây https://kyberswap.com";
 "transaction.being.broadcasted" = "Giao dịch đang được gửi";

@@ -306,7 +306,9 @@
 "edit.wallet" = "编辑钱包";
 "backup.keystore" = "备份Keystore";
 "backup.private.key" = "备份私钥";
+"backup.mnemonic" = "备份Mnemonic";
 "copy.address" = "复制地址";
+"export.at.your.own.risk" = "导出风险自负！";
 "backup" = "备份";
 "share.with.friends.text" = "我刚刚找到一个很棒的钱包应用程序。在这里查看https://kyberswap.com";
 "transaction.being.broadcasted" = "正在广播交易";

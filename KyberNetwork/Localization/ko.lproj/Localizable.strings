@@ -306,7 +306,9 @@
 "edit.wallet" = "지갑 수정";
 "backup.keystore" = "키스토어 백업";
 "backup.private.key" = "프라이빗 키 백업";
+"backup.mnemonic" = "Mnemonic 백업";
 "copy.address" = "주소 복사";
+"export.at.your.own.risk" = "자신의 책임하에 수출하십시오!";
 "backup" = "백업";
 "share.with.friends.text" = "최고의 암호화폐 지갑앱을 추천합니다. https://kyberswap.com";
 "transaction.being.broadcasted" = "거래가 중계되고 있습니다.";

@@ -197,9 +197,10 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
     self.navigationController.present(debugVC, animated: true, completion: nil)
   }
 
-  func settingsViewControllerBackUpButtonPressed() {
+  func settingsViewControllerBackUpButtonPressed(wallet: KNWalletObject) {
+    guard let wallet = self.session.keystore.wallets.first(where: { $0.address.description.lowercased() == wallet.address.lowercased() }) else { return }
     let alertController = UIAlertController(
-      title: NSLocalizedString("backup", value: "Backup", comment: ""),
+      title: NSLocalizedString("export.at.your.own.risk", value: "Export at your own risk!", comment: ""),
       message: nil,
       preferredStyle: .actionSheet
     )
@@ -207,21 +208,30 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
       title: NSLocalizedString("backup.keystore", value: "Backup Keystore", comment: ""),
       style: .default,
       handler: { _ in
-      self.backupKeystore()
+      self.backupKeystore(wallet: wallet)
       }
     ))
     alertController.addAction(UIAlertAction(
       title: NSLocalizedString("backup.private.key", value: "Backup Private Key", comment: ""),
       style: .default,
       handler: { _ in
-      self.backupPrivateKey()
+      self.backupPrivateKey(wallet: wallet)
       }
     ))
+    if case .real(let account) = wallet.type, case .success = self.session.keystore.exportMnemonics(account: account) {
+      alertController.addAction(UIAlertAction(
+        title: NSLocalizedString("backup.mnemonic", value: "Backup Mnemonic", comment: ""),
+        style: .default,
+        handler: { _ in
+          self.backupMnemonic(wallet: wallet)
+        }
+      ))
+    }
     alertController.addAction(UIAlertAction(
       title: NSLocalizedString("copy.address", value: "Copy Address", comment: ""),
       style: .default,
       handler: { _ in
-      self.copyAddress()
+      self.copyAddress(wallet: wallet)
       }
     ))
     alertController.addAction(UIAlertAction(
@@ -232,7 +242,7 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
     self.navigationController.topViewController?.present(alertController, animated: true, completion: nil)
   }
 
-  fileprivate func backupKeystore() {
+  fileprivate func backupKeystore(wallet: Wallet) {
     KNCrashlyticsUtil.logCustomEvent(withName: "edit_wallet", customAttributes: ["type": "show_back_up_keystore"])
     let createPassword = KNCreatePasswordViewController(delegate: self)
     createPassword.modalPresentationStyle = .overCurrentContext
@@ -240,22 +250,44 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
     self.navigationController.topViewController?.present(createPassword, animated: true, completion: nil)
   }
 
-  fileprivate func backupPrivateKey() {
+  fileprivate func backupPrivateKey(wallet: Wallet) {
     KNCrashlyticsUtil.logCustomEvent(withName: "edit_wallet", customAttributes: ["type": "show_back_up_private_key"])
-    if case .real(let account) = self.session.wallet.type {
+    if case .real(let account) = wallet.type {
       let result = self.session.keystore.exportPrivateKey(account: account)
       switch result {
       case .success(let data):
-        self.exportDataString(data.hexString)
+        self.openShowBackUpView(data: data.hexString)
       case .failure(let error):
         self.navigationController.topViewController?.displayError(error: error)
       }
     }
   }
 
-  fileprivate func copyAddress() {
+  fileprivate func backupMnemonic(wallet: Wallet) {
+    KNCrashlyticsUtil.logCustomEvent(withName: "edit_wallet", customAttributes: ["type": "show_back_up_mnemonic"])
+    if case .real(let account) = wallet.type {
+      let result = self.session.keystore.exportMnemonics(account: account)
+      switch result {
+      case .success(let data):
+        self.openShowBackUpView(data: data)
+      case .failure(let error):
+        self.navigationController.topViewController?.displayError(error: error)
+      }
+    }
+  }
+
+  fileprivate func openShowBackUpView(data: String) {
+    let showBackUpVC = KNShowBackUpDataViewController(
+      wallet: self.session.wallet.address.description,
+      backupData: data
+    )
+    showBackUpVC.loadViewIfNeeded()
+    self.navigationController.pushViewController(showBackUpVC, animated: true)
+  }
+
+  fileprivate func copyAddress(wallet: Wallet) {
     KNCrashlyticsUtil.logCustomEvent(withName: "edit_wallet", customAttributes: ["type": "show_back_up_copy_address"])
-    UIPasteboard.general.string = self.session.wallet.address.description
+    UIPasteboard.general.string = wallet.address.description
   }
 
   fileprivate func exportDataString(_ value: String) {
@@ -264,7 +296,7 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
       formatter.dateFormat = "yyyy-MM-dd_HH:mm"
       return formatter
     }()
-    let fileName = "kyberswap_backup\(self.session.wallet.address.description)_\(dateFormatter.string(from: Date())).json"
+    let fileName = "kyberswap_backup_\(self.session.wallet.address.description)_\(dateFormatter.string(from: Date())).json"
     let url = URL(fileURLWithPath: NSTemporaryDirectory().appending(fileName))
     do {
       try value.data(using: .utf8)!.write(to: url)
@@ -400,6 +432,6 @@ extension KNSettingsCoordinator: KNListWalletsCoordinatorDelegate {
   }
 
   func listWalletsCoordinatorShouldBackUpWallet(_ wallet: KNWalletObject) {
-    self.settingsViewControllerBackUpButtonPressed()
+    self.settingsViewControllerBackUpButtonPressed(wallet: wallet)
   }
 }

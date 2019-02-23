@@ -94,6 +94,8 @@ extension KNAppCoordinator {
 
     self.addObserveNotificationFromSession()
     self.updateLocalData()
+    KNNotificationUtil.postNotification(for: kETHBalanceDidUpdateNotificationKey)
+    KNNotificationUtil.postNotification(for: kOtherBalanceDidUpdateNotificationKey)
   }
 
   func stopAllSessions() {
@@ -147,6 +149,8 @@ extension KNAppCoordinator {
 
     self.addObserveNotificationFromSession()
     self.updateLocalData()
+    KNNotificationUtil.postNotification(for: kETHBalanceDidUpdateNotificationKey)
+    KNNotificationUtil.postNotification(for: kOtherBalanceDidUpdateNotificationKey)
   }
 
   // Remove a wallet
@@ -180,6 +184,8 @@ extension KNAppCoordinator {
         self.session,
         resetRoot: isRemovingCurrentWallet
       )
+      KNNotificationUtil.postNotification(for: kETHBalanceDidUpdateNotificationKey)
+      KNNotificationUtil.postNotification(for: kOtherBalanceDidUpdateNotificationKey)
     } else {
       self.loadBalanceCoordinator?.restartNewSession(self.session)
       self.navigationController.showErrorTopBannerMessage(

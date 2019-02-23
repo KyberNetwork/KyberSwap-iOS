@@ -25,16 +25,16 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kyberswap</string>
+				<string>kyber</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6</string>
+	<string>63</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
-		<string>ba2abdd3cccc6ee1b53cb3b0b7312f55ab926bfc</string>
+		<string>d18f567bc4750619445ba2db3a764e3a2a77b416</string>
 		<key>Kits</key>
 		<array>
 			<dict>
@@ -140,22 +140,22 @@
 	<true/>
 	<key>branch_app_domain</key>
 	<array>
-		<string>kyberswapnew.test-app.link</string>
-		<string>kyberswapnew.app.link</string>
+		<string>kyberswaplive.test-app.link</string>
+		<string>kyberswaplive.app.link</string>
 	</array>
 	<key>branch_key</key>
 	<dict>
 		<key>live</key>
-		<string>key_live_geMkJXjJQNySeqx7Yn1TjflnwtlVxo1x</string>
+		<string>key_live_plIpHArcGEXmGKW1bigxPpacCyoCKU5H</string>
 		<key>test</key>
-		<string>key_test_ebQbV0aJGGrKhtD60g3NeoooFAkMuk4n</string>
+		<string>key_test_dfGpGyAnNCYhNUZ5cfqppmcjvtntKK1Z</string>
 	</dict>
 	<key>branch_universal_link_domains</key>
 	<array>
-		<string>kyberswapnew-alternate.test-app.link</string>
-		<string>kyberswapnew.test-app.link</string>
-		<string>kyberswapnew-alternate.app.link</string>
-		<string>kyberswapnew.app.link</string>
+		<string>kyberswaplive-alternate.test-app.link</string>
+		<string>kyberswaplive.test-app.link</string>
+		<string>kyberswaplive-alternate.app.link</string>
+		<string>kyberswaplive.app.link</string>
 	</array>
 	<key>com.apple.security.get-task-allow</key>
 	<true/>

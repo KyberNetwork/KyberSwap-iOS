@@ -1,7 +1,7 @@
-app_identifier "com.kyberswap.ios" # The bundle identifier of your app
-apple_id "ios@kyber.network" # Your Apple email address
+app_identifier "manhlx.kyber.network" # The bundle identifier of your app
+apple_id "manhlx.300695@gmail.com" # Your Apple email address
 
-team_id "7N9YDG6SF9" # Developer Portal Team ID
+team_id "HMT2AL7Q6Y" # Developer Portal Team ID
 itc_team_id "119039691"
 
 # you can even provide different app identifiers, Apple IDs and team names per lane:

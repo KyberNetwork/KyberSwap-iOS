@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         KNReachability.shared.startNetworkReachabilityObserver()
         Fabric.with([Crashlytics.self])
         OneSignal.setRequiresUserPrivacyConsent(false)
-        OneSignal.initWithLaunchOptions(launchOptions, appId: KNSecret.oneSignalAppID)
+        OneSignal.initWithLaunchOptions(launchOptions, appId: KNSecret.oldOneSignalAppID)
         OneSignal.inFocusDisplayType = .notification
         return true
     }

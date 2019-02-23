@@ -82,9 +82,9 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         iCloudContainerEnvironment: "Production",
-        teamID: "7N9YDG6SF9",
+        teamID: "HMT2AL7Q6Y",
         provisioningProfiles: {
-          "com.kyberswap.ios" => "Kyberswap iOS Distribution Appstore"
+          "manhlx.kyber.network" => "iOS Distribution AppStore Kyber Network"
         }
       }
     )

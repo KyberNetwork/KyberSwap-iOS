@@ -6,16 +6,16 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:kyberswapnew.test-app.link</string>
-		<string>applinks:kyberswapnew-alternate.test-app.link</string>
-		<string>applinks:kyberswapnew.app.link</string>
-		<string>applinks:kyberswapnew-alternate.app.link</string>
+		<string>applinks:kyberswaplive.app.link</string>
+		<string>applinks:kyberswaplive-alternate.app.link</string>
+		<string>applinks:kyberswaplive.test-app.link</string>
+		<string>applinks:kyberswaplive-alternate.test-app.link</string>
 	</array>
 	<key>com.apple.developer.default-data-protection</key>
 	<string>NSFileProtectionComplete</string>
 	<key>com.apple.developer.icloud-container-identifiers</key>
 	<array>
-		<string>iCloud.com.kyberswap.ios</string>
+		<string>iCloud.manhlx.kyber.network</string>
 	</array>
 	<key>com.apple.developer.icloud-services</key>
 	<array>
@@ -23,7 +23,7 @@
 	</array>
 	<key>com.apple.developer.ubiquity-container-identifiers</key>
 	<array>
-		<string>iCloud.com.kyberswap.ios</string>
+		<string>iCloud.manhlx.kyber.network</string>
 	</array>
 	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
 	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>

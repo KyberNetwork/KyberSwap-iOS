@@ -103,7 +103,7 @@ enum KNEnvironment: Int {
 
   var clientID: String {
     switch KNEnvironment.default {
-    case .mainnetTest, .production: return KNSecret.appID
+    case .mainnetTest, .production: return KNSecret.oldAppID
     case .ropsten, .rinkeby, .kovan: return KNSecret.debugAppID
     case .staging: return KNSecret.stagingAppID
     }
@@ -111,7 +111,7 @@ enum KNEnvironment: Int {
 
   var clientSecret: String {
     switch KNEnvironment.default {
-    case .mainnetTest, .production: return KNSecret.secret
+    case .mainnetTest, .production: return KNSecret.oldSecret
     case .ropsten, .rinkeby, .kovan: return KNSecret.debugSecret
     case .staging: return KNSecret.stagingSecret
     }
@@ -119,9 +119,9 @@ enum KNEnvironment: Int {
 
   var redirectLink: String {
     switch KNEnvironment.default {
-    case .mainnetTest, .production: return KNSecret.redirectURL
-    case .ropsten, .rinkeby, .kovan: return KNSecret.debugRedirectURL
-    case .staging: return KNSecret.stagingRedirectURL
+    case .mainnetTest, .production: return KNSecret.oldRedirectURL
+    case .ropsten, .rinkeby, .kovan: return KNSecret.oldDebugRedirectURL
+    case .staging: return KNSecret.oldStagingRedirectURL
     }
   }
 

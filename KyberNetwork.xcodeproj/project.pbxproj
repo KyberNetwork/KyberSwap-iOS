@@ -88,7 +88,6 @@
 		254CD0F021492E1D0079EA7A /* KYCPersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CD0EE21492E1D0079EA7A /* KYCPersonalInfoViewController.swift */; };
 		254CD0F121492E1D0079EA7A /* KYCPersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 254CD0EF21492E1D0079EA7A /* KYCPersonalInfoViewController.xib */; };
 		254CD0F621492F590079EA7A /* KYCCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254CD0F521492F590079EA7A /* KYCCoordinator.swift */; };
-		254EAB2A221D9EFD00C0EDC8 /* KyberNetwork.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = 29AD8A071F93E1F0008E10E7 /* KyberNetwork.entitlements */; };
 		255709BF20DCB50800B5BC9E /* KNNewContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255709BD20DCB50800B5BC9E /* KNNewContactViewController.swift */; };
 		255709C020DCB50800B5BC9E /* KNNewContactViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 255709BE20DCB50800B5BC9E /* KNNewContactViewController.xib */; };
 		25577AE920F72A9700A54607 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29E14FDA1F7F4F3D00185568 /* Transaction.swift */; };
@@ -3459,7 +3458,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				254EAB2A221D9EFD00C0EDC8 /* KyberNetwork.entitlements in Resources */,
 				259BF5C121918B0D004D70F9 /* kyc_industry_code.json in Resources */,
 				613D04891FDE15F8008DE72E /* COMODO ECC Domain Validation Secure Server CA 2.cer in Resources */,
 				25696F6920BE9EB6002CC53F /* KNSearchTokenViewController.xib in Resources */,
@@ -3656,7 +3654,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" ba2abdd3cccc6ee1b53cb3b0b7312f55ab926bfc 8ce95dc74b52c330deabb3cdcb9ecdc9fa4a72b1601990135cd06e799ad2b435\n";
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" d18f567bc4750619445ba2db3a764e3a2a77b416 afd96e85dcc3f40aed42d7e935267c6eb039c841fbeb0cc8352c5fe65a5646bf\n";
 		};
 		558B94C30BF51EDC00493AF8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -4302,18 +4300,18 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = 7N9YDG6SF9;
+				CURRENT_PROJECT_VERSION = 63;
+				DEVELOPMENT_TEAM = HMT2AL7Q6Y;
 				ENABLE_BITCODE = YES;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
 				INFOPLIST_FILE = KyberNetwork/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyberswap.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = manhlx.kyber.network;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "e5075762-0411-4d14-9957-1b8590f82682";
-				PROVISIONING_PROFILE_SPECIFIER = "Kyberswap iOS Development";
+				PROVISIONING_PROFILE_SPECIFIER = "iOS Development Kyber Network";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -4326,20 +4324,19 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = KyberNetwork/KyberNetwork.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6;
-				DEVELOPMENT_TEAM = 7N9YDG6SF9;
+				CURRENT_PROJECT_VERSION = 63;
+				DEVELOPMENT_TEAM = HMT2AL7Q6Y;
 				ENABLE_BITCODE = YES;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
 				INFOPLIST_FILE = KyberNetwork/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyberswap.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = manhlx.kyber.network;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "d08d5f84-6398-4202-b037-8e45e693b687";
-				PROVISIONING_PROFILE_SPECIFIER = "Kyberswap iOS Distribution Appstore";
+				PROVISIONING_PROFILE_SPECIFIER = "iOS Distribution AppStore Kyber Network";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -4354,10 +4351,10 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 7N9YDG6SF9;
+				DEVELOPMENT_TEAM = HMT2AL7Q6Y;
 				INFOPLIST_FILE = KyberNetworkTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyberswap.ios.KyberNetworkTests;
+				PRODUCT_BUNDLE_IDENTIFIER = manhlx.kyber.network.KyberNetworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4376,7 +4373,7 @@
 				DEVELOPMENT_TEAM = HMT2AL7Q6Y;
 				INFOPLIST_FILE = KyberNetworkTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyberswap.ios.KyberNetworkTests;
+				PRODUCT_BUNDLE_IDENTIFIER = manhlx.kyber.network.KyberNetworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4391,10 +4388,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7N9YDG6SF9;
+				DEVELOPMENT_TEAM = HMT2AL7Q6Y;
 				INFOPLIST_FILE = KyberNetworkUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyberswap.ios.KyberNetworkUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = manhlx.kyber.network.KyberNetworkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4409,10 +4406,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 7N9YDG6SF9;
+				DEVELOPMENT_TEAM = HMT2AL7Q6Y;
 				INFOPLIST_FILE = KyberNetworkUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.kyberswap.ios.KyberNetworkUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = manhlx.kyber.network.KyberNetworkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -5,6 +5,7 @@ import IQKeyboardManager
 import BigInt
 import Moya
 import Crashlytics
+import OneSignal
 
 class KNAppCoordinator: NSObject, Coordinator {
 
@@ -126,5 +127,14 @@ extension KNAppCoordinator {
       guard let url = URL(string: urlString) else { return }
       UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
+  }
+
+  func appDidReceiverOneSignalPushNotification(result: OSNotificationOpenedResult?) {
+    guard let payload = result?.notification.payload else { return }
+    let title = payload.title
+    let body = payload.body
+    let alertController = UIAlertController(title: title, message: body, preferredStyle: .alert)
+    alertController.addAction(UIAlertAction(title: NSLocalizedString("ok", value: "OK", comment: ""), style: .cancel, handler: nil))
+    self.navigationController.present(alertController, animated: true, completion: nil)
   }
 }

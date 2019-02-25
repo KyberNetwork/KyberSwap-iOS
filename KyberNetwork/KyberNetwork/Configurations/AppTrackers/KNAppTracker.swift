@@ -26,6 +26,8 @@ class KNAppTracker {
   static let kCurrencyTypeKey: String = "kCurrencyTypeKey"
 
   static let kAppStyle: String = "kAppStyle"
+
+  static let kPushNotificationTokenKey: String = "kPushNotificationTokenKey"
   static let userDefaults: UserDefaults = UserDefaults.standard
 
   static func internalCachedEnpoint() -> String {
@@ -157,6 +159,16 @@ class KNAppTracker {
   static func getAppStyleType() -> KNAppStyleType {
     let type = userDefaults.object(forKey: kAppStyle) as? String ?? ""
     return KNAppStyleType(rawValue: type) ?? .default
+  }
+
+  // MARK: Push notification token
+  static func updatePushNotificationToken(_ token: String) {
+    userDefaults.set(token, forKey: kPushNotificationTokenKey)
+    userDefaults.synchronize()
+  }
+
+  static func getPushNotificationToken() -> String? {
+    return userDefaults.object(forKey: kPushNotificationTokenKey) as? String
   }
 
   // MARK: Reset app tracker

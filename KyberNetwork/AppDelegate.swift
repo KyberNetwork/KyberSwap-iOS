@@ -47,12 +47,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         KNReachability.shared.startNetworkReachabilityObserver()
         Fabric.with([Crashlytics.self])
         OneSignal.setRequiresUserPrivacyConsent(false)
-        OneSignal.initWithLaunchOptions(launchOptions, appId: KNSecret.oldOneSignalAppID)
+        let notificationOpenedBlock: OSHandleNotificationActionBlock = { result in
+          // This block gets called when the user reacts to a notification received
+          self.coordinator.appDidReceiverOneSignalPushNotification(result: result)
+        }
+        let oneSignalInitSettings = [kOSSettingsKeyAutoPrompt: false, kOSSettingsKeyInAppLaunchURL: true, ]
+        OneSignal.initWithLaunchOptions(
+          launchOptions,
+          appId: KNSecret.oldOneSignalAppID,
+          handleNotificationAction: notificationOpenedBlock,
+          settings: oneSignalInitSettings
+        )
         OneSignal.inFocusDisplayType = .notification
         return true
     }
 
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+      let token = deviceToken.reduce("") { $0 + String(format: "%02x", $1) }
+      KNAppTracker.updatePushNotificationToken(token)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

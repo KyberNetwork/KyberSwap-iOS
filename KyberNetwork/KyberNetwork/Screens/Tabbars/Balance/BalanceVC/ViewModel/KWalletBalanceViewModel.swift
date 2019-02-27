@@ -145,6 +145,14 @@ class KWalletBalanceViewModel: NSObject {
     return true
   }
 
+  func updateTokenSortedChange24h(with currencyType: KWalletCurrencyType) {
+    self.currencyType = currencyType
+    KNAppTracker.updateCurrencyType(currencyType)
+    self.tokensDisplayType = KWalletSortType.changeDesc
+    self.isKyberList = true
+    self.createDisplayedData()
+  }
+
   func updateSearchText(_ text: String) {
     self.searchText = text
     self.createDisplayedData()

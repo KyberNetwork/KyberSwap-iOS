@@ -280,6 +280,16 @@ extension KWalletBalanceViewController {
     self.hamburgerMenu.update(transactions: transactions)
     self.hasPendingTxView.isHidden = transactions.isEmpty
   }
+
+  func coordinatorSortedChange24h(with currencyType: KWalletCurrencyType) {
+    // reset search text
+    self.searchTextField.text = ""
+    self.viewModel.updateSearchText("")
+    // update: currency type, sorted change24h
+    self.viewModel.updateTokenSortedChange24h(with: currencyType)
+    // update Kyber listed/Other, Currency button
+    self.updateDisplayedDataType()
+  }
 }
 
 // MARK: Hamburger menu delegation

@@ -167,6 +167,17 @@ extension KNBalanceTabCoordinator {
   func appCoordinatorTokensTransactionsDidUpdate() {
     self.historyCoordinator?.appCoordinatorTokensTransactionsDidUpdate()
   }
+
+  func appCoordinatorOpenTokenChart(for token: String) {
+    guard let token = self.session.tokenStorage.tokens.first(where: { return $0.symbol == token }) else { return }
+    self.navigationController.popToRootViewController(animated: false)
+    self.openTokenChartView(for: token)
+  }
+
+  func appCoordinatorBalanceSorted(with currencyType: KWalletCurrencyType) {
+    self.navigationController.popToRootViewController(animated: false)
+    self.newRootViewController.coordinatorSortedChange24h(with: currencyType)
+  }
 }
 
 // MARK: New Design K Wallet Balance delegation

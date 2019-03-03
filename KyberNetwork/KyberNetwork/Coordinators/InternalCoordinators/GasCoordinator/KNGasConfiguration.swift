@@ -16,6 +16,7 @@ public struct KNGasConfiguration {
   static let makerGasLimitDefault = BigInt(400_000)
   static let propyGasLimitDefault = BigInt(500_000)
   static let promotionTokenGasLimitDefault = BigInt(380_000)
+  static let trueUSDTokenGasLimitDefault = BigInt(500_000)
 
   static let gasPriceDefault: BigInt = EtherNumberFormatter.full.number(from: "10", units: UnitConfiguration.gasPriceUnit)!
   static let gasPriceMin: BigInt = EtherNumberFormatter.full.number(from: "5", units: UnitConfiguration.gasPriceUnit)!
@@ -34,6 +35,7 @@ public struct KNGasConfiguration {
       if from.isMKR { return makerGasLimitDefault }
       if from.isPRO { return propyGasLimitDefault }
       if from.isPT { return promotionTokenGasLimitDefault }
+      if from.isTUSD { return trueUSDTokenGasLimitDefault }
       return exchangeETHTokenGasLimitDefault
     }()
     let gasETHToDest: BigInt = {
@@ -43,6 +45,7 @@ public struct KNGasConfiguration {
       if to.isMKR { return makerGasLimitDefault }
       if to.isPRO { return propyGasLimitDefault }
       if to.isPT { return promotionTokenGasLimitDefault }
+      if to.isTUSD { return trueUSDTokenGasLimitDefault }
       return exchangeETHTokenGasLimitDefault
     }()
     return gasSrcToETH + gasETHToDest
@@ -55,6 +58,7 @@ public struct KNGasConfiguration {
     if token.isMKR { return makerGasLimitDefault }
     if token.isPRO { return propyGasLimitDefault }
     if token.isPT { return promotionTokenGasLimitDefault }
+    if token.isTUSD { return trueUSDTokenGasLimitDefault }
     return transferTokenGasLimitDefault
   }
 }

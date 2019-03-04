@@ -11,6 +11,7 @@ enum KWalletSortType {
   case changeAsc
   case changeDesc
   case balanceDesc
+  case `default`
 }
 
 enum KWalletCurrencyType: String {
@@ -23,7 +24,7 @@ class KWalletBalanceViewModel: NSObject {
   private(set) var isKyberList: Bool = true
   private(set) var wallet: KNWalletObject
   private(set) var tokenObjects: [TokenObject] = []
-  private(set) var tokensDisplayType: KWalletSortType = .balanceDesc
+  private(set) var tokensDisplayType: KWalletSortType = .default
 
   private(set) var trackerRateData: [String: KNTrackerRate] = [:]
   private(set) var displayedTokens: [TokenObject] = []
@@ -228,7 +229,12 @@ class KWalletBalanceViewModel: NSObject {
 
   fileprivate func createDisplayedData() {
     // Compute displayed token objects sorted by displayed type
-    let tokenObjects = self.tokenObjects.filter({ $0.contains(self.searchText) }).filter({ $0.isSupported == self.isKyberList })
+    let tokenObjects = self.tokenObjects.filter({
+      return $0.contains(self.searchText) && $0.isSupported == self.isKyberList
+    }).filter({
+      if $0.extraData?.isListed == false { return false }
+      return true
+    })
     self.displayedTokens = {
       return tokenObjects.sorted(by: {
         return self.displayedTokenComparator(left: $0, right: $1)
@@ -244,11 +250,15 @@ class KWalletBalanceViewModel: NSObject {
       if self.trackerRateData[left.identifier()] == nil { return false }
       if self.trackerRateData[right.identifier()] == nil { return true }
     }
+    if self.tokensDisplayType == .default {
+      if left.extraData?.shouldShowAsNew == true { return true }
+      if right.extraData?.shouldShowAsNew == true { return false }
+    }
     // sort by name
     if self.tokensDisplayType == .nameAsc { return left.symbol < right.symbol }
     if self.tokensDisplayType == .nameDesc { return left.symbol > right.symbol }
 
-    if self.tokensDisplayType == .balanceDesc {
+    if self.tokensDisplayType == .balanceDesc || self.tokensDisplayType == .default {
       // sort by balance
       guard let balance0 = self.balance(for: left) else { return false }
       guard let balance1 = self.balance(for: right) else { return true }

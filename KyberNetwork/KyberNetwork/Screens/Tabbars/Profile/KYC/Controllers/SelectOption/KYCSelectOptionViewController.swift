@@ -120,7 +120,7 @@ class KYCSelectOptionViewController: KNBaseViewController {
     if text.isEmpty {
       self.displayData = self.dataSources
     } else {
-      self.displayData = self.dataSources.filter { $0.uppercased().contains(text.uppercased()) }
+      self.displayData = self.dataSources.filter { return $0.uppercased().contains(text.uppercased()) }
     }
     self.dataTableView.reloadData()
     if self.displayData.isEmpty {

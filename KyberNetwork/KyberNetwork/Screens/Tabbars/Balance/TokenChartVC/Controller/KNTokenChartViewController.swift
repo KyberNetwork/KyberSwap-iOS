@@ -189,7 +189,7 @@ class KNTokenChartViewModel {
 
   var displayDataSeries: ChartSeries {
     if let object = self.data.first {
-      self.data = self.data.filter({ $0.time >= self.type.fromTime(for: object.time) })
+      self.data = self.data.filter({ return $0.time >= self.type.fromTime(for: object.time) })
     }
     guard let first = self.data.first else {
       return ChartSeries(data: [(x: 0, y: 0)])

@@ -406,6 +406,7 @@
 "rate.our.app" = "신청서 평가";
 "skip" = "건너뛰기";
 "you.can.backup.your.wallet.later" = "나중에 지갑을 백업 할 수 있습니다.";
+"new" = "새로운";
 
 // Promo code error messages
 "Promo code is invalid!" = "프로모션 코드가 잘못되었습니다.";

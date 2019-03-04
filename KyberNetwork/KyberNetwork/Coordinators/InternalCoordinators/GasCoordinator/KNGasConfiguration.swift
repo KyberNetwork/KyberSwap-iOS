@@ -29,6 +29,7 @@ public struct KNGasConfiguration {
       return calculateDefaultGasLimitTransfer(token: from)
     }
     let gasSrcToETH: BigInt = {
+      if let gasLimit = from.extraData?.gasLimitDefault { return gasLimit }
       if from.isETH { return BigInt(0) }
       if from.isDGX { return digixGasLimitDefault }
       if from.isDAI { return daiGasLimitDefault }
@@ -39,6 +40,7 @@ public struct KNGasConfiguration {
       return exchangeETHTokenGasLimitDefault
     }()
     let gasETHToDest: BigInt = {
+      if let gasLimit = to.extraData?.gasLimitDefault { return gasLimit }
       if to.isETH { return BigInt(0) }
       if to.isDGX { return digixGasLimitDefault }
       if to.isDAI { return daiGasLimitDefault }
@@ -52,6 +54,7 @@ public struct KNGasConfiguration {
   }
 
   static func calculateDefaultGasLimitTransfer(token: TokenObject) -> BigInt {
+    if let gasLimit = token.extraData?.gasLimitDefault { return gasLimit }
     if token.isETH { return transferETHGasLimitDefault }
     if token.isDGX { return digixGasLimitDefault }
     if token.isDAI { return daiGasLimitDefault }

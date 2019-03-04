@@ -38,7 +38,7 @@ class KNSearchTokenViewModel {
       if self.searchedText == "" {
         return self.supportedTokens
       }
-      return self.supportedTokens.filter({ ($0.symbol + " " + $0.name).lowercased().contains(self.searchedText.lowercased()) })
+      return self.supportedTokens.filter({ return ($0.symbol + " " + $0.name).lowercased().contains(self.searchedText.lowercased()) })
     }()
     self.displayedTokens.sort { (token0, token1) -> Bool in
       guard let balance0 = self.balances[token0.contract] else { return false }

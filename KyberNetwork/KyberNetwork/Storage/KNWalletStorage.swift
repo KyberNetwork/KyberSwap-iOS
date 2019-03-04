@@ -19,7 +19,7 @@ class KNWalletStorage {
     if self.realm == nil { return [] }
     return self.realm.objects(KNWalletObject.self)
       .sorted(byKeyPath: "date", ascending: true)
-      .filter { !$0.address.isEmpty }
+      .filter { return !$0.address.isEmpty }
   }
 
   func get(forPrimaryKey key: String) -> KNWalletObject? {

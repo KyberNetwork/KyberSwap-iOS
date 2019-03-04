@@ -406,6 +406,7 @@
 "rate.our.app" = "Đánh giá ứng dụng";
 "skip" = "Bỏ qua";
 "you.can.backup.your.wallet.later" = "Bạn có thể sao lưu ví của mình sau";
+"new" = "Mới";
 
 // Promo code error messages
 "Promo code is invalid!" = "Mã khuyến mãi không hợp lệ!";

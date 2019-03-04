@@ -24,6 +24,11 @@ struct KNBalanceTokenTableViewCellModel {
     self.index = index
   }
 
+  var isNewTokenHidden: Bool {
+    if let isNew = token.extraData?.shouldShowAsNew, isNew { return false }
+    return true
+  }
+
   var backgroundColor: UIColor {
     return self.index % 2 == 0 ? .white : UIColor(red: 248, green: 249, blue: 255)
   }
@@ -129,6 +134,7 @@ class KNBalanceTokenTableViewCell: UITableViewCell {
   static let kCellID: String = "KNBalanceTokenTableViewCell"
   static let kCellHeight: CGFloat = 64
 
+  @IBOutlet weak var newTextLabel: UILabel!
   @IBOutlet weak var iconImageView: UIImageView!
   @IBOutlet weak var symbolLabel: UILabel!
   @IBOutlet weak var amountHoldingsLabel: UILabel!
@@ -142,10 +148,12 @@ class KNBalanceTokenTableViewCell: UITableViewCell {
     self.symbolLabel.text = ""
     self.rateLabel.text = ""
     self.amountHoldingsLabel.text = ""
+    self.newTextLabel.text = NSLocalizedString("new", value: "New", comment: "").uppercased()
     self.iconImageView.rounded(radius: self.iconImageView.frame.width / 2.0)
   }
 
   func updateCellView(with viewModel: KNBalanceTokenTableViewCellModel) {
+    self.newTextLabel.isHidden = viewModel.isNewTokenHidden
     self.iconImageView.setTokenImage(
       token: viewModel.token,
       size: self.iconImageView.frame.size

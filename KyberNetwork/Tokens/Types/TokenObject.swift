@@ -48,17 +48,7 @@ class TokenObject: Object {
       self.contract = (localDict["address"] as? String ?? "").lowercased()
       self.decimals = localDict["decimals"] as? Int ?? 0
       self.isSupported = true
-    }
-
-    // init from tracker api
-    convenience init(trackerDict: JSONDictionary) {
-      self.init()
-      self.name = trackerDict["name"] as? String ?? ""
-      self.symbol = trackerDict["symbol"] as? String ?? ""
-      self.icon = self.symbol.lowercased()
-      self.contract = (trackerDict["contractAddress"] as? String ?? "").lowercased()
-      self.decimals = trackerDict["decimals"] as? Int ?? 0
-      self.isSupported = true
+      self.addExtraData(json: localDict)
     }
 
     // init from public API
@@ -70,6 +60,7 @@ class TokenObject: Object {
       self.contract = (apiDict["address"] as? String ?? "").lowercased()
       self.decimals = apiDict["decimals"] as? Int ?? 0
       self.isSupported = true
+      self.addExtraData(json: apiDict)
     }
 
     var isETH: Bool {
@@ -143,6 +134,13 @@ class TokenObject: Object {
       isDisabled: self.isDisabled
     )
   }
+
+  func addExtraData(json: JSONDictionary) {
+    let extraData = TokenExtraData(dict: json)
+    let key = "\(KNEnvironment.default.displayName)_\(self.contract)"
+    UserDefaults.standard.set(extraData.json, forKey: key)
+    UserDefaults.standard.synchronize()
+  }
 }
 
 extension TokenObject {
@@ -161,5 +159,56 @@ extension TokenObject {
     if text.isEmpty { return true }
     let desc = "\(symbol)\(name)".replacingOccurrences(of: " ", with: "").lowercased()
     return desc.contains(text.lowercased())
+  }
+
+  var extraData: TokenExtraData? {
+    let key = "\(KNEnvironment.default.displayName)_\(self.contract)"
+    if let object = UserDefaults.standard.object(forKey: key) as? JSONDictionary {
+      return TokenExtraData(dict: object)
+    }
+    return nil
+  }
+}
+
+class TokenExtraData: NSObject {
+  let address: String
+  let gasLimit: String
+  let listingTime: TimeInterval
+
+  init(address: String, gasLimit: String, listingTime: TimeInterval) {
+    self.address = address
+    self.gasLimit = gasLimit
+    self.listingTime = listingTime
+  }
+
+  init(dict: JSONDictionary) {
+    self.address = dict["address"] as? String ?? ""
+    self.gasLimit = dict["gasLimit"] as? String ?? ""
+    self.listingTime = dict["listing_time"] as? TimeInterval ?? 0.0
+  }
+
+  var json: JSONDictionary {
+    return [
+      "address": address,
+      "gasLimit": gasLimit,
+      "listing_time": listingTime,
+    ]
+  }
+
+  var gasLimitDefault: BigInt? {
+    guard !self.gasLimit.isEmpty else { return nil }
+    guard let value = self.gasLimit.shortBigInt(units: .wei), !value.isZero else { return nil }
+    return value
+  }
+
+  var shouldShowAsNew: Bool {
+    // less than 7 days
+    let date = Date(timeIntervalSince1970: self.listingTime)
+    return Date().timeIntervalSince(date) <= 7.0 * 24.0 * 60.0 * 60.0
+  }
+
+  var isListed: Bool {
+    let date = Date(timeIntervalSince1970: self.listingTime)
+    return Date().timeIntervalSince(date) >= 0
   }
 }

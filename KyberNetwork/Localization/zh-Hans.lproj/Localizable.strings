@@ -399,6 +399,7 @@
 "kyc.submit.wallet.warning.message.personal.info" = "您只能在此处编辑钱包。一旦您的个人资料提交审查, 您将无法修改。";
 "invalid password" = "无效的密码";
 "can.not.transfer.this.token" = "无法转移此令牌";
+"new" = "新";
 
 "please.check.your.internet.connection" = "请检查您的互联网连接";
 "address.has.already.been.taken" = "地址已经被采纳";

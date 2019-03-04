@@ -144,7 +144,7 @@ extension KNTransactionCoordinator {
             do {
               let json: JSONDictionary = try response.mapJSON(failsOnEmptyData: false) as? JSONDictionary ?? [:]
               let data: [JSONDictionary] = json["result"] as? [JSONDictionary] ?? []
-              let transactions = data.map({ return KNTokenTransaction(dictionary: $0).toTransaction() }).filter({ self.transactionStorage.get(forPrimaryKey: $0.id) == nil })
+              let transactions = data.map({ return KNTokenTransaction(dictionary: $0).toTransaction() }).filter({ return self.transactionStorage.get(forPrimaryKey: $0.id) == nil })
               self.updateListTokenTransactions(transactions)
               print("---- ERC20 Token Transactions: Loaded \(transactions.count) transactions ----")
               completion?(.success(transactions))
@@ -283,11 +283,11 @@ extension KNTransactionCoordinator {
   fileprivate func updateAllTransactions(address: String, data: [JSONDictionary]) -> [Transaction] {
     let eth = KNSupportedTokenStorage.shared.ethToken
 
-    let completedTransactions: [Transaction] = data.filter({ ($0["isError"] as? String ?? "") == "0" })
+    let completedTransactions: [Transaction] = data.filter({ return ($0["isError"] as? String ?? "") == "0" })
       .map({ return KNTokenTransaction(internalDict: $0, eth: eth) })
-      .filter({ $0.tokenSymbol.lowercased() == eth.symbol.lowercased() })
+      .filter({ return $0.tokenSymbol.lowercased() == eth.symbol.lowercased() })
       .map({ return $0.toTransaction() })
-    let failedTransactions: [Transaction] = data.filter({ ($0["isError"] as? String ?? "") == "1"
+    let failedTransactions: [Transaction] = data.filter({ return ($0["isError"] as? String ?? "") == "1"
     }).map({
       let transaction = KNTokenTransaction(internalDict: $0, eth: eth).toTransaction()
       transaction.internalState = TransactionState.error.rawValue
@@ -489,11 +489,11 @@ extension RawTransaction {
 extension TransactionsStorage {
 
   var nonePendingObjects: [Transaction] {
-    return objects.filter({ $0.state != .pending })
+    return objects.filter({ return $0.state != .pending })
   }
 
   var transferNonePendingObjects: [Transaction] {
-    return objects.filter({ $0.state != .pending && $0.isTransfer })
+    return objects.filter({ return $0.state != .pending && $0.isTransfer })
   }
 
   func addHistoryTransactions(_ transactions: [KNHistoryTransaction]) {
@@ -517,6 +517,6 @@ extension TransactionsStorage {
   var historyTransactions: [KNHistoryTransaction] {
     return self.realm.objects(KNHistoryTransaction.self)
       .sorted(byKeyPath: "blockTimestamp", ascending: false)
-      .filter { !$0.id.isEmpty }
+      .filter { return !$0.id.isEmpty }
   }
 }

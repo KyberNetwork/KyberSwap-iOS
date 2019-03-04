@@ -17,7 +17,7 @@ class KNContactStorage {
     if self.realm == nil { return [] }
     return self.realm.objects(KNContact.self)
       .sorted(byKeyPath: "lastUsed", ascending: false)
-      .filter { !$0.address.isEmpty }
+      .filter { return !$0.address.isEmpty }
   }
 
   func get(forPrimaryKey key: String) -> KNContact? {

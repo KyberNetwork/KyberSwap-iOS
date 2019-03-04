@@ -406,6 +406,7 @@
 "rate.our.app" = "Rate our App";
 "skip" = "Skip";
 "you.can.backup.your.wallet.later" = "You can backup your wallet later";
+"new" = "New";
 
 // Promo code error messages
 "Promo code is invalid!" = "Promo code is invalid!";

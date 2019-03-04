@@ -209,11 +209,11 @@ extension TransactionsStorage {
   }
 
   var kyberPendingTransactions: [KNTransaction] {
-    return self.kyberTransactions.filter { $0.state == .pending }
+    return self.kyberTransactions.filter { return $0.state == .pending }
   }
 
   var kyberMinedTransactions: [KNTransaction] {
-    return self.kyberTransactions.filter { $0.state != .pending || $0.state != .unknown }
+    return self.kyberTransactions.filter { return $0.state != .pending || $0.state != .unknown }
   }
 
   func getKyberTransaction(forPrimaryKey: String) -> KNTransaction? {

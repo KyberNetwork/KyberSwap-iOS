@@ -4,13 +4,13 @@ import Moya
 import CryptoSwift
 
 enum KyberNetworkService: String {
-  case getRate = "/getRate"
-  case getRateUSD = "/getRateUSD"
+  case getRate = "/rate"
+  case getRateUSD = "/rateUSD"
   case getHistoryOneColumn = "/getHistoryOneColumn"
-  case getLatestBlock = "/getLatestBlock"
-  case getKyberEnabled = "/getKyberEnabled"
-  case getMaxGasPrice = "/getMaxGasPrice"
-  case getGasPrice = "/getGasPrice"
+  case getLatestBlock = "/latestBlock"
+  case getKyberEnabled = "/kyberEnabled"
+  case getMaxGasPrice = "/maxGasPrice"
+  case getGasPrice = "/gasPrice"
   case supportedToken = ""
 }
 

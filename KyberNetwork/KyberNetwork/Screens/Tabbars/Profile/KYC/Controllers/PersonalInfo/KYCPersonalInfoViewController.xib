@@ -182,7 +182,7 @@
                                 <constraint firstAttribute="height" constant="1" id="fHi-AV-anO"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAL-xL-9HK">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kAL-xL-9HK">
                             <rect key="frame" x="339" y="385" width="12" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="xoE-og-bkI"/>
@@ -192,7 +192,7 @@
                                 <action selector="nationalityButtonPressed:" destination="-1" eventType="touchUpInside" id="EPe-V6-MgM"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B6c-CU-Any">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B6c-CU-Any">
                             <rect key="frame" x="339" y="985" width="12" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="21Q-s7-s3h"/>
@@ -451,7 +451,7 @@
                             <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cK-EC-LuQ">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cK-EC-LuQ">
                             <rect key="frame" x="339" y="1306" width="12" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="m7K-UY-RzK"/>

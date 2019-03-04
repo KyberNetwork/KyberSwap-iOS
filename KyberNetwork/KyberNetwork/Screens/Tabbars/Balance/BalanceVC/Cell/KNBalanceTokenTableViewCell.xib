@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="Montserrat-Bold.ttf">
+            <string>Montserrat-Bold</string>
+        </array>
         <array key="Montserrat-Medium.ttf">
             <string>Montserrat-Medium</string>
         </array>
@@ -62,9 +65,16 @@
                             <color key="titleColor" red="0.19215686269999999" green="0.79607843140000001" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </state>
                     </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEW" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SuJ-q5-Iqc">
+                        <rect key="frame" x="88" y="14" width="21.5" height="10"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Bold" family="Montserrat" pointSize="8"/>
+                        <color key="textColor" red="0.97647058823529409" green="0.38823529411764707" blue="0.38823529411764707" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="Ctg-Ik-kyf" secondAttribute="trailing" constant="12" id="09o-ct-bmA"/>
+                    <constraint firstItem="SuJ-q5-Iqc" firstAttribute="top" secondItem="pir-L3-LFm" secondAttribute="top" constant="-2" id="9xK-E6-OFn"/>
                     <constraint firstItem="Ctg-Ik-kyf" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Gwg-kt-R9G"/>
                     <constraint firstItem="d78-la-wVU" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="JqM-6S-1kt"/>
                     <constraint firstItem="hGC-oV-nAd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="pir-L3-LFm" secondAttribute="trailing" constant="16" id="Ukf-pg-8Cb"/>
@@ -72,6 +82,7 @@
                     <constraint firstItem="pir-L3-LFm" firstAttribute="leading" secondItem="d78-la-wVU" secondAttribute="trailing" constant="8" id="ZdI-hs-Gal"/>
                     <constraint firstItem="d78-la-wVU" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="bVA-sA-6Bw"/>
                     <constraint firstItem="pir-L3-LFm" firstAttribute="top" secondItem="d78-la-wVU" secondAttribute="top" id="dAl-pX-ehR"/>
+                    <constraint firstItem="SuJ-q5-Iqc" firstAttribute="leading" secondItem="pir-L3-LFm" secondAttribute="trailing" constant="4" id="kOM-fp-vQd"/>
                     <constraint firstItem="9pw-Xp-rOF" firstAttribute="leading" secondItem="pir-L3-LFm" secondAttribute="leading" id="pYN-8O-DNO"/>
                     <constraint firstItem="hGC-oV-nAd" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="sk1-5y-LVr"/>
                     <constraint firstItem="9pw-Xp-rOF" firstAttribute="top" secondItem="pir-L3-LFm" secondAttribute="bottom" id="usS-M5-9se"/>
@@ -83,6 +94,7 @@
                 <outlet property="amountHoldingsLabel" destination="9pw-Xp-rOF" id="CT4-9G-eNx"/>
                 <outlet property="change24h" destination="Ctg-Ik-kyf" id="faG-ie-ExJ"/>
                 <outlet property="iconImageView" destination="d78-la-wVU" id="G3d-hp-xVN"/>
+                <outlet property="newTextLabel" destination="SuJ-q5-Iqc" id="eYU-Lq-QIO"/>
                 <outlet property="rateLabel" destination="hGC-oV-nAd" id="ci3-PQ-B2b"/>
                 <outlet property="symbolLabel" destination="pir-L3-LFm" id="nos-72-PWj"/>
             </connections>

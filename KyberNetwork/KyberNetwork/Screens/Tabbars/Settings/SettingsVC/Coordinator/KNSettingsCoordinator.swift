@@ -134,7 +134,7 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
       self.navigationController.pushViewController(self.contactVC, animated: true)
     case .support:
       KNCrashlyticsUtil.logCustomEvent(withName: "settings", customAttributes: ["value": "support"])
-      self.navigationController.openSafari(with: "https://docs.google.com/forms/d/1Ik-H0nN8qKpi90NVTCwwDzopId7C8mX_HOPeT5iBLhc/viewform?edit_requested=true")
+      self.navigationController.openSafari(with: "https://bit.ly/2JpcGk3")
     case .about:
       KNCrashlyticsUtil.logCustomEvent(withName: "settings", customAttributes: ["value": "about"])
       self.openCommunityURL("https://kyber.network/about/company")
@@ -161,7 +161,7 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
       self.openCommunityURL("https://t.me/KyberDeveloper")
     case .github:
       KNCrashlyticsUtil.logCustomEvent(withName: "settings", customAttributes: ["value": "open_github"])
-      self.openCommunityURL("https://github.com/KyberNetwork/KyberSwap")
+      self.openCommunityURL("https://github.com/KyberNetwork/KyberSwap-iOS")
     case .twitter:
       KNCrashlyticsUtil.logCustomEvent(withName: "settings", customAttributes: ["value": "open_twitter"])
       self.openCommunityURL("https://twitter.com/KyberSwap")
@@ -193,7 +193,7 @@ extension KNSettingsCoordinator: KNSettingsTabViewControllerDelegate {
   fileprivate func openShareWithFriends() {
     let text = NSLocalizedString(
       "share.with.friends.text",
-      value: "I just found an awesome wallet app. Check out here https://kyberswap.com",
+      value: "I just found an awesome wallet app. Check out here https://apple.co/2USHOtx",
       comment: ""
     )
     let activitiy = UIActivityViewController(activityItems: [text], applicationActivities: nil)

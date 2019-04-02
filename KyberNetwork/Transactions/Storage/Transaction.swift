@@ -125,4 +125,11 @@ extension Transaction {
       isDisabled: false
     )
   }
+
+  func getTokenSymbol() -> String? {
+    guard let localObject = self.localizedOperations.first, localObject.type == "transfer" else {
+      return nil
+    }
+    return localObject.symbol
+  }
 }

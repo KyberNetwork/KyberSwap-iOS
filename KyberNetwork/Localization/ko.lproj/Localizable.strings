@@ -409,6 +409,8 @@
 "new" = "새로운";
 "can.not.update.exchange.rate" = "환율을 업데이트할 수 없습니다.";
 
+"successfully.received" = "%@ 에서 %@ 성공적으로 받았습니다.";
+"received.token" = "받은 %@";
 
 // MARK: Price alert feature
 "Cap reached" = "Cap reached";

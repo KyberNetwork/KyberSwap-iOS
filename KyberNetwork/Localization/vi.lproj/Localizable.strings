@@ -422,6 +422,9 @@
 "something.went.wrong.please.try.again" = "Đã xảy ra lỗi, vui lòng thử lại";
 "please.send.your.request.to.support" = "Vui lòng gửi yêu cầu của bạn đến support@kyber.network";
 
+"successfully.received" = "Thành công nhận được %@ từ %@";
+"received.token" = "Đã nhận %@";
+
 // MARK: Price alert feature
 "Cap reached" = "Đạt mức cho phép";
 "You can only have maximum of 10 alerts" = "Bạn chỉ có thể có tối đa 10 thông báo";

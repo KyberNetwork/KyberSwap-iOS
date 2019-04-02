@@ -41,6 +41,9 @@ let kIEOTxListUpdateNotificationKey = "kIEOTxListUpdateNotificationKey"
 
 let kUserWalletsListUpdatedNotificationKey = "kUserWalletsListUpdatedNotificationKey"
 
+// Receive txs
+let kNewReceivedTransactionKey = "kNewReceivedTransactionKey"
+
 class KNNotificationUtil {
 
   static func postNotification(for key: String, object: Any? = nil, userInfo: [AnyHashable: Any]? = nil) {

@@ -447,6 +447,8 @@
 "can.not.decode.data" = "Can not decode data";
 "something.went.wrong.please.try.again" = "Something went wrong, please try again";
 "please.send.your.request.to.support" = "Please send your request to support@kyber.network";
+"successfully.received" = "Successfully received %@ from %@";
+"received.token" = "Received %@";
 
 // Promo code error messages
 "Promo code is invalid!" = "Promo code is invalid!";

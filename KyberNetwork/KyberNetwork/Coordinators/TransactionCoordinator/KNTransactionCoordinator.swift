@@ -266,6 +266,7 @@ extension KNTransactionCoordinator {
               KNAppTracker.updateInternalTransactionLastBlockLoad(lastBlockLoaded, for: self.wallet.address)
               let eth = KNSupportedTokenStorage.shared.ethToken
               let transactions = data.map({ KNTokenTransaction(internalDict: $0, eth: eth).toTransaction() })
+              self.handleReceiveEtherOrToken(transactions)
               self.transactionStorage.add(transactions)
               KNNotificationUtil.postNotification(for: kTokenTransactionListDidUpdateNotificationKey)
               print("---- Internal Token Transactions: Loaded \(transactions.count) transactions ----")
@@ -304,6 +305,7 @@ extension KNTransactionCoordinator {
 
   func updateListTokenTransactions(_ transactions: [Transaction]) {
     if transactions.isEmpty { return }
+    self.handleReceiveEtherOrToken(transactions)
     self.transactionStorage.add(transactions)
     KNNotificationUtil.postNotification(for: kTokenTransactionListDidUpdateNotificationKey)
     var tokenObjects: [TokenObject] = []
@@ -315,6 +317,30 @@ extension KNTransactionCoordinator {
     if !tokenObjects.isEmpty {
       self.tokenStorage.add(tokens: tokenObjects)
       KNNotificationUtil.postNotification(for: kTokenObjectListDidUpdateNotificationKey)
+    }
+  }
+
+  fileprivate func handleReceiveEtherOrToken(_ transactions: [Transaction]) {
+    if transactions.isEmpty { return }
+    if KNAppTracker.transactionLoadState(for: wallet.address) != .done { return }
+    let receivedTxs = transactions.filter({ return $0.to.lowercased() == wallet.address.description.lowercased() && $0.state == .completed }).sorted(by: { return $0.date > $1.date })
+    if let latestReceiveTx = receivedTxs.first {
+      let title = NSLocalizedString("received.token", value: "Received %@", comment: "")
+      let message = NSLocalizedString("successfully.received", value: "Successfully received %@ from %@", comment: "")
+      let txs = receivedTxs.filter({ return $0.id == latestReceiveTx.id })
+      if txs.count > 1 { return } // swap transactions
+      if self.transactionStorage.get(forPrimaryKey: latestReceiveTx.compoundKey) != nil { return }
+      let address = "\(latestReceiveTx.from.prefix(12))...\(latestReceiveTx.from.suffix(10))"
+
+      guard let symbol = latestReceiveTx.getTokenSymbol() else { return }
+      let amount = "\(latestReceiveTx.value) \(symbol)"
+      let userInfo = ["transaction_hash": "\(latestReceiveTx.id)"]
+
+      KNNotificationUtil.localPushNotification(
+        title: String(format: title, symbol),
+        body: String(format: message, arguments: [amount, address]),
+        userInfo: userInfo
+      )
     }
   }
 }
@@ -353,7 +379,7 @@ extension KNTransactionCoordinator {
       guard let `self` = self else { return }
       self.externalProvider.getTransactionByHash(transaction.id, completion: { [weak self] sessionError in
         guard let `self` = self else { return }
-        guard let trans = self.transactionStorage.get(forPrimaryKey: transaction.id) else { return }
+        guard let trans = self.transactionStorage.getKyberTransaction(forPrimaryKey: transaction.id) else { return }
         if trans.state != .pending {
           // Prevent the notification is called multiple time due to timer runs
           return

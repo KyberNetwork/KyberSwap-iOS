@@ -40,6 +40,10 @@ class KNTransactionCoordinator {
     self.isLoadingEnabled = true
     self.startUpdatingCompletedTransactions()
     self.startUpdatingPendingTransactions()
+
+    // remove some old txs
+    let oldKyberTxs = self.transactionStorage.kyberMinedTransactions.filter({ return Date().timeIntervalSince($0.date) >= 7.0 * 24.0 * 60.0 * 60.0 })
+    self.transactionStorage.delete(oldKyberTxs)
   }
 
   func stop() {
@@ -327,9 +331,8 @@ extension KNTransactionCoordinator {
     if let latestReceiveTx = receivedTxs.first {
       let title = NSLocalizedString("received.token", value: "Received %@", comment: "")
       let message = NSLocalizedString("successfully.received", value: "Successfully received %@ from %@", comment: "")
-      let txs = receivedTxs.filter({ return $0.id == latestReceiveTx.id })
-      if txs.count > 1 { return } // swap transactions
-      if self.transactionStorage.get(forPrimaryKey: latestReceiveTx.compoundKey) != nil { return }
+      if self.transactionStorage.getKyberTransaction(forPrimaryKey: latestReceiveTx.id) != nil { return } // swap/transfer transaction
+      if self.transactionStorage.get(forPrimaryKey: latestReceiveTx.compoundKey) != nil { return } // already done transaction
       let address = "\(latestReceiveTx.from.prefix(12))...\(latestReceiveTx.from.suffix(10))"
 
       guard let symbol = latestReceiveTx.getTokenSymbol() else { return }
@@ -365,9 +368,6 @@ extension KNTransactionCoordinator {
 
   @objc func shouldUpdatePendingTransaction(_ sender: Any?) {
     let objects = self.transactionStorage.kyberPendingTransactions
-    if objects.isEmpty {
-      self.transactionStorage.deleteAllKyberTransactions()
-    }
     objects.forEach {
       if self.isLoadingEnabled { self.updatePendingTransaction($0) }
     }
@@ -426,7 +426,6 @@ extension KNTransactionCoordinator {
           object: newTx.id,
           userInfo: nil
         )
-        self?.transactionStorage.delete([transaction])
         completion(nil)
       case .failure(let error):
         completion(error)

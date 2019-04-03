@@ -190,6 +190,9 @@
 		257C9FC92078F6A600EE0128 /* KNCreatePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257C9FC72078F6A500EE0128 /* KNCreatePasswordViewController.swift */; };
 		257C9FCA2078F6A600EE0128 /* KNCreatePasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257C9FC82078F6A500EE0128 /* KNCreatePasswordViewController.xib */; };
 		257C9FD32078FB5700EE0128 /* KNSettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257C9FD22078FB5700EE0128 /* KNSettingsCoordinator.swift */; };
+		2582332022549420007D5480 /* KNPromoSwapConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2582331E22549420007D5480 /* KNPromoSwapConfirmViewController.swift */; };
+		2582332122549420007D5480 /* KNPromoSwapConfirmViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2582331F22549420007D5480 /* KNPromoSwapConfirmViewController.xib */; };
+		2582332522549AAE007D5480 /* KNPromoSwapConfirmViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2582332422549AAE007D5480 /* KNPromoSwapConfirmViewModel.swift */; };
 		258711E62226433800B5906C /* KNPriceAlertCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258711E52226433800B5906C /* KNPriceAlertCoordinator.swift */; };
 		258711EA2227DA9900B5906C /* KNNotificationAlertPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258711E82227DA9900B5906C /* KNNotificationAlertPopupViewController.swift */; };
 		258711EB2227DA9900B5906C /* KNNotificationAlertPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258711E92227DA9900B5906C /* KNNotificationAlertPopupViewController.xib */; };
@@ -719,6 +722,9 @@
 		257C9FC72078F6A500EE0128 /* KNCreatePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KNCreatePasswordViewController.swift; sourceTree = "<group>"; };
 		257C9FC82078F6A500EE0128 /* KNCreatePasswordViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KNCreatePasswordViewController.xib; sourceTree = "<group>"; };
 		257C9FD22078FB5700EE0128 /* KNSettingsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNSettingsCoordinator.swift; sourceTree = "<group>"; };
+		2582331E22549420007D5480 /* KNPromoSwapConfirmViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNPromoSwapConfirmViewController.swift; sourceTree = "<group>"; };
+		2582331F22549420007D5480 /* KNPromoSwapConfirmViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNPromoSwapConfirmViewController.xib; sourceTree = "<group>"; };
+		2582332422549AAE007D5480 /* KNPromoSwapConfirmViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNPromoSwapConfirmViewModel.swift; sourceTree = "<group>"; };
 		258711E52226433800B5906C /* KNPriceAlertCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNPriceAlertCoordinator.swift; sourceTree = "<group>"; };
 		258711E82227DA9900B5906C /* KNNotificationAlertPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNNotificationAlertPopupViewController.swift; sourceTree = "<group>"; };
 		258711E92227DA9900B5906C /* KNNotificationAlertPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNNotificationAlertPopupViewController.xib; sourceTree = "<group>"; };
@@ -1501,6 +1507,7 @@
 		254BB34F211D9A2300B8E75D /* Confirms */ = {
 			isa = PBXGroup;
 			children = (
+				2582331D225493F3007D5480 /* PromoConfirm */,
 				2596872E211DEBF10080A33F /* SwapConfirm */,
 				254BB351211D9A3600B8E75D /* SendConfirm */,
 			);
@@ -2167,6 +2174,32 @@
 				257C9FD22078FB5700EE0128 /* KNSettingsCoordinator.swift */,
 			);
 			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		2582331D225493F3007D5480 /* PromoConfirm */ = {
+			isa = PBXGroup;
+			children = (
+				2582332322549A90007D5480 /* ViewModel */,
+				2582332222549A82007D5480 /* Controller */,
+			);
+			path = PromoConfirm;
+			sourceTree = "<group>";
+		};
+		2582332222549A82007D5480 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				2582331E22549420007D5480 /* KNPromoSwapConfirmViewController.swift */,
+				2582331F22549420007D5480 /* KNPromoSwapConfirmViewController.xib */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		2582332322549A90007D5480 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				2582332422549AAE007D5480 /* KNPromoSwapConfirmViewModel.swift */,
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		258711E72227DA2800B5906C /* AlertPopup */ = {
@@ -3646,6 +3679,7 @@
 				254EAB2A221D9EFD00C0EDC8 /* KyberNetwork.entitlements in Resources */,
 				259BF5C121918B0D004D70F9 /* kyc_industry_code.json in Resources */,
 				613D04891FDE15F8008DE72E /* COMODO ECC Domain Validation Secure Server CA 2.cer in Resources */,
+				2582332122549420007D5480 /* KNPromoSwapConfirmViewController.xib in Resources */,
 				25696F6920BE9EB6002CC53F /* KNSearchTokenViewController.xib in Resources */,
 				256E61EE20B3C0830084CA3F /* KNBalanceTabHamburgerMenuViewController.xib in Resources */,
 				25929C5520DA5C760045CFA3 /* SF-Pro-Display-RegularItalic.otf in Resources */,
@@ -4025,6 +4059,7 @@
 				29FF12F61F74799D00AFD326 /* NSAttributedString.swift in Sources */,
 				255C40EB2092D64F00475871 /* KNTokenStorage.swift in Sources */,
 				254CD0F621492F590079EA7A /* KYCCoordinator.swift in Sources */,
+				2582332522549AAE007D5480 /* KNPromoSwapConfirmViewModel.swift in Sources */,
 				25AAE7DE214BA2D800231A85 /* KYCProfileVerificationStatusViewController.swift in Sources */,
 				259EC46920E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.swift in Sources */,
 				25A4B4B321242DE000924351 /* KNCreateWalletViewController.swift in Sources */,
@@ -4121,6 +4156,7 @@
 				29E14FD11F7F457D00185568 /* TransactionsStorage.swift in Sources */,
 				253FD59C219048DF00CACDEB /* KYCPersonalOptionalDataView.swift in Sources */,
 				25CC0A912057D7340009D0D5 /* KNLoadBalanceCoordinator.swift in Sources */,
+				2582332022549420007D5480 /* KNPromoSwapConfirmViewController.swift in Sources */,
 				29F114EE1FA65DEF00114A29 /* ImportType.swift in Sources */,
 				25F9C7692213D0D80001064D /* Double.swift in Sources */,
 				29BDF1981FEE4DB00023A45F /* GasPriceConfiguration.swift in Sources */,

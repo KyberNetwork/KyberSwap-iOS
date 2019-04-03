@@ -7,7 +7,7 @@ import Moya
 import Crashlytics
 
 protocol KNPromoCodeCoordinatorDelegate: class {
-  func promoCodeCoordinatorDidCreate(_ wallet: Wallet, expiredDate: TimeInterval, destinationToken: String?, name: String?)
+  func promoCodeCoordinatorDidCreate(_ wallet: Wallet, expiredDate: TimeInterval, destinationToken: String?, destAddress: String?, name: String?)
 }
 
 class KNPromoCodeCoordinator: Coordinator {
@@ -67,6 +67,13 @@ extension KNPromoCodeCoordinator: KNPromoCodeViewControllerDelegate {
                   return (DateFormatterUtil.shared.promoCodeDateFormatter.date(from: string) ?? Date()).timeIntervalSince1970
                 }()
                 let destinationToken = data["destination_token"] as? String ?? ""
+                let destAddress: String? = {
+                  let type = data["type"] as? String ?? ""
+                  if type.lowercased() == "payment" {
+                    return data["receive_address"] as? String
+                  }
+                  return nil
+                }()
                 self.rootViewController.displayLoading(text: NSLocalizedString("importing.wallet", value: "Importing wallet", comment: ""), animated: true)
                 KNCrashlyticsUtil.logCustomEvent(withName: "kybercode", customAttributes: ["type": "check_code_success"])
                 self.keystore.importWallet(type: ImportType.privateKey(privateKey: privateKey)) { [weak self] result in
@@ -78,7 +85,8 @@ extension KNPromoCodeCoordinator: KNPromoCodeViewControllerDelegate {
                       wallet: wallet,
                       name: name,
                       expiredDate: expiredDate,
-                      destinationToken: destinationToken
+                      destinationToken: destinationToken,
+                      destAddress: destAddress
                     )
                   case .failure(let error):
                     self.navigationController.displayError(error: error)
@@ -106,7 +114,7 @@ extension KNPromoCodeCoordinator: KNPromoCodeViewControllerDelegate {
     }
   }
 
-  fileprivate func didSuccessUnlockPromoCode(wallet: Wallet, name: String, expiredDate: TimeInterval, destinationToken: String) {
+  fileprivate func didSuccessUnlockPromoCode(wallet: Wallet, name: String, expiredDate: TimeInterval, destinationToken: String, destAddress: String?) {
     let walletObject = KNWalletObject(
       address: wallet.address.description,
       name: name

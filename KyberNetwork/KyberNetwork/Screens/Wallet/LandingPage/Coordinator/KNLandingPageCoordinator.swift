@@ -190,10 +190,12 @@ extension KNLandingPageCoordinator: KNCreateWalletCoordinatorDelegate {
 }
 
 extension KNLandingPageCoordinator: KNPromoCodeCoordinatorDelegate {
-  func promoCodeCoordinatorDidCreate(_ wallet: Wallet, expiredDate: TimeInterval, destinationToken: String?, name: String?) {
+  func promoCodeCoordinatorDidCreate(_ wallet: Wallet, expiredDate: TimeInterval, destinationToken: String?, destAddress: String?, name: String?) {
     KNWalletPromoInfoStorage.shared.addWalletPromoInfo(
       address: wallet.address.description,
-      destinationToken: destinationToken ?? ""
+      destinationToken: destinationToken ?? "",
+      destAddress: destAddress,
+      expiredTime: expiredDate
     )
     self.addNewWallet(wallet, isCreate: false, name: name)
   }

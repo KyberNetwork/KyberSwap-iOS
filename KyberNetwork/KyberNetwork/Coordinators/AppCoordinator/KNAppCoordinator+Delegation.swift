@@ -126,12 +126,14 @@ extension KNAppCoordinator: KNAddNewWalletCoordinatorDelegate {
 }
 
 extension KNAppCoordinator: KNPromoCodeCoordinatorDelegate {
-  func promoCodeCoordinatorDidCreate(_ wallet: Wallet, expiredDate: TimeInterval, destinationToken: String?, name: String?) {
+  func promoCodeCoordinatorDidCreate(_ wallet: Wallet, expiredDate: TimeInterval, destinationToken: String?, destAddress: String?, name: String?) {
     self.navigationController.popViewController(animated: true) {
       let address = wallet.address.description
       KNWalletPromoInfoStorage.shared.addWalletPromoInfo(
         address: address,
-        destinationToken: destinationToken ?? ""
+        destinationToken: destinationToken ?? "",
+        destAddress: destAddress,
+        expiredTime: expiredDate
       )
       self.addNewWalletCoordinator(add: wallet)
     }

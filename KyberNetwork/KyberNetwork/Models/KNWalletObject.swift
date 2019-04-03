@@ -47,6 +47,8 @@ class KNWalletObject: Object {
 class KNWalletPromoInfoStorage: NSObject {
 
   let userDefaults = UserDefaults.standard
+  let destAddressKey = "destAddressKey"
+  let expiredTimeKey = "expiredTimeKey"
   static let shared = KNWalletPromoInfoStorage()
   var kKeyPrefix: String {
     return "\(KNEnvironment.default.displayName)_\(KNEnvironment.default.chainID)_"
@@ -54,17 +56,33 @@ class KNWalletPromoInfoStorage: NSObject {
 
   override init() {}
 
-  func addWalletPromoInfo(address: String, destinationToken: String) {
+  func addWalletPromoInfo(address: String, destinationToken: String, destAddress: String?, expiredTime: TimeInterval) {
     self.userDefaults.set(destinationToken, forKey: kKeyPrefix + address.lowercased())
+    if let destAddr = destAddress {
+      self.userDefaults.set(destAddr, forKey: kKeyPrefix + destAddressKey + address.lowercased())
+    } else {
+      self.userDefaults.removeObject(forKey: kKeyPrefix + destAddressKey + address.lowercased())
+    }
+    self.userDefaults.set(expiredTime, forKey: kKeyPrefix + expiredTimeKey + address.lowercased())
     self.userDefaults.synchronize()
   }
 
   func removeWalletPromoInfo(address: String) {
     self.userDefaults.removeObject(forKey: kKeyPrefix + address.lowercased())
+    self.userDefaults.removeObject(forKey: kKeyPrefix + destAddressKey + address.lowercased())
+    self.userDefaults.removeObject(forKey: kKeyPrefix + expiredTimeKey + address.lowercased())
     self.userDefaults.synchronize()
   }
 
   func getDestinationToken(from address: String) -> String? {
     return self.userDefaults.object(forKey: kKeyPrefix + address.lowercased()) as? String
+  }
+
+  func getDestWallet(from address: String) -> String? {
+    return self.userDefaults.object(forKey: kKeyPrefix + destAddressKey + address.lowercased()) as? String
+  }
+
+  func getExpiredTime(from address: String) -> TimeInterval? {
+    return self.userDefaults.object(forKey: kKeyPrefix + expiredTimeKey + address.lowercased()) as? TimeInterval
   }
 }

@@ -14,6 +14,7 @@ protocol KNExchangeTokenCoordinatorDelegate: class {
   func exchangeTokenCoordinatorDidSelectPromoCode()
 }
 
+//swiftlint_disable:file_length
 class KNExchangeTokenCoordinator: Coordinator {
 
   let navigationController: UINavigationController
@@ -29,6 +30,7 @@ class KNExchangeTokenCoordinator: Coordinator {
   fileprivate var sendTokenCoordinator: KNSendTokenViewCoordinator?
   fileprivate var setGasPriceVC: KNSetGasPriceViewController?
   fileprivate var confirmSwapVC: KConfirmSwapViewController?
+  fileprivate var promoConfirmSwapVC: KNPromoSwapConfirmViewController?
 
   lazy var rootViewController: KSwapViewController = {
     let (from, to): (TokenObject, TokenObject) = {
@@ -182,6 +184,7 @@ extension KNExchangeTokenCoordinator {
         }
       case .failure(let error):
         self.confirmSwapVC?.resetActionButtons()
+        self.promoConfirmSwapVC?.resetActionButtons()
         KNNotificationUtil.postNotification(
           for: kTransactionDidUpdateNotificationKey,
           object: error,
@@ -203,10 +206,19 @@ extension KNExchangeTokenCoordinator {
           nounce: self.session.externalProvider.minTxCount
         )
         self.session.addNewPendingTransaction(transaction)
-        if self.confirmSwapVC != nil {
-          self.navigationController.popViewController(animated: true, completion: {
-            self.confirmSwapVC = nil
-          })
+        if KNWalletPromoInfoStorage.shared.getDestinationToken(from: self.session.wallet.address.description) == nil {
+          if self.confirmSwapVC != nil {
+            self.navigationController.popViewController(animated: true, completion: {
+              self.confirmSwapVC = nil
+            })
+          }
+        } else {
+          // promo code
+          if self.promoConfirmSwapVC != nil {
+            self.navigationController.popViewController(animated: true, completion: {
+              self.promoConfirmSwapVC = nil
+            })
+          }
         }
       case .failure(let error):
         self.confirmSwapVC?.resetActionButtons()
@@ -261,6 +273,19 @@ extension KNExchangeTokenCoordinator {
         completion(.failure(error))
       }
     }
+  }
+}
+
+// MARK: Promo Confirm transaction
+extension KNExchangeTokenCoordinator: KNPromoSwapConfirmViewControllerDelegate {
+  func promoCodeSwapConfirmViewControllerDidBack() {
+    self.navigationController.popViewController(animated: true) {
+      self.promoConfirmSwapVC = nil
+    }
+  }
+
+  func promoCodeSwapConfirmViewController(_ controller: KNPromoSwapConfirmViewController, transaction: KNDraftExchangeTransaction, destAddress: String) {
+    self.didConfirmSendExchangeTransaction(transaction)
   }
 }
 
@@ -380,14 +405,34 @@ extension KNExchangeTokenCoordinator: KSwapViewControllerDelegate {
   }
 
   fileprivate func exchangeButtonPressed(data: KNDraftExchangeTransaction) {
-    self.confirmSwapVC = {
-      let viewModel = KConfirmSwapViewModel(transaction: data)
-      let controller = KConfirmSwapViewController(viewModel: viewModel)
-      controller.loadViewIfNeeded()
-      controller.delegate = self
-      return controller
-    }()
-    self.navigationController.pushViewController(self.confirmSwapVC!, animated: true)
+    if KNWalletPromoInfoStorage.shared.getDestinationToken(from: self.session.wallet.address.description) != nil {
+      let address = self.session.wallet.address.description
+      // promo code wallet
+      let destWallet = KNWalletPromoInfoStorage.shared.getDestWallet(from: address) ?? address
+      let expiredDate: Date = {
+        let time = KNWalletPromoInfoStorage.shared.getExpiredTime(from: address) ?? 0.0
+        return Date(timeIntervalSince1970: time)
+      }()
+      let viewModel = KNPromoSwapConfirmViewModel(
+        transaction: data,
+        srcWallet: self.session.wallet.address.description,
+        destWallet: destWallet,
+        expiredDate: expiredDate
+      )
+      self.promoConfirmSwapVC = KNPromoSwapConfirmViewController(viewModel: viewModel)
+      self.promoConfirmSwapVC?.loadViewIfNeeded()
+      self.promoConfirmSwapVC?.delegate = self
+      self.navigationController.pushViewController(self.promoConfirmSwapVC!, animated: true)
+    } else {
+      self.confirmSwapVC = {
+        let viewModel = KConfirmSwapViewModel(transaction: data)
+        let controller = KConfirmSwapViewController(viewModel: viewModel)
+        controller.loadViewIfNeeded()
+        controller.delegate = self
+        return controller
+      }()
+      self.navigationController.pushViewController(self.confirmSwapVC!, animated: true)
+    }
   }
 
   fileprivate func updateEstimatedRate(from: TokenObject, to: TokenObject, amount: BigInt, showError: Bool, completion: ((Error?) -> Void)? = nil) {

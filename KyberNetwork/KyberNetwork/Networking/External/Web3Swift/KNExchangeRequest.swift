@@ -23,7 +23,7 @@ struct KNExchangeRequestEncode: Web3Request {
     let walletID: String = "0x9a68f7330A3Fe9869FfAEe4c3cF3E6BBef1189Da"
     let hint = "PERM".hexEncoded
     let destAddress: String = {
-      if let destAddr = KNWalletPromoInfoStorage.shared.getDestWallet(from: address.description) { return destAddr }
+      if let destAddr = KNWalletPromoInfoStorage.shared.getDestWallet(from: address.description), let wallet = Address(string: destAddr) { return wallet.description }
       return address.description
     }()
     let run = "web3.eth.abi.encodeFunctionCall(\(KNExchangeRequestEncode.abi), [\"\(exchange.from.address.description)\", \"\(exchange.amount.description)\", \"\(exchange.to.address.description)\", \"\(destAddress)\", \"\(exchange.maxDestAmount.description)\", \"\(minRate.description)\", \"\(walletID)\", \"\(hint)\"])"

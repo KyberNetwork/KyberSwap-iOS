@@ -49,8 +49,12 @@ class KAdvancedSettingsViewModel: NSObject {
   fileprivate(set) var currentRate: Double = 0.0
 
   fileprivate(set) var pairToken: String = ""
+  fileprivate(set) var isPromoWallet: Bool = false
 
-  init(hasMinRate: Bool) { self.hasMinRate = hasMinRate }
+  init(hasMinRate: Bool, isPromo: Bool) {
+    self.hasMinRate = hasMinRate
+    self.isPromoWallet = isPromo
+  }
 
   var advancedSettingsHeight: CGFloat {
     if self.isViewHidden { return 0.0 }
@@ -125,9 +129,16 @@ class KAdvancedSettingsViewModel: NSObject {
   }
 
   func updateGasPrices(fast: BigInt, medium: BigInt, slow: BigInt) {
-    self.fast = fast
-    self.medium = medium
-    self.slow = slow
+    if self.isPromoWallet {
+      let extraGas = KNGasConfiguration.extraGasPromoWallet
+      self.fast = fast + extraGas
+      self.medium = medium + extraGas
+      self.slow = slow + extraGas
+    } else {
+      self.fast = fast
+      self.medium = medium
+      self.slow = slow
+    }
   }
 
   func updateSelectedType(_ type: KNSelectedGasPriceType) {
@@ -149,6 +160,16 @@ class KAdvancedSettingsViewModel: NSObject {
     if self.minRateTypeInt == 2 {
       self.minRateType = .custom(value: percent)
     }
+  }
+
+  func updateIsPromoWallet(_ isPromo: Bool) {
+    self.isPromoWallet = isPromo
+    self.updateSelectedType(.fast)
+    self.updateGasPrices(
+      fast: KNGasCoordinator.shared.fastKNGas,
+      medium: KNGasCoordinator.shared.standardKNGas,
+      slow: KNGasCoordinator.shared.lowKNGas
+    )
   }
 
   func updateHasMinRate(hasMinRate: Bool) { self.hasMinRate = hasMinRate }
@@ -332,6 +353,11 @@ class KAdvancedSettingsView: XibLoaderView {
     if self.viewModel == nil { return }
     self.viewModel.updateMinRateValue(value, percent: percent)
     self.updateMinRateUIs()
+  }
+
+  func updateIsPromoWallet(_ isPromo: Bool) {
+    self.viewModel.updateIsPromoWallet(isPromo)
+    self.updateGasPriceUIs()
   }
 
   @IBAction func displayViewButtonPressed(_ sender: Any) {

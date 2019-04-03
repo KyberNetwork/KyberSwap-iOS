@@ -220,7 +220,8 @@ class KSwapViewController: KNBaseViewController {
   }
 
   fileprivate func setupAdvancedSettingsView() {
-    let viewModel = KAdvancedSettingsViewModel(hasMinRate: true)
+    let isPromo = KNWalletPromoInfoStorage.shared.getDestWallet(from: self.viewModel.walletObject.address) != nil
+    let viewModel = KAdvancedSettingsViewModel(hasMinRate: true, isPromo: isPromo)
     viewModel.updateGasPrices(
       fast: KNGasCoordinator.shared.fastKNGas,
       medium: KNGasCoordinator.shared.standardKNGas,
@@ -569,6 +570,8 @@ extension KSwapViewController {
     self.updateTokensView()
     self.updateViewAmountDidChange()
     self.updateAdvancedSettingsView()
+    let isPromo = KNWalletPromoInfoStorage.shared.getDestinationToken(from: wallet.address.description) != nil
+    self.advancedSettingsView.updateIsPromoWallet(isPromo)
     self.hamburgerMenu.update(
       walletObjects: KNWalletStorage.shared.wallets,
       currentWallet: self.viewModel.walletObject

@@ -143,6 +143,7 @@ extension KNPromoCodeCoordinator: KNPromoCodeViewControllerDelegate {
       wallet,
       expiredDate: expiredDate,
       destinationToken: destinationToken,
+      destAddress: destAddress,
       name: name
     )
   }

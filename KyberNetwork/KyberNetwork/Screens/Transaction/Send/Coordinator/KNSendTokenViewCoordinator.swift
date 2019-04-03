@@ -2,6 +2,7 @@
 
 import UIKit
 import BigInt
+import TrustKeystore
 
 class KNSendTokenViewCoordinator: Coordinator {
 
@@ -51,6 +52,9 @@ class KNSendTokenViewCoordinator: Coordinator {
   func start() {
     self.navigationController.pushViewController(self.rootViewController, animated: true)
     self.rootViewController.coordinatorUpdateBalances(self.balances)
+
+    let isPromo = KNWalletPromoInfoStorage.shared.getDestinationToken(from: self.session.wallet.address.description) != nil
+    self.rootViewController.coordinatorUpdateIsPromoWallet(isPromo)
   }
 
   func stop() {

@@ -14,7 +14,7 @@ protocol KNExchangeTokenCoordinatorDelegate: class {
   func exchangeTokenCoordinatorDidSelectPromoCode()
 }
 
-//swiftlint_disable:file_length
+//swiftlint:disable file_length
 class KNExchangeTokenCoordinator: Coordinator {
 
   let navigationController: UINavigationController

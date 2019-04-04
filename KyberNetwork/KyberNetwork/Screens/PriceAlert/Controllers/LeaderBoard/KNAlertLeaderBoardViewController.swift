@@ -282,8 +282,7 @@ class KNAlertLeaderBoardViewController: KNBaseViewController {
 
     if let user = IEOUserStorage.shared.user, let alert = self.leaderBoardData.first(where: { ($0["user_id"] as? Int ?? 0) == user.userID }) {
       var json = alert
-      json["telegram_account"] = "You".toBeLocalised()
-      json["user_email"] = "You".toBeLocalised()
+      json["current_user_name"] = user.name
       self.leaderBoardData.insert(json, at: 0)
     }
 

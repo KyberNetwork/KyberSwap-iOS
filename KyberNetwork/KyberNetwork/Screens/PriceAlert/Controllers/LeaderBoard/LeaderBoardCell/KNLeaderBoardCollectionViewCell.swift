@@ -50,18 +50,31 @@ class KNLeaderBoardCollectionViewCell: UICollectionViewCell {
       let change = data["percent_change"] as? Double ?? 0.0
       return NumberFormatterUtil.shared.displayPercentage(from: change) + "%"
     }()
+    let currentUserName = data["current_user_name"] as? String
     let reward = data["reward"] as? String
     let rank = data["rank"] as? Int ?? 0
-    self.rankLabel.text = "\(rank)"
-    self.rankLabel.backgroundColor = (reward != nil) ? UIColor.Kyber.shamrock : UIColor(red: 158, green: 161, blue: 170)
-    self.userContactLabel.text = {
-      if let tele = data["telegram_account"] as? String { return tele }
-      if let email = data["user_email"] as? String { return email }
-      return "unknown"
-    }()
-    self.userContactLabel.textColor = UIColor.Kyber.blueGreen
-    self.rewardAmount.setTitle(reward, for: .normal)
-    self.rewardAmount.isHidden = reward == nil
+    if let userName = currentUserName {
+      self.rankLabel.text = "\(rank)"
+      self.rankLabel.backgroundColor = .white
+      self.rankLabel.textColor = (reward != nil) ? UIColor.Kyber.shamrock : UIColor(red: 158, green: 161, blue: 170)
+      self.userContactLabel.text = userName
+      self.userContactLabel.font = UIFont.Kyber.medium(with: 18)
+      self.userContactLabel.textColor = .white
+      self.userInfoContainerView.backgroundColor = (reward != nil) ? UIColor.Kyber.shamrock : UIColor(red: 158, green: 161, blue: 170)
+    } else {
+      self.rankLabel.text = "\(rank)"
+      self.rankLabel.backgroundColor = (reward != nil) ? UIColor.Kyber.shamrock : UIColor(red: 158, green: 161, blue: 170)
+      self.userContactLabel.text = {
+        if let tele = data["telegram_account"] as? String { return tele }
+        if let email = data["user_email"] as? String { return email }
+        return "unknown"
+      }()
+      self.userContactLabel.font = UIFont.Kyber.medium(with: 12)
+      self.userContactLabel.textColor = UIColor.Kyber.blueGreen
+      self.userInfoContainerView.backgroundColor = UIColor(red: 246, green: 247, blue: 250)
+    }
+    //self.rewardAmount.setTitle(reward, for: .normal)
+    self.rewardAmount.isHidden = true
     self.layoutIfNeeded()
   }
 }

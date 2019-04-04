@@ -76,8 +76,8 @@ class KSwapViewModel {
   }
 
   var equivalentUSDAmount: BigInt? {
-    if let usdRate = KNRateCoordinator.shared.usdRate(for: self.from) {
-      return usdRate.rate * self.amountFromBigInt / BigInt(10).power(self.from.decimals)
+    if let usdRate = KNRateCoordinator.shared.usdRate(for: self.to) {
+      return usdRate.rate * self.amountToBigInt / BigInt(10).power(self.to.decimals)
     }
     return nil
   }
@@ -139,7 +139,7 @@ class KSwapViewModel {
 
   // MARK: To Token
   var amountToBigInt: BigInt {
-    return self.amountTo.fullBigInt(decimals: self.to.decimals) ?? BigInt(0)
+    return self.amountTo.removeGroupSeparator().fullBigInt(decimals: self.to.decimals) ?? BigInt(0)
   }
 
   var isToTokenBtnEnabled: Bool {

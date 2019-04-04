@@ -252,12 +252,13 @@
                             <color key="textColor" red="0.35294117650000001" green="0.36862745099999999" blue="0.4039215686" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZNd-bN-d7b">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="top" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZNd-bN-d7b">
                             <rect key="frame" x="311" y="16" width="32" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="S1J-Qu-yL6"/>
                                 <constraint firstAttribute="width" constant="32" id="jas-Tt-Glm"/>
                             </constraints>
+                            <inset key="contentEdgeInsets" minX="0.0" minY="4" maxX="0.0" maxY="0.0"/>
                             <state key="normal" image="arrow_down_gray"/>
                             <connections>
                                 <action selector="campaignActionButtonPressed:" destination="-1" eventType="touchUpInside" id="1xN-DN-3jz"/>

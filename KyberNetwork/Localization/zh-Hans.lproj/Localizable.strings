@@ -441,6 +441,12 @@
 "No data to show right now" = "无数据可显示";
 "Can not update leader board data right now" = "目前暂时无法更新排行榜";
 "This rate is %@ lower than current Market" = "此价格比目前的市场价低%@";
+"1 Gift" = "1 Gift";
+"You are swapping to receive a gift" = "You are swapping to receive a gift";
+"Swap and Send to the Organizer" = "Swap and Send to the Organizer";
+"After swapping, please transfer your token to your personal wallet before %@" = "After swapping, please transfer your token to your personal wallet before %@";
+"This alert is eligible for a reward from the current competition. Do you still want to delete?" = "This alert is eligible for a reward from the current competition. Do you still want to delete?";
+"This alert is eligible for a reward from the current competition. Do you still want to update?" = "This alert is eligible for a reward from the current competition. Do you still want to update?";
 
 "can.not.decode.data" = "无法解码数据";
 "something.went.wrong.please.try.again" = "出了点问题，请再试一次";

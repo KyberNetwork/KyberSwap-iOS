@@ -414,8 +414,8 @@
 
 // MARK: Price alert feature
 "Cap reached" = "Cap reached";
-"Alert limit exceeded" = "Alert limit exceeded";
-"You already have 10 (maximum) alerts in your inbox. Please delete an existing alert to add a new one" = "You already have 10 (maximum) alerts in your inbox. Please delete an existing alert to add a new one";
+"Alert limit exceeded" = "알림 한도 초과";
+"You already have 10 (maximum) alerts in your inbox. Please delete an existing alert to add a new one" = "이미 10개의 알림을 설정하셨습니다. 새로운 알림을 설정하기 위해 기존 알림 설정을 삭제해주세요.";
 "You can only have maximum of 10 alerts" = "You can only have maximum of 10 alerts";
 "Price Alerts" = "Price Alerts";
 "We will send you notifications when prices go above or below your targets" = "We will send you notifications when prices go above or below your targets";
@@ -448,10 +448,16 @@
 "No data to show right now" = "No data to show right now";
 "Can not update leader board data right now" = "Can not update leader board data right now";
 "This rate is %@ lower than current Market" = "This rate is %@ lower than current Market";
+"1 Gift" = "1 Gift";
+"You are swapping to receive a gift" = "You are swapping to receive a gift";
+"Swap and Send to the Organizer" = "Swap and Send to the Organizer";
+"After swapping, please transfer your token to your personal wallet before %@" = "After swapping, please transfer your token to your personal wallet before %@";
+"This alert is eligible for a reward from the current competition. Do you still want to delete?" = "This alert is eligible for a reward from the current competition. Do you still want to delete?";
+"This alert is eligible for a reward from the current competition. Do you still want to update?" = "This alert is eligible for a reward from the current competition. Do you still want to update?";
 
-"can.not.decode.data" = "Can not decode data";
-"something.went.wrong.please.try.again" = "Something went wrong, please try again";
-"please.send.your.request.to.support" = "Please send your request to support@kyber.network";
+"can.not.decode.data" = "데이터를 디코딩 할 수 없습니다.";
+"something.went.wrong.please.try.again" = "문제가 발생했습니다. 다시 시도하십시오";
+"please.send.your.request.to.support" = "귀하의 요청을 support@kyber.network로 보내주시기 바랍니다.";
 
 // Promo code error messages
 "Promo code is invalid!" = "프로모션 코드가 잘못되었습니다.";

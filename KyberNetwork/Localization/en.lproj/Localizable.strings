@@ -451,6 +451,12 @@
 "please.send.your.request.to.support" = "Please send your request to support@kyber.network";
 "successfully.received" = "Successfully received %@ from %@";
 "received.token" = "Received %@";
+"1 Gift" = "1 Gift";
+"You are swapping to receive a gift" = "You are swapping to receive a gift";
+"Swap and Send to the Organizer" = "Swap and Send to the Organizer";
+"After swapping, please transfer your token to your personal wallet before %@" = "After swapping, please transfer your token to your personal wallet before %@";
+"This alert is eligible for a reward from the current competition. Do you still want to delete?" = "This alert is eligible for a reward from the current competition. Do you still want to delete?";
+"This alert is eligible for a reward from the current competition. Do you still want to update?" = "This alert is eligible for a reward from the current competition. Do you still want to update?";
 
 // Promo code error messages
 "Promo code is invalid!" = "Promo code is invalid!";

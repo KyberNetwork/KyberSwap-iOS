@@ -75,7 +75,7 @@ extension KNManageAlertCoordinator: KNManageAlertsViewControllerDelegate {
   func manageAlertsViewController(_ viewController: KNManageAlertsViewController, run event: KNAlertTableViewEvent) {
     switch event {
     case .delete(let alert):
-      let message = alert.hasReward ? "This alert is rewarded in a running campaign, you will lose the prize if removing it, do you want to continue?".toBeLocalised() : "Do you want to delete this alert?".toBeLocalised()
+      let message = alert.hasReward ? "This alert is eligible for a reward from the current competition. Do you still want to delete?".toBeLocalised() : "Do you want to delete this alert?".toBeLocalised()
       let alertController = UIAlertController(title: NSLocalizedString("delete", value: "Delete", comment: ""), message: message, preferredStyle: .alert)
       alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", value: "Cancel", comment: ""), style: .cancel, handler: nil))
       alertController.addAction(UIAlertAction(title: NSLocalizedString("delete", value: "Delete", comment: ""), style: .destructive, handler: { _ in

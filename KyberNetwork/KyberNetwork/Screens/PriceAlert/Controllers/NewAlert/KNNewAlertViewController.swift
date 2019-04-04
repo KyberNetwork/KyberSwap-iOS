@@ -290,7 +290,7 @@ class KNNewAlertViewController: KNBaseViewController {
   fileprivate func updateAlertWithWarningIfNeeded() {
     guard let alertID = self.viewModel.alertID else { return }
     if let alert = KNAlertStorage.shared.getObject(primaryKey: alertID), alert.hasReward {
-      let message = "This alert is rewarded in a running campaign, you will lose the prize if updating it, do you want to continue?".toBeLocalised()
+      let message = "This alert is eligible for a reward from the current competition. Do you still want to update?".toBeLocalised()
       let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
       alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", value: "Cancel", comment: ""), style: .cancel, handler: nil))
       alertController.addAction(UIAlertAction(title: NSLocalizedString("continue", value: "Continue", comment: ""), style: .destructive, handler: { _ in

@@ -33,7 +33,7 @@ class DateFormatterUtil {
 
   lazy var leaderBoardFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd MMM yyyy"
+    dateFormatter.dateFormat = "dd MMM yyyy HH:mm"
     return dateFormatter
   }()
 }

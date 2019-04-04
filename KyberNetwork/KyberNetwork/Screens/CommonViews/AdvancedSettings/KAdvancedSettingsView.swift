@@ -209,6 +209,7 @@ class KAdvancedSettingsView: XibLoaderView {
   @IBOutlet weak var stillProceedIfRateGoesDownTextLabel: UILabel!
   @IBOutlet weak var transactionWillBeRevertedTextLabel: UILabel!
 
+  fileprivate var isPromo: Bool = false
   fileprivate var viewModel: KAdvancedSettingsViewModel!
   weak var delegate: KAdvancedSettingsViewDelegate?
 
@@ -252,6 +253,7 @@ class KAdvancedSettingsView: XibLoaderView {
 
   func updateViewModel(_ viewModel: KAdvancedSettingsViewModel) {
     self.viewModel = viewModel
+    self.viewModel.updateIsPromoWallet(isPromo)
     self.advancedSettingsViewHeightConstraint.constant = self.viewModel.advancedSettingsHeight
     self.advancedContainerView.isHidden = self.viewModel.isViewHidden
     self.updateGasPriceUIs()
@@ -356,6 +358,8 @@ class KAdvancedSettingsView: XibLoaderView {
   }
 
   func updateIsPromoWallet(_ isPromo: Bool) {
+    self.isPromo = isPromo
+    if self.viewModel == nil { return }
     self.viewModel.updateIsPromoWallet(isPromo)
     self.updateGasPriceUIs()
   }

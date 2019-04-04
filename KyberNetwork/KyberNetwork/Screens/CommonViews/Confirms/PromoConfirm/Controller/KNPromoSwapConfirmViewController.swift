@@ -125,7 +125,7 @@ class KNPromoSwapConfirmViewController: KNBaseViewController {
     self.transactionFeeInUSDLabel.text = self.viewModel.feeUSDString
 
     self.confirmButton.setTitle(NSLocalizedString("confirm", value: "Confirm", comment: ""), for: .normal)
-    self.confirmButton.rounded(radius: 4.0)
+    self.confirmButton.rounded(radius: KNAppStyleType.current.buttonRadius(for: self.confirmButton.frame.height))
     self.confirmButton.applyGradient()
 
     self.cancelButton.setTitle(NSLocalizedString("cancel", value: "Cancel", comment: ""), for: .normal)

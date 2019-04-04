@@ -67,13 +67,22 @@ extension KNPromoCodeCoordinator: KNPromoCodeViewControllerDelegate {
                   return (DateFormatterUtil.shared.promoCodeDateFormatter.date(from: string) ?? Date()).timeIntervalSince1970
                 }()
                 let destinationToken = data["destination_token"] as? String ?? ""
+                let isPayment = (data["type"] as? String ?? "").lowercased() == "payment"
                 let destAddress: String? = {
-                  let type = data["type"] as? String ?? ""
-                  if type.lowercased() == "payment" {
+                  if isPayment {
                     return data["receive_address"] as? String
                   }
                   return nil
                 }()
+                let isValidAddr = Address(string: destAddress ?? "") != nil
+                if isPayment && !isValidAddr {
+                  self.navigationController.showWarningTopBannerMessage(
+                    with: NSLocalizedString("error", value: "Error", comment: ""),
+                    message: NSLocalizedString("Promo code is invalid!", value: "Promo code is invalid!", comment: ""),
+                    time: 1.5
+                  )
+                  return
+                }
                 self.rootViewController.displayLoading(text: NSLocalizedString("importing.wallet", value: "Importing wallet", comment: ""), animated: true)
                 KNCrashlyticsUtil.logCustomEvent(withName: "kybercode", customAttributes: ["type": "check_code_success"])
                 self.keystore.importWallet(type: ImportType.privateKey(privateKey: privateKey)) { [weak self] result in

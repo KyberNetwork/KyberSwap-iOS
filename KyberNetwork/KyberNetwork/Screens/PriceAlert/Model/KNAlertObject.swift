@@ -65,7 +65,12 @@ class KNAlertObject: Object {
       let date = DateFormatterUtil.shared.priceAlertAPIFormatter.date(from: string)
       return date?.timeIntervalSince1970 ?? 0.0
     }()
-    UserDefaults.standard.set(json["reward"] as? String, forKey: "\(KNEnvironment.default.displayName)_alert_\(id)")
+    if let reward = json["reward"] as? String {
+      UserDefaults.standard.set(reward, forKey: "\(KNEnvironment.default.displayName)_alert_\(id)")
+    } else {
+      UserDefaults.standard.removeObject(forKey: "\(KNEnvironment.default.displayName)_alert_\(id)")
+    }
+    UserDefaults.standard.synchronize()
   }
 
   var hasReward: Bool {
@@ -74,6 +79,7 @@ class KNAlertObject: Object {
 
   func removeRewardData() {
     UserDefaults.standard.removeObject(forKey: "\(KNEnvironment.default.displayName)_alert_\(id)")
+    UserDefaults.standard.synchronize()
   }
 
   var json: JSONDictionary {

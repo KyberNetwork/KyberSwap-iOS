@@ -250,7 +250,7 @@ class KNNewAlertViewController: KNBaseViewController {
     }
     self.viewModel.updateTargetPrice(Double(price) / pow(10.0, 18.0))
     if let _ = self.viewModel.alertID {
-      self.updateAlertSavePressed()
+      self.updateAlertWithWarningIfNeeded()
     } else {
       self.createNewAlertSavePressed()
     }
@@ -284,6 +284,21 @@ class KNNewAlertViewController: KNBaseViewController {
         )
         self.navigationController?.popViewController(animated: true)
       }
+    }
+  }
+
+  fileprivate func updateAlertWithWarningIfNeeded() {
+    guard let alertID = self.viewModel.alertID else { return }
+    if let alert = KNAlertStorage.shared.getObject(primaryKey: alertID), alert.hasReward {
+      let message = "This alert is rewarded in a running campaign, you will lose the prize if updating it, do you want to continue?".toBeLocalised()
+      let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
+      alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", value: "Cancel", comment: ""), style: .cancel, handler: nil))
+      alertController.addAction(UIAlertAction(title: NSLocalizedString("continue", value: "Continue", comment: ""), style: .destructive, handler: { _ in
+        self.updateAlertSavePressed()
+      }))
+      self.present(alertController, animated: true, completion: nil)
+    } else {
+      self.updateAlertSavePressed()
     }
   }
 

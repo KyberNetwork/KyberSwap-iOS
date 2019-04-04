@@ -547,7 +547,7 @@ extension KNProfileHomeViewController: KNAlertTableViewDelegate {
     case .update(let height):
       self.updatePriceAlertsView(tableViewHeight: height)
     case .delete(let alert):
-      let message = alert.hasReward ? "This alert is rewarded in a current running campaign, you will lose your reward if removing it, do you want to continue?".toBeLocalised() : "Do you want to delete this alert?".toBeLocalised()
+      let message = alert.hasReward ? "This alert is rewarded in a running campaign, you will lose your reward if removing it, do you want to continue?".toBeLocalised() : "Do you want to delete this alert?".toBeLocalised()
       let alertController = UIAlertController(title: NSLocalizedString("delete", value: "Delete", comment: ""), message: message, preferredStyle: .alert)
       alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", value: "Cancel", comment: ""), style: .cancel, handler: nil))
       alertController.addAction(UIAlertAction(title: NSLocalizedString("delete", value: "Delete", comment: ""), style: .destructive, handler: { _ in

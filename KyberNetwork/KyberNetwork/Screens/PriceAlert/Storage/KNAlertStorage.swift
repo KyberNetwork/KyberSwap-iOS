@@ -47,7 +47,8 @@ class KNAlertStorage {
     if self.realm == nil { return }
     self.realm.beginWrite()
     // filter removed alerts
-    let removedAlerts = self.alerts.filter({ return !alerts.contains($0) })
+    let alertIDs = alerts.map({ return $0.id })
+    let removedAlerts = self.alerts.filter({ return !alertIDs.contains($0.id) })
     removedAlerts.forEach({ $0.removeRewardData() })
     self.realm.delete(removedAlerts)
     self.realm.add(alerts, update: true)
@@ -73,6 +74,7 @@ class KNAlertStorage {
     try! self.realm.commitWrite()
     KNNotificationUtil.postNotification(for: kUpdateListAlertsNotificationKey)
   }
+
   func getObject(primaryKey: Int) -> KNAlertObject? {
     if self.realm == nil { return nil }
     return self.realm.object(ofType: KNAlertObject.self, forPrimaryKey: primaryKey)

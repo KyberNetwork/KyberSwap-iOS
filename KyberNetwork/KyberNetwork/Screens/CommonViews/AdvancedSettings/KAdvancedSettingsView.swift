@@ -132,8 +132,8 @@ class KAdvancedSettingsViewModel: NSObject {
     if self.isPromoWallet {
       let extraGas = KNGasConfiguration.extraGasPromoWallet
       self.fast = fast + extraGas
-      self.medium = medium + extraGas
-      self.slow = slow + extraGas
+      self.medium = medium
+      self.slow = slow
     } else {
       self.fast = fast
       self.medium = medium

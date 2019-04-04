@@ -154,7 +154,7 @@ class KNPriceAlertCoordinator: NSObject {
     }
   }
 
-  func loadLeaderBoardData(accessToken: String, completion: @escaping ([JSONDictionary], String?) -> Void) {
+  func loadLeaderBoardData(accessToken: String, completion: @escaping (JSONDictionary, String?) -> Void) {
     DispatchQueue.global(qos: .background).async {
       self.provider.request(.getLeaderBoardData(accessToken: accessToken)) { [weak self] result in
         guard let _ = self else { return }
@@ -164,13 +164,12 @@ class KNPriceAlertCoordinator: NSObject {
             do {
               let _ = try data.filterSuccessfulStatusCodes()
               let jsonData = try data.mapJSON() as? JSONDictionary ?? [:]
-              let jsonArr = jsonData["data"] as? [JSONDictionary] ?? []
-              completion(jsonArr, nil)
+              completion(jsonData, nil)
             } catch {
-              completion([], NSLocalizedString("can.not.decode.data", value: "Can not decode data", comment: ""))
+              completion([:], NSLocalizedString("can.not.decode.data", value: "Can not decode data", comment: ""))
             }
           case .failure(let error):
-            completion([], error.prettyError)
+            completion([:], error.prettyError)
           }
         }
       }

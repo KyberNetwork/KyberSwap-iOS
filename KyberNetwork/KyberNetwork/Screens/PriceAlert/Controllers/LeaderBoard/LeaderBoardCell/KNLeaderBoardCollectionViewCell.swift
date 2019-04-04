@@ -17,6 +17,7 @@ class KNLeaderBoardCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var targetLabel: UILabel!
   @IBOutlet weak var swingsTextLabel: UILabel!
   @IBOutlet weak var swingsLabel: UILabel!
+  @IBOutlet weak var rewardAmount: UIButton!
 
   override func awakeFromNib() {
     super.awakeFromNib()
@@ -27,6 +28,7 @@ class KNLeaderBoardCollectionViewCell: UICollectionViewCell {
     self.entryTextLabel.text = "Entry".toBeLocalised().uppercased()
     self.targetTextLabel.text = "Target".toBeLocalised().uppercased()
     self.swingsTextLabel.text = "Swing".toBeLocalised().uppercased()
+    self.rewardAmount.rounded(radius: 2.5)
     self.rounded(radius: 4.0)
   }
 
@@ -48,15 +50,18 @@ class KNLeaderBoardCollectionViewCell: UICollectionViewCell {
       let change = data["percent_change"] as? Double ?? 0.0
       return NumberFormatterUtil.shared.displayPercentage(from: change) + "%"
     }()
+    let reward = data["reward"] as? String
     let rank = data["rank"] as? Int ?? 0
     self.rankLabel.text = "\(rank)"
-    self.rankLabel.backgroundColor = rank <= 3 ? UIColor.Kyber.shamrock : UIColor(red: 158, green: 161, blue: 170)
+    self.rankLabel.backgroundColor = (reward != nil) ? UIColor.Kyber.shamrock : UIColor(red: 158, green: 161, blue: 170)
     self.userContactLabel.text = {
       if let tele = data["telegram_account"] as? String { return tele }
       if let email = data["user_email"] as? String { return email }
       return "unknown"
     }()
     self.userContactLabel.textColor = UIColor.Kyber.blueGreen
+    self.rewardAmount.setTitle(reward, for: .normal)
+    self.rewardAmount.isHidden = reward == nil
     self.layoutIfNeeded()
   }
 }

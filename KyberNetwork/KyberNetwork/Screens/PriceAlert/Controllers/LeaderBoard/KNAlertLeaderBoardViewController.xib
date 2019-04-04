@@ -20,7 +20,12 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KNAlertLeaderBoardViewController" customModule="KyberNetwork" customModuleProvider="target">
             <connections>
+                <outlet property="campaignActionButton" destination="ZNd-bN-d7b" id="z9B-x1-lgh"/>
+                <outlet property="campaignContainerView" destination="ubl-CA-9tG" id="4UB-Qt-ih1"/>
+                <outlet property="campaignDescLabel" destination="Yoc-VQ-Gmy" id="n7o-H3-Pyg"/>
+                <outlet property="campaignNameLabel" destination="id3-0i-yNE" id="roc-Cz-uw0"/>
                 <outlet property="currentUserDataContainerView" destination="JC2-VL-J3H" id="LUB-nR-Xxg"/>
+                <outlet property="endTimeLabel" destination="DtJ-h3-YV6" id="ZJj-DV-zYn"/>
                 <outlet property="entryLabel" destination="Ftp-9d-tvM" id="0ns-it-BNQ"/>
                 <outlet property="entryTextLabel" destination="79j-vg-eEE" id="BoW-S0-gyI"/>
                 <outlet property="headerContainerView" destination="uCs-28-NLH" id="GHD-80-FnF"/>
@@ -29,16 +34,25 @@
                 <outlet property="noDataLabel" destination="bA6-K6-VKn" id="UrV-s0-IQx"/>
                 <outlet property="pairLabel" destination="bfL-vh-N2q" id="w4D-fl-elc"/>
                 <outlet property="pairTextLabel" destination="fEB-GL-Xim" id="im7-DB-sMv"/>
+                <outlet property="rewardCurrencyLabel" destination="Myz-0t-CgY" id="UJx-OW-gEY"/>
+                <outlet property="startTimeLabel" destination="x5x-os-dTC" id="7aH-vq-6GA"/>
                 <outlet property="swingsLabel" destination="J9e-hb-PrY" id="Fam-jP-osq"/>
                 <outlet property="swingsTextLabel" destination="TLq-bs-BwP" id="efh-St-mnX"/>
                 <outlet property="targetLabel" destination="TUZ-HA-dGH" id="LqI-Ki-Ug4"/>
                 <outlet property="targetTextLabel" destination="Zo8-A7-F7H" id="vHY-bA-cfx"/>
                 <outlet property="topPaddingCollectionViewConstraint" destination="aIP-7B-5CZ" id="JRN-Pe-DxY"/>
+                <outlet property="topPaddingCollectionViewToCampaignDetailConstraint" destination="bpj-cR-lkP" id="hUU-q2-qNO"/>
+                <outlet property="topPaddingCollectionViewToUserInfoConstraint" destination="8Zq-lc-Y4l" id="aDN-AO-tTi"/>
+                <outlet property="topPaddingUserInfoContainerViewConstraint" destination="TaV-g7-Vm4" id="8Dn-Pd-TiG"/>
+                <outlet property="topPaddingUserInfoToCampaignDetailsConstraint" destination="3uf-ge-zfZ" id="Czt-XR-SYs"/>
                 <outlet property="userContactMethodLabel" destination="lnC-B8-Vcy" id="CO3-Re-Ic5"/>
                 <outlet property="userInfoContainerView" destination="Xk0-l0-mFG" id="zIW-Vn-tI1"/>
                 <outlet property="userNameLabel" destination="hah-WC-lls" id="vr4-FD-00e"/>
                 <outlet property="userRankLabel" destination="aNd-8Z-gTE" id="GLl-kp-21S"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outletCollection property="campaignPaddingConstraints" destination="lIi-8V-yO9" collectionClass="NSMutableArray" id="Ubm-QF-yVB"/>
+                <outletCollection property="campaignPaddingConstraints" destination="SaE-O7-N38" collectionClass="NSMutableArray" id="S3L-hi-qbJ"/>
+                <outletCollection property="campaignPaddingConstraints" destination="5Fw-eH-jPn" collectionClass="NSMutableArray" id="Xrn-zj-gKr"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -76,7 +90,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JC2-VL-J3H">
-                    <rect key="frame" x="8" y="92" width="359" height="125.5"/>
+                    <rect key="frame" x="8" y="264" width="359" height="125.5"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WBTC/USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfL-vh-N2q">
                             <rect key="frame" x="16" y="100" width="63.5" height="13.5"/>
@@ -190,8 +204,8 @@
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="QsX-1N-RAs">
-                    <rect key="frame" x="0.0" y="84" width="375" height="583"/>
-                    <color key="backgroundColor" red="0.94901960784313721" green="0.95294117647058818" blue="0.96470588235294119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <rect key="frame" x="0.0" y="404" width="375" height="263"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1Ts-Oo-ain">
                         <size key="itemSize" width="50" height="50"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -200,23 +214,93 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No data to show right now" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bA6-K6-VKn">
-                    <rect key="frame" x="79.5" y="365.5" width="216" height="20"/>
+                    <rect key="frame" x="79.5" y="525.5" width="216" height="20"/>
                     <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="16"/>
                     <color key="textColor" red="0.078431372550000003" green="0.098039215690000001" blue="0.1529411765" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ubl-CA-9tG">
+                    <rect key="frame" x="8" y="92" width="359" height="160"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Campaign Name Campaign Name Campaign Name Campaign Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="id3-0i-yNE">
+                            <rect key="frame" x="16" y="16" width="311" height="44"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="18"/>
+                            <color key="textColor" red="0.078431372550000003" green="0.098039215690000001" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start: 15 Jan 2019" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x5x-os-dTC">
+                            <rect key="frame" x="16" y="66" width="102" height="15"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="12"/>
+                            <color key="textColor" red="0.61960784310000006" green="0.63137254899999995" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End: 15 Jan 2019" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DtJ-h3-YV6">
+                            <rect key="frame" x="246.5" y="66" width="96.5" height="15"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="12"/>
+                            <color key="textColor" red="0.61960784310000006" green="0.63137254899999995" blue="0.66666666669999997" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="REWARD CURRENCY: USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Myz-0t-CgY">
+                            <rect key="frame" x="16" y="89" width="164" height="15"/>
+                            <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="12"/>
+                            <color key="textColor" red="0.35294117650000001" green="0.36862745099999999" blue="0.4039215686" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This leader board shows only filled alerts data in the last 30 days" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yoc-VQ-Gmy">
+                            <rect key="frame" x="16" y="112" width="327" height="32"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="13"/>
+                            <color key="textColor" red="0.35294117650000001" green="0.36862745099999999" blue="0.4039215686" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZNd-bN-d7b">
+                            <rect key="frame" x="311" y="16" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="S1J-Qu-yL6"/>
+                                <constraint firstAttribute="width" constant="32" id="jas-Tt-Glm"/>
+                            </constraints>
+                            <state key="normal" image="arrow_down_gray"/>
+                            <connections>
+                                <action selector="campaignActionButtonPressed:" destination="-1" eventType="touchUpInside" id="1xN-DN-3jz"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="Yoc-VQ-Gmy" secondAttribute="bottom" constant="16" id="0pd-ga-t3s"/>
+                        <constraint firstItem="Yoc-VQ-Gmy" firstAttribute="top" secondItem="Myz-0t-CgY" secondAttribute="bottom" constant="8" id="5Fw-eH-jPn"/>
+                        <constraint firstItem="DtJ-h3-YV6" firstAttribute="centerY" secondItem="x5x-os-dTC" secondAttribute="centerY" id="6Fe-Ue-IQP"/>
+                        <constraint firstItem="ZNd-bN-d7b" firstAttribute="top" secondItem="id3-0i-yNE" secondAttribute="top" id="Ag1-hd-iqP"/>
+                        <constraint firstItem="id3-0i-yNE" firstAttribute="leading" secondItem="ubl-CA-9tG" secondAttribute="leading" constant="16" id="I9b-Ot-3Qj"/>
+                        <constraint firstAttribute="trailing" secondItem="ZNd-bN-d7b" secondAttribute="trailing" constant="16" id="Mr8-ca-I2A"/>
+                        <constraint firstItem="Myz-0t-CgY" firstAttribute="top" secondItem="x5x-os-dTC" secondAttribute="bottom" constant="8" id="SaE-O7-N38"/>
+                        <constraint firstItem="id3-0i-yNE" firstAttribute="top" secondItem="ubl-CA-9tG" secondAttribute="top" constant="16" id="Vul-fS-qpI"/>
+                        <constraint firstAttribute="trailing" secondItem="Yoc-VQ-Gmy" secondAttribute="trailing" constant="16" id="aZC-2v-5ZD"/>
+                        <constraint firstAttribute="trailing" secondItem="DtJ-h3-YV6" secondAttribute="trailing" constant="16" id="chY-EE-pEp"/>
+                        <constraint firstAttribute="trailing" secondItem="id3-0i-yNE" secondAttribute="trailing" constant="32" id="eXy-jh-8JE"/>
+                        <constraint firstItem="x5x-os-dTC" firstAttribute="top" secondItem="id3-0i-yNE" secondAttribute="bottom" constant="6" id="lIi-8V-yO9"/>
+                        <constraint firstItem="Yoc-VQ-Gmy" firstAttribute="leading" secondItem="ubl-CA-9tG" secondAttribute="leading" constant="16" id="oB8-4u-fot"/>
+                        <constraint firstItem="x5x-os-dTC" firstAttribute="leading" secondItem="ubl-CA-9tG" secondAttribute="leading" constant="16" id="qyI-e6-gsh"/>
+                        <constraint firstItem="Myz-0t-CgY" firstAttribute="leading" secondItem="ubl-CA-9tG" secondAttribute="leading" constant="16" id="sEz-6c-jVZ"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.94901960784313721" green="0.95294117647058818" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
             <gestureRecognizers/>
             <constraints>
+                <constraint firstItem="JC2-VL-J3H" firstAttribute="top" secondItem="ubl-CA-9tG" secondAttribute="bottom" constant="12" id="3uf-ge-zfZ"/>
+                <constraint firstItem="QsX-1N-RAs" firstAttribute="top" secondItem="JC2-VL-J3H" secondAttribute="bottom" constant="14.5" id="8Zq-lc-Y4l"/>
                 <constraint firstItem="uCs-28-NLH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Bxp-Wq-jdz"/>
                 <constraint firstItem="bA6-K6-VKn" firstAttribute="centerY" secondItem="QsX-1N-RAs" secondAttribute="centerY" id="IbB-qB-bZE"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="uCs-28-NLH" secondAttribute="trailing" id="LQP-3y-QAh"/>
                 <constraint firstItem="bA6-K6-VKn" firstAttribute="centerX" secondItem="QsX-1N-RAs" secondAttribute="centerX" id="NIp-pK-l0I"/>
                 <constraint firstItem="JC2-VL-J3H" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="8" id="SVW-fa-zpQ"/>
-                <constraint firstItem="JC2-VL-J3H" firstAttribute="top" secondItem="uCs-28-NLH" secondAttribute="bottom" constant="8" id="TaV-g7-Vm4"/>
+                <constraint firstItem="JC2-VL-J3H" firstAttribute="top" secondItem="uCs-28-NLH" secondAttribute="bottom" constant="180" id="TaV-g7-Vm4"/>
+                <constraint firstItem="ubl-CA-9tG" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="8" id="Tge-LO-dc0"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="QsX-1N-RAs" secondAttribute="bottom" id="W9Z-Kf-JMk"/>
-                <constraint firstItem="QsX-1N-RAs" firstAttribute="top" secondItem="uCs-28-NLH" secondAttribute="bottom" id="aIP-7B-5CZ"/>
+                <constraint firstItem="QsX-1N-RAs" firstAttribute="top" secondItem="uCs-28-NLH" secondAttribute="bottom" constant="320" id="aIP-7B-5CZ"/>
+                <constraint firstItem="ubl-CA-9tG" firstAttribute="top" secondItem="uCs-28-NLH" secondAttribute="bottom" constant="8" id="ajc-dR-liJ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ubl-CA-9tG" secondAttribute="trailing" constant="8" id="bLB-Et-bby"/>
+                <constraint firstItem="QsX-1N-RAs" firstAttribute="top" secondItem="ubl-CA-9tG" secondAttribute="bottom" constant="152" id="bpj-cR-lkP"/>
                 <constraint firstItem="QsX-1N-RAs" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="i0p-Pd-AMP"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="QsX-1N-RAs" secondAttribute="trailing" id="jxE-L4-ngK"/>
                 <constraint firstItem="uCs-28-NLH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="y0d-Q0-E4P"/>
@@ -226,6 +310,7 @@
             <connections>
                 <outletCollection property="gestureRecognizers" destination="HC3-tm-ESu" appends="YES" id="clu-At-Zty"/>
             </connections>
+            <point key="canvasLocation" x="138.40000000000001" y="125.4872563718141"/>
         </view>
         <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="HC3-tm-ESu">
             <rectEdge key="edges" left="YES"/>
@@ -235,6 +320,7 @@
         </screenEdgePanGestureRecognizer>
     </objects>
     <resources>
+        <image name="arrow_down_gray" width="12" height="9"/>
         <image name="back_white_icon" width="38" height="19"/>
     </resources>
 </document>

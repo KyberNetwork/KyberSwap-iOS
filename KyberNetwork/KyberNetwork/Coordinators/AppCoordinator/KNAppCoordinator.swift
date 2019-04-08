@@ -111,6 +111,9 @@ extension KNAppCoordinator {
     KNSession.pauseInternalSession()
     KNSession.resumeInternalSession()
     self.loadBalanceCoordinator?.resume()
+
+    // check app update available
+    self.showForceAppUpdateAvailableIfNeeded()
   }
 
   func appWillEnterForeground() {
@@ -215,5 +218,29 @@ extension KNAppCoordinator {
     controller.modalPresentationStyle = .overCurrentContext
     controller.modalTransitionStyle = .crossDissolve
     self.navigationController.present(controller, animated: true, completion: nil)
+  }
+
+  func showForceAppUpdateAvailableIfNeeded() {
+    if isDebug { return }
+    DispatchQueue.global().async {
+      do {
+        let update = try Bundle.isUpdateAvailable()
+        DispatchQueue.main.async {
+          if !update { return }
+          let alertController = UIAlertController(
+            title: "Update Available!".toBeLocalised(),
+            message: "New version is available, please open AppStore to update KyberSwap now.".toBeLocalised(),
+            preferredStyle: .alert
+          )
+          alertController.addAction(UIAlertAction(title: "Open AppStore".toBeLocalised(), style: .default, handler: { _ in
+            let url = URL(string: "https://itunes.apple.com/us/app/kyberswap/id1453691309")!
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+          }))
+          self.navigationController.present(alertController, animated: true, completion: nil)
+        }
+      } catch {
+        print(error)
+      }
+    }
   }
 }

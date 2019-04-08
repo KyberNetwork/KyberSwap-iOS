@@ -458,6 +458,9 @@
 "This alert is eligible for a reward from the current competition. Do you still want to delete?" = "This alert is eligible for a reward from the current competition. Do you still want to delete?";
 "This alert is eligible for a reward from the current competition. Do you still want to update?" = "This alert is eligible for a reward from the current competition. Do you still want to update?";
 "Currency" = "Currency";
+"Update Available!" = "Update Available!";
+"New version is available, please open AppStore to update KyberSwap now." = "New version is available, please open AppStore to update KyberSwap now.";
+"Open AppStore" = "Open AppStore";
 
 // Promo code error messages
 "Promo code is invalid!" = "Promo code is invalid!";

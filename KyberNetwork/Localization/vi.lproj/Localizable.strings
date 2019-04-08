@@ -424,6 +424,9 @@
 "This alert is eligible for a reward from the current competition. Do you still want to delete?" = "Thông báo này đủ điều kiện nhận phần thưởng từ cuộc thi hiện tại. Bạn vẫn muốn xoá?";
 "This alert is eligible for a reward from the current competition. Do you still want to update?" = "Thông báo này đủ điều kiện nhận phần thưởng từ cuộc thi hiện tại. Bạn vẫn muốn cập nhật lại?";
 "Currency" = "Đơn vị";
+"Update Available!" = "Cập nhật phiên bản!";
+"New version is available, please open AppStore to update KyberSwap now." = "Phiên bản mới đã có, vui lòng mở AppStore để cập nhật KyberSwap ngay bây giờ.";
+"Open AppStore" = "Mở AppStore";
 
 "can.not.decode.data" = "Không thể giải mã dữ liệu";
 "something.went.wrong.please.try.again" = "Đã xảy ra lỗi, vui lòng thử lại";

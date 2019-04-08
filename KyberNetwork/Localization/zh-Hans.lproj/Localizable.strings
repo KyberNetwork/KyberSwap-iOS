@@ -448,6 +448,9 @@
 "This alert is eligible for a reward from the current competition. Do you still want to delete?" = "This alert is eligible for a reward from the current competition. Do you still want to delete?";
 "This alert is eligible for a reward from the current competition. Do you still want to update?" = "This alert is eligible for a reward from the current competition. Do you still want to update?";
 "Currency" = "货币";
+"Update Available!" = "可用更新!";
+"New version is available, please open AppStore to update KyberSwap now." = "新版本可用，请立即打开AppStore更新KyberSwap。";
+"Open AppStore" = "打开AppStore";
 
 "can.not.decode.data" = "无法解码数据";
 "something.went.wrong.please.try.again" = "出了点问题，请再试一次";
@@ -459,6 +462,7 @@
 "rate.our.app" = "评价我们的申请";
 "skip" = "跳跃";
 "you.can.backup.your.wallet.later" = "您可以稍后备份您的钱包";
+
 
 // Promo code error messages
 "Promo code is invalid!" = "促销代码无效！";

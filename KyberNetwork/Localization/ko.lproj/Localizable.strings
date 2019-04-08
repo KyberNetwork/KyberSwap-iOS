@@ -455,6 +455,9 @@
 "This alert is eligible for a reward from the current competition. Do you still want to delete?" = "This alert is eligible for a reward from the current competition. Do you still want to delete?";
 "This alert is eligible for a reward from the current competition. Do you still want to update?" = "This alert is eligible for a reward from the current competition. Do you still want to update?";
 "Currency" = "통화";
+"Update Available!" = "Update Available!";
+"New version is available, please open AppStore to update KyberSwap now." = "New version is available, please open AppStore to update KyberSwap now.";
+"Open AppStore" = "Open AppStore";
 
 "can.not.decode.data" = "데이터를 디코딩 할 수 없습니다.";
 "something.went.wrong.please.try.again" = "문제가 발생했습니다. 다시 시도하십시오";

@@ -86,6 +86,16 @@ class KNSignInViewController: KNBaseViewController {
     self.secureTextButton.setImage(image, for: .normal)
   }
 
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    self.emailTextField.becomeFirstResponder()
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    self.view.endEditing(true)
+  }
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     self.headerContainerView.removeSublayer(at: 0)

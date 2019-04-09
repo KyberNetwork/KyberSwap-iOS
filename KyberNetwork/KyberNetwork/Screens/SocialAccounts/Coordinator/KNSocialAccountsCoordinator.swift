@@ -12,6 +12,11 @@ enum KNSocialAccountsType {
   case google(name: String, email: String, icon: String, accessToken: String)
   case twitter(name: String, email: String, icon: String, userID: String)
   case normal(email: String, password: String, name: String)
+
+  var isEmail: Bool {
+    if case .normal = self { return true }
+    return false
+  }
 }
 
 class KNSocialAccountsCoordinator: NSObject, Coordinator {
@@ -21,10 +26,19 @@ class KNSocialAccountsCoordinator: NSObject, Coordinator {
   var navController: UINavigationController?
 
   fileprivate var isSignIn: Bool = false
+  fileprivate var isSubscribe: Bool = false
 
   lazy var signInViewController: KNSignInViewController = {
     let viewModel = KNSignInViewModel()
     let controller = KNSignInViewController(viewModel: viewModel)
+    controller.loadViewIfNeeded()
+    controller.delegate = self
+    return controller
+  }()
+
+  lazy var signUpViewController: KNSignUpViewController = {
+    let viewModel = KNSignUpViewModel()
+    let controller = KNSignUpViewController(viewModel: viewModel)
     controller.loadViewIfNeeded()
     controller.delegate = self
     return controller
@@ -45,6 +59,29 @@ class KNSocialAccountsCoordinator: NSObject, Coordinator {
 
   func stop() {
     self.navigationController.dismiss(animated: true, completion: nil)
+  }
+}
+
+extension KNSocialAccountsCoordinator: KNSignUpViewControllerDelegate {
+  func signUpViewController(_ controller: KNSignUpViewController, run event: KNSignUpViewEvent) {
+    self.isSignIn = false
+    switch event {
+    case .back:
+      self.navController?.popViewController(animated: true)
+    case .pressedGoogle:
+      self.authenticateGoogle()
+    case .pressedFacebook:
+      self.authenticateFacebook()
+    case .pressedTwitter:
+      self.authenticateTwitter()
+    case .signIn:
+      self.navController?.popViewController(animated: true)
+    case .openTAC:
+      UIApplication.shared.open(URL(string: "https://files.kyberswap.com/tac.pdf")!, options: [:], completionHandler: nil)
+    case .signUp(let accountType, let isSubs):
+      self.isSubscribe = isSubs
+      self.proceedSignUp(accountType: accountType)
+    }
   }
 }
 
@@ -72,7 +109,7 @@ extension KNSocialAccountsCoordinator: KNSignInViewControllerDelegate {
     case .signInWithTwitter:
       self.authenticateTwitter()
     case .signUp:
-      print("Sign up")
+      self.navController?.pushViewController(self.signUpViewController, animated: true)
     }
   }
 }

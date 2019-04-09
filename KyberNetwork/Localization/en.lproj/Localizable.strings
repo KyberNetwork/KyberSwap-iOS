@@ -516,7 +516,6 @@
 "Email Address" = "Email Address";
 "Password" = "Password";
 "Forgot Password?" = "Forgot Password?";
-"Please enter a valid email address to continue" = "Please enter a valid email address to continue";
 "Please enter a password to continue" = "Please enter a password to continue";
 "Don't have an account?" = "Don't have an account?";
 "Sign Up Now" = "Sign Up Now";
@@ -529,4 +528,7 @@
 "Agree to" = "Agree to";
 "Terms & Conditions" = "Terms & Conditions";
 "Already a member?" = "Already a member?";
+"Please enter a valid email address to continue" = "Please enter a valid email address to continue";
 "Please enter a display name to continue" = "Please enter a display name to continue";
+"Please accept our Terms and Conditions to continue" = "Please accept our Terms and Conditions to continue";
+"Please enter a valid password to continue" = "Please enter a valid password to continue";

@@ -19,63 +19,22 @@ enum KNSocialAccountsType {
   }
 }
 
-class KNSocialAccountsCoordinator: NSObject, Coordinator {
-
-  let navigationController: UINavigationController
-  var coordinators: [Coordinator] = []
-  var navController: UINavigationController?
-
-  fileprivate var isSignIn: Bool = false
-  fileprivate var isSubscribe: Bool = false
-
-  lazy var signInViewController: KNSignInViewController = {
-    let viewModel = KNSignInViewModel()
-    let controller = KNSignInViewController(viewModel: viewModel)
-    controller.loadViewIfNeeded()
-    controller.delegate = self
-    return controller
-  }()
-
-  lazy var signUpViewController: KNSignUpViewController = {
-    let viewModel = KNSignUpViewModel()
-    let controller = KNSignUpViewController(viewModel: viewModel)
-    controller.loadViewIfNeeded()
-    controller.delegate = self
-    return controller
-  }()
-
-  init(
-    navigationController: UINavigationController
-    ) {
-    self.navigationController = navigationController
-  }
-
-  func start(isSignIn: Bool) {
-    let rootVC = isSignIn ? self.signInViewController : self.signInViewController
-    self.navController = UINavigationController(rootViewController: rootVC)
-    self.navController?.setNavigationBarHidden(true, animated: false)
-    self.navigationController.present(self.navController!, animated: true, completion: nil)
-  }
-
-  func stop() {
-    self.navigationController.dismiss(animated: true, completion: nil)
-  }
-}
-
-extension KNSocialAccountsCoordinator: KNSignUpViewControllerDelegate {
+extension KNProfileHomeCoordinator: KNSignUpViewControllerDelegate {
   func signUpViewController(_ controller: KNSignUpViewController, run event: KNSignUpViewEvent) {
     self.isSignIn = false
     switch event {
     case .back:
-      self.navController?.popViewController(animated: true)
+      self.navigationController.popViewController(animated: true)
+      self.signUpViewController = nil
     case .pressedGoogle:
       self.authenticateGoogle()
     case .pressedFacebook:
       self.authenticateFacebook()
     case .pressedTwitter:
       self.authenticateTwitter()
-    case .signIn:
-      self.navController?.popViewController(animated: true)
+    case .alreadyMemberSignIn:
+      self.navigationController.popViewController(animated: true)
+      self.signUpViewController = nil
     case .openTAC:
       UIApplication.shared.open(URL(string: "https://files.kyberswap.com/tac.pdf")!, options: [:], completionHandler: nil)
     case .signUp(let accountType, let isSubs):
@@ -85,17 +44,10 @@ extension KNSocialAccountsCoordinator: KNSignUpViewControllerDelegate {
   }
 }
 
-extension KNSocialAccountsCoordinator: KNSignInViewControllerDelegate {
-  func signInViewController(_ controller: KNSignInViewController, run event: KNSignInViewEvent) {
-    guard let navController = self.navController else { return }
+extension KNProfileHomeCoordinator {
+  func profileHomeViewController(_ controller: KNProfileHomeViewController, run event: KNSignInViewEvent) {
     self.isSignIn = true
     switch event {
-    case .back:
-      if navController.viewControllers.count > 2 {
-        navController.popViewController(animated: true)
-      } else {
-        self.stop()
-      }
     case .forgotPassword:
       print("Forgot password")
     case .signInWithEmail(let email, let password):
@@ -108,14 +60,26 @@ extension KNSocialAccountsCoordinator: KNSignInViewControllerDelegate {
       self.authenticateGoogle()
     case .signInWithTwitter:
       self.authenticateTwitter()
-    case .signUp:
-      self.navController?.pushViewController(self.signUpViewController, animated: true)
+    case .dontHaveAccountSignUp:
+      self.openSignUpView()
     }
+  }
+
+  fileprivate func openSignUpView() {
+    self.signUpViewController = nil
+    self.signUpViewController = {
+      let viewModel = KNSignUpViewModel()
+      let controller = KNSignUpViewController(viewModel: viewModel)
+      controller.loadViewIfNeeded()
+      controller.delegate = self
+      return controller
+    }()
+    self.navigationController.pushViewController(self.signUpViewController!, animated: true)
   }
 }
 
 // MARK: Handle Facebook authentication
-extension KNSocialAccountsCoordinator {
+extension KNProfileHomeCoordinator {
   fileprivate func authenticateFacebook() {
     LoginManager().logOut() // TODO: Remove
     self.retrieveFacebokAccessToken { (accessToken, isError) in
@@ -155,7 +119,7 @@ extension KNSocialAccountsCoordinator {
       return
     }
     let loginManager = LoginManager()
-    loginManager.logIn(readPermissions: [.publicProfile, .email], viewController: self.navController) { loginResult in
+    loginManager.logIn(readPermissions: [.publicProfile, .email], viewController: self.navigationController) { loginResult in
       switch loginResult {
       case .failed(let error):
         print("Retrieving facebook access token failed: \(error.prettyError)")
@@ -191,7 +155,7 @@ extension KNSocialAccountsCoordinator {
           return data["url"] as? String ?? ""
         }()
         let accountType = KNSocialAccountsType.facebook(name: name, email: email, icon: icon, accessToken: accessToken.authenticationToken)
-        self.navController?.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(name), you are using \(email)", time: 2.0) // TODO: Remove
+        self.navigationController.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(name), you are using \(email)", time: 2.0) // TODO: Remove
         completion(.success(accountType))
       case .failed(let error):
         print(error)
@@ -202,7 +166,7 @@ extension KNSocialAccountsCoordinator {
 }
 
 // MARK: Handle Google authentication
-extension KNSocialAccountsCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
+extension KNProfileHomeCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
   fileprivate func authenticateGoogle() {
     GIDSignIn.sharedInstance()?.signOut() // TOMO: Remove
     GIDSignIn.sharedInstance()?.clientID = KNEnvironment.default.googleSignInClientID
@@ -213,14 +177,14 @@ extension KNSocialAccountsCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
 
   func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
     if error != nil {
-      self.navController?.showErrorTopBannerMessage(
+      self.navigationController.showErrorTopBannerMessage(
         with: NSLocalizedString("error", value: "Error", comment: ""),
         message: "Can not get your information from Google. Please try again".toBeLocalised(),
         time: 2.0
       )
     } else {
       guard let email = user.profile.email, !email.isEmpty else {
-        self.navController?.showErrorTopBannerMessage(
+        self.navigationController.showErrorTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
           message: "Can not get email from your Google account".toBeLocalised(),
           time: 2.0
@@ -236,7 +200,7 @@ extension KNSocialAccountsCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
       }()
       print("Get user information with: \(fullName) \(email) \(icon) \(idToken)")
       let accountType = KNSocialAccountsType.google(name: fullName, email: email, icon: icon, accessToken: idToken)
-      self.navController?.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(fullName), you are using \(email)", time: 2.0) // TODO: Remove
+      self.navigationController.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(fullName), you are using \(email)", time: 2.0) // TODO: Remove
       self.proceedSignIn(accountType: accountType)
     }
   }
@@ -245,21 +209,21 @@ extension KNSocialAccountsCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
   }
 
   func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
-    self.navController?.dismiss(animated: true, completion: nil)
+    self.navigationController.dismiss(animated: true, completion: nil)
   }
 
   func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
-    self.navController?.present(viewController, animated: true, completion: nil)
+    self.navigationController.present(viewController, animated: true, completion: nil)
   }
 }
 
 // MARK: Handle Twitter authentication
-extension KNSocialAccountsCoordinator {
+extension KNProfileHomeCoordinator {
   fileprivate func authenticateTwitter() {
     TWTRTwitter.sharedInstance().logIn { [weak self] (session, error) in
       guard let `self` = self else { return }
       guard let session = session, error == nil else {
-        self.navController?.showErrorTopBannerMessage(
+        self.navigationController.showErrorTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
           message: "Can not get your information from Twitter. Please try again".toBeLocalised(),
           time: 2.0
@@ -272,7 +236,7 @@ extension KNSocialAccountsCoordinator {
       client.requestEmail(forCurrentUser: { [weak self] (email, error) in
         guard let `self` = self else { return }
         guard let email = email, !email.isEmpty, error == nil else {
-          self.navController?.showErrorTopBannerMessage(
+          self.navigationController.showErrorTopBannerMessage(
             with: NSLocalizedString("error", value: "Error", comment: ""),
             message: "Can not get your information from Twitter. Please try again".toBeLocalised(),
             time: 2.0
@@ -280,7 +244,7 @@ extension KNSocialAccountsCoordinator {
           return
         }
         let accountType = KNSocialAccountsType.twitter(name: name, email: email, icon: "", userID: userID)
-        self.navController?.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(name), you are using \(email)", time: 2.0) // TODO: Remove
+        self.navigationController.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(name), you are using \(email)", time: 2.0) // TODO: Remove
         if self.isSignIn {
           self.proceedSignIn(accountType: accountType)
         } else {
@@ -292,7 +256,7 @@ extension KNSocialAccountsCoordinator {
 }
 
 // MARK: Handle sign in/up
-extension KNSocialAccountsCoordinator {
+extension KNProfileHomeCoordinator {
   fileprivate func proceedSignIn(accountType: KNSocialAccountsType) {
   }
 

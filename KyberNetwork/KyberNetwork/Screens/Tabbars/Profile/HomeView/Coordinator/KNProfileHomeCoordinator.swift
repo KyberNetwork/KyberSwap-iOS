@@ -9,7 +9,7 @@ import FacebookLogin
 import FacebookCore
 import GoogleSignIn
 
-class KNProfileHomeCoordinator: Coordinator {
+class KNProfileHomeCoordinator: NSObject, Coordinator {
 
   let navigationController: UINavigationController
   var coordinators: [Coordinator] = []
@@ -30,10 +30,14 @@ class KNProfileHomeCoordinator: Coordinator {
 
   fileprivate var kycCoordinator: KYCCoordinator?
   fileprivate var manageAlertCoordinator: KNManageAlertCoordinator?
-  fileprivate var socialAccountCoordiantor: KNSocialAccountsCoordinator?
 
   fileprivate var loadUserInfoTimer: Timer?
   fileprivate var lastUpdatedUserInfo: Date?
+
+  internal var isSignIn: Bool = false
+  internal var isSubscribe: Bool = false
+
+  internal var signUpViewController: KNSignUpViewController?
 
   init(
     navigationController: UINavigationController = UINavigationController(),
@@ -172,43 +176,6 @@ extension KNProfileHomeCoordinator {
       if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.pause() }
     }))
     self.rootViewController.present(alertController, animated: true, completion: nil)
-  }
-
-  fileprivate func openSignInView() {
-    if let user = IEOUserStorage.shared.user {
-      // User already signed in
-      let text = NSLocalizedString("welcome.back.user", value: "Welcome back, %@", comment: "")
-      let message = String(format: text, user.name)
-      self.navigationController.showSuccessTopBannerMessage(with: "", message: message)
-      return
-    }
-    // Clear old session
-    URLCache.shared.removeAllCachedResponses()
-    URLCache.shared.diskCapacity = 0
-    URLCache.shared.memoryCapacity = 0
-
-    let storage = HTTPCookieStorage.shared
-    storage.cookies?.forEach({ storage.deleteCookie($0) })
-    self.socialAccountCoordiantor = nil
-    self.socialAccountCoordiantor = KNSocialAccountsCoordinator(navigationController: self.navigationController)
-    self.socialAccountCoordiantor?.start(isSignIn: true)
-  }
-
-  fileprivate func openSignUpView() {
-    if let url = URL(string: KNAppTracker.getKyberProfileBaseString() + "/users/sign_up?lang=\(Locale.current.kyberSupportedLang)&isInternalApp=true") {
-      // Clear old session
-      URLCache.shared.removeAllCachedResponses()
-      URLCache.shared.diskCapacity = 0
-      URLCache.shared.memoryCapacity = 0
-
-      let storage = HTTPCookieStorage.shared
-      storage.cookies?.forEach({ storage.deleteCookie($0) })
-      self.webViewSignInVC = KGOInAppSignInViewController(
-        with: url,
-        isSignIn: false
-      )
-      self.navigationController.pushViewController(self.webViewSignInVC!, animated: true)
-    }
   }
 
   @objc func appCoordinatorDidReceiveCallback(_ sender: Notification) {
@@ -390,10 +357,6 @@ extension KNProfileHomeCoordinator {
 extension KNProfileHomeCoordinator: KNProfileHomeViewControllerDelegate {
   func profileHomeViewController(_ controller: KNProfileHomeViewController, run event: KNProfileHomeViewEvent) {
     switch event {
-    case .signIn:
-      self.openSignInView()
-    case .signUp:
-      self.openSignUpView()
     case .logOut:
       self.handleUserSignOut()
     case .openVerification:

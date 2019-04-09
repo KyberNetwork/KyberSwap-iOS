@@ -9,7 +9,7 @@ enum KNSignUpViewEvent {
   case pressedTwitter
   case signUp(accountType: KNSocialAccountsType, isSubscribe: Bool)
   case openTAC
-  case signIn
+  case alreadyMemberSignIn
 }
 
 class KNSignUpViewModel {
@@ -185,7 +185,7 @@ class KNSignUpViewController: KNBaseViewController {
   }
 
   @IBAction func signInButtonPressed(_ sender: Any) {
-    self.delegate?.signUpViewController(self, run: .signIn)
+    self.delegate?.signUpViewController(self, run: .alreadyMemberSignIn)
   }
 
   @IBAction func subscribeButtonPressed(_ sender: Any) {

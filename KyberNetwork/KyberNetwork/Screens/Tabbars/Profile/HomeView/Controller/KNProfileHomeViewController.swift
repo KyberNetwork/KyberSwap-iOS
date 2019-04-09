@@ -1,5 +1,6 @@
 // Copyright SIX DAY LLC. All rights reserved.
 
+//swiftlint:disable file_length
 import UIKit
 import Moya
 import QRCodeReaderViewController
@@ -7,8 +8,6 @@ import TrustCore
 import Crashlytics
 
 enum KNProfileHomeViewEvent {
-  case signIn
-  case signUp
   case logOut
   case openVerification
   case addPriceAlert
@@ -17,8 +16,38 @@ enum KNProfileHomeViewEvent {
   case leaderBoard
 }
 
+enum KNSignInViewEvent {
+  case signInWithEmail(email: String, password: String)
+  case signInWithFacebook
+  case signInWithGoogle
+  case signInWithTwitter
+  case forgotPassword
+  case dontHaveAccountSignUp
+}
+
+class KNSignInViewModel {
+  var isSecureText: Bool = true
+
+  var dontHaveAccountAttributedText: NSAttributedString = {
+    let normalAttributes: [NSAttributedStringKey: Any] = [
+      NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
+      NSAttributedStringKey.foregroundColor: UIColor(red: 90, green: 94, blue: 103),
+    ]
+    let orangeAttributes: [NSAttributedStringKey: Any] = [
+      NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
+      NSAttributedStringKey.foregroundColor: UIColor(red: 254, green: 163, blue: 76),
+    ]
+    let attributedText = NSMutableAttributedString()
+    attributedText.append(NSAttributedString(string: "Don't have an account? ".toBeLocalised(), attributes: normalAttributes))
+    attributedText.append(NSAttributedString(string: "Sign Up Now", attributes: orangeAttributes)
+    )
+    return attributedText
+  }()
+}
+
 protocol KNProfileHomeViewControllerDelegate: class {
   func profileHomeViewController(_ controller: KNProfileHomeViewController, run event: KNProfileHomeViewEvent)
+  func profileHomeViewController(_ controller: KNProfileHomeViewController, run event: KNSignInViewEvent)
 }
 
 class KNProfileHomeViewController: KNBaseViewController {
@@ -28,9 +57,18 @@ class KNProfileHomeViewController: KNBaseViewController {
 
   @IBOutlet weak var navTitleLabel: UILabel!
   @IBOutlet weak var notSignInView: UIView!
-  @IBOutlet weak var notSignInTitleLabel: UILabel!
-  @IBOutlet weak var notSignInDescLabel: UILabel!
+
+  // Not Sign in view
+  @IBOutlet weak var headerContainerView: UIView!
+  @IBOutlet weak var notSignInNavTitle: UILabel!
+  @IBOutlet weak var orTextLabel: UILabel!
+  @IBOutlet weak var emailTextField: UITextField!
+  @IBOutlet weak var passwordTextField: UITextField!
+  @IBOutlet weak var forgotPassButton: UIButton!
+  @IBOutlet weak var secureTextButton: UIButton!
+  @IBOutlet weak var dontHaveAnAccountButton: UIButton!
   @IBOutlet weak var signInButton: UIButton!
+  @IBOutlet var dashLineViews: [UIView]!
 
   @IBOutlet weak var signInHeaderView: UIView!
   @IBOutlet weak var myProfileTextLabel: UILabel!
@@ -74,6 +112,7 @@ class KNProfileHomeViewController: KNBaseViewController {
 
   weak var delegate: KNProfileHomeViewControllerDelegate?
   fileprivate var viewModel: KNProfileHomeViewModel
+  fileprivate let signInViewModel: KNSignInViewModel
 
   fileprivate var walletTimer: Timer?
 
@@ -81,6 +120,7 @@ class KNProfileHomeViewController: KNBaseViewController {
 
   init(viewModel: KNProfileHomeViewModel) {
     self.viewModel = viewModel
+    self.signInViewModel = KNSignInViewModel()
     super.init(nibName: KNProfileHomeViewController.className, bundle: nil)
   }
 
@@ -114,10 +154,16 @@ class KNProfileHomeViewController: KNBaseViewController {
 
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    self.notSignInView.removeSublayer(at: 0)
-    self.notSignInView.applyGradient(with: UIColor.Kyber.backgroundColors)
     self.signInHeaderView.removeSublayer(at: 0)
     self.signInHeaderView.applyGradient(with: UIColor.Kyber.headerColors)
+
+    self.headerContainerView.removeSublayer(at: 0)
+    self.headerContainerView.applyGradient(with: UIColor.Kyber.headerColors)
+    self.dashLineViews.forEach({
+      $0.dashLine(width: 1.0, color: UIColor.Kyber.dashLine)
+    })
+    self.signInButton.removeSublayer(at: 0)
+    self.signInButton.applyGradient()
   }
 
   fileprivate func setupUI() {
@@ -128,26 +174,30 @@ class KNProfileHomeViewController: KNBaseViewController {
   }
 
   fileprivate func setupNotSignInView() {
-    self.notSignInView.applyGradient(with: UIColor.Kyber.backgroundColors)
+    self.headerContainerView.applyGradient(with: UIColor.Kyber.headerColors)
+    self.dashLineViews.forEach({
+      $0.backgroundColor = .clear
+      $0.dashLine(width: 1.0, color: UIColor.Kyber.dashLine)
+    })
+    self.signInButton.applyGradient()
+    self.notSignInNavTitle.text = NSLocalizedString("sign.in", value: "Sign In", comment: "")
+    self.orTextLabel.text = "or".toBeLocalised()
+    self.signInButton.setTitle(NSLocalizedString("sign.in", value: "Sign In", comment: ""), for: .normal)
+    self.signInButton.rounded(radius: KNAppStyleType.current.buttonRadius(for: self.signInButton.frame.height))
+    self.emailTextField.placeholder = "Email Address".toBeLocalised()
+    self.passwordTextField.placeholder = "Password".toBeLocalised()
+    self.forgotPassButton.setTitle("Forgot Password?".toBeLocalised(), for: .normal)
+    self.dontHaveAnAccountButton.setAttributedTitle(self.signInViewModel.dontHaveAccountAttributedText, for: .normal)
+    self.passwordTextField.isSecureTextEntry = self.signInViewModel.isSecureText
+    let image = self.signInViewModel.isSecureText ? UIImage(named: "hide_secure_text") : UIImage(named: "show_secure_text")
+    self.secureTextButton.setImage(image, for: .normal)
     self.signInButton.rounded(
       radius: self.appStyle.buttonRadius(for: self.signInButton.frame.height)
     )
-    self.notSignInTitleLabel.text = NSLocalizedString(
-      "profile", value: "Profile",
-      comment: ""
-    )
-    self.notSignInTitleLabel.addLetterSpacing()
-    self.notSignInDescLabel.text = NSLocalizedString(
-      "welcome.third.screen.description", value: "Profile process just got simpler. Straight from the app.",
-      comment: ""
-    )
-    self.notSignInDescLabel.addLetterSpacing()
     self.signInButton.setTitle(
       NSLocalizedString("sign.in", value: "Sign In", comment: ""),
       for: .normal
     )
-    self.signInButton.backgroundColor = UIColor.white
-    self.signInButton.setTitleColor(UIColor(red: 251, green: 121, blue: 93), for: .normal)
     self.signInButton.addTextSpacing()
     self.notSignInView.isHidden = self.viewModel.isUserSignedIn
   }
@@ -381,9 +431,53 @@ class KNProfileHomeViewController: KNBaseViewController {
     self.view.layoutIfNeeded()
   }
 
+  @IBAction func forgotButtonPressed(_ sender: Any) {
+    self.delegate?.profileHomeViewController(self, run: .forgotPassword)
+  }
+
+  @IBAction func facebookButtonPressed(_ sender: Any) {
+    self.delegate?.profileHomeViewController(self, run: .signInWithFacebook)
+  }
+
+  @IBAction func googleButtonPressed(_ sender: Any) {
+    self.delegate?.profileHomeViewController(self, run: .signInWithGoogle)
+  }
+
+  @IBAction func twitterButtonPressed(_ sender: Any) {
+    self.delegate?.profileHomeViewController(self, run: .signInWithTwitter)
+  }
+
+  @IBAction func secureTextButtonPressed(_ sender: Any) {
+    self.signInViewModel.isSecureText = !self.signInViewModel.isSecureText
+    self.passwordTextField.isSecureTextEntry = self.signInViewModel.isSecureText
+    let image = self.signInViewModel.isSecureText ? UIImage(named: "hide_secure_text") : UIImage(named: "show_secure_text")
+    self.secureTextButton.setImage(image, for: .normal)
+  }
+
   @IBAction func signInButtonPressed(_ sender: Any) {
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "sign_in_button_pressed"])
-    self.delegate?.profileHomeViewController(self, run: .signIn)
+    let email = self.emailTextField.text ?? ""
+    let pass = self.passwordTextField.text ?? ""
+    guard email.isValidEmail() else {
+      self.showErrorTopBannerMessage(
+        with: NSLocalizedString("error", value: "Error", comment: ""),
+        message: "Please enter a valid email address to continue".toBeLocalised(),
+        time: 2.0
+      )
+      return
+    }
+    guard !pass.isEmpty else {
+      self.showErrorTopBannerMessage(
+        with: NSLocalizedString("error", value: "Error", comment: ""),
+        message: "Please enter a password to continue".toBeLocalised(),
+        time: 2.0
+      )
+      return
+    }
+    self.delegate?.profileHomeViewController(self, run: .signInWithEmail(email: email, password: pass))
+  }
+
+  @IBAction func dontHaveAccountButtonPressed(_ sender: Any) {
+    self.delegate?.profileHomeViewController(self, run: .dontHaveAccountSignUp)
   }
 
   @IBAction func logOutButtonPressed(_ sender: Any) {

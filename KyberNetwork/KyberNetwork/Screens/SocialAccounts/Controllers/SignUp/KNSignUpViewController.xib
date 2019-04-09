@@ -73,7 +73,7 @@
                         <constraint firstAttribute="bottom" secondItem="Oov-94-Zq9" secondAttribute="bottom" constant="16" id="oy9-E5-T9D"/>
                     </constraints>
                 </view>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ZF-fP-eVn">
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ZF-fP-eVn">
                     <rect key="frame" x="0.0" y="84" width="375" height="583"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kFt-fJ-0BJ">

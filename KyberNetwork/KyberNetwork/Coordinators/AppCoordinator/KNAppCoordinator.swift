@@ -105,15 +105,15 @@ extension KNAppCoordinator {
     IQKeyboardManager.shared().isEnabled = true
     IQKeyboardManager.shared().shouldResignOnTouchOutside = true
     KNSession.resumeInternalSession()
+
+    // check app update available
+    self.showForceAppUpdateAvailableIfNeeded()
   }
 
   func appDidBecomeActive() {
     KNSession.pauseInternalSession()
     KNSession.resumeInternalSession()
     self.loadBalanceCoordinator?.resume()
-
-    // check app update available
-    self.showForceAppUpdateAvailableIfNeeded()
   }
 
   func appWillEnterForeground() {
@@ -221,7 +221,6 @@ extension KNAppCoordinator {
   }
 
   func showForceAppUpdateAvailableIfNeeded() {
-    if isDebug { return }
     DispatchQueue.global().async {
       do {
         let update = try Bundle.isUpdateAvailable()

@@ -5,6 +5,9 @@ import Moya
 import Branch
 import Result
 import Crashlytics
+import FacebookLogin
+import FacebookCore
+import GoogleSignIn
 
 class KNProfileHomeCoordinator: Coordinator {
 
@@ -27,6 +30,7 @@ class KNProfileHomeCoordinator: Coordinator {
 
   fileprivate var kycCoordinator: KYCCoordinator?
   fileprivate var manageAlertCoordinator: KNManageAlertCoordinator?
+  fileprivate var socialAccountCoordiantor: KNSocialAccountsCoordinator?
 
   fileprivate var loadUserInfoTimer: Timer?
   fileprivate var lastUpdatedUserInfo: Date?
@@ -157,6 +161,9 @@ extension KNProfileHomeCoordinator {
     )
     alertController.addAction(UIAlertAction(title: NSLocalizedString("cancel", value: "Cancel", comment: ""), style: .cancel, handler: nil))
     alertController.addAction(UIAlertAction(title: NSLocalizedString("log.out", value: "Log Out", comment: ""), style: .default, handler: { _ in
+      // log user out of facebook
+      if AccessToken.current != nil { LoginManager().logOut() }
+      GIDSignIn.sharedInstance().signOut()
       self.loadUserInfoTimer?.invalidate()
       self.lastUpdatedUserInfo = nil
       IEOUserStorage.shared.signedOut()
@@ -175,22 +182,16 @@ extension KNProfileHomeCoordinator {
       self.navigationController.showSuccessTopBannerMessage(with: "", message: message)
       return
     }
-    let clientID: String = KNEnvironment.default.clientID
-    let redirectLink: String = KNEnvironment.default.redirectLink
-    if let url = URL(string: KNAppTracker.getKyberProfileBaseString() + "/oauth/authorize?lang=\(Locale.current.kyberSupportedLang)&isInternalApp=true&client_id=\(clientID)&redirect_uri=\(redirectLink)&response_type=code&state=\(KNSecret.state)") {
-      // Clear old session
-      URLCache.shared.removeAllCachedResponses()
-      URLCache.shared.diskCapacity = 0
-      URLCache.shared.memoryCapacity = 0
+    // Clear old session
+    URLCache.shared.removeAllCachedResponses()
+    URLCache.shared.diskCapacity = 0
+    URLCache.shared.memoryCapacity = 0
 
-      let storage = HTTPCookieStorage.shared
-      storage.cookies?.forEach({ storage.deleteCookie($0) })
-      self.webViewSignInVC = KGOInAppSignInViewController(
-        with: url,
-        isSignIn: true
-      )
-      self.navigationController.pushViewController(self.webViewSignInVC!, animated: true)
-    }
+    let storage = HTTPCookieStorage.shared
+    storage.cookies?.forEach({ storage.deleteCookie($0) })
+    self.socialAccountCoordiantor = nil
+    self.socialAccountCoordiantor = KNSocialAccountsCoordinator(navigationController: self.navigationController)
+    self.socialAccountCoordiantor?.start(isSignIn: true)
   }
 
   fileprivate func openSignUpView() {

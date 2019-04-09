@@ -6,6 +6,7 @@ import BigInt
 import Moya
 import Crashlytics
 import OneSignal
+import TwitterKit
 
 class KNAppCoordinator: NSObject, Coordinator {
 
@@ -105,6 +106,10 @@ extension KNAppCoordinator {
     IQKeyboardManager.shared().isEnabled = true
     IQKeyboardManager.shared().shouldResignOnTouchOutside = true
     KNSession.resumeInternalSession()
+    TWTRTwitter.sharedInstance().start(
+      withConsumerKey: KNEnvironment.default.twitterConsumerID,
+      consumerSecret: KNEnvironment.default.twitterSecretKey
+    )
   }
 
   func appDidBecomeActive() {

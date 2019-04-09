@@ -152,6 +152,27 @@ enum KNEnvironment: Int {
     }
   }
 
+  var googleSignInClientID: String {
+    switch KNEnvironment.default {
+    case .mainnetTest, .production: return KNSecret.prodGoogleClientID
+    case .ropsten, .rinkeby, .kovan, .staging: return KNSecret.devGoogleClientID
+    }
+  }
+
+  var twitterConsumerID: String {
+    switch KNEnvironment.default {
+    case .mainnetTest, .production: return KNSecret.prodTwitterConsumerID
+    case .ropsten, .rinkeby, .kovan, .staging: return KNSecret.devTwitterConsumerID
+    }
+  }
+
+  var twitterSecretKey: String {
+    switch KNEnvironment.default {
+    case .mainnetTest, .production: return KNSecret.prodTwitterSecretKey
+    case .ropsten, .rinkeby, .kovan, .staging: return KNSecret.devTwitterSecretKey
+    }
+  }
+
   var nodeEndpoint: String { return "" }
 
   var cachedRateURL: String {

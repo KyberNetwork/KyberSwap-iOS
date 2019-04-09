@@ -284,6 +284,9 @@
 		25ACC264225E11EF0081D2B9 /* KNListAlertHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25ACC263225E11EF0081D2B9 /* KNListAlertHeaderView.xib */; };
 		25BA01CE20BFEBA700053863 /* KNTransactionStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BA01CD20BFEBA700053863 /* KNTransactionStatusView.swift */; };
 		25BA01D020BFEBB500053863 /* KNTransactionStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25BA01CF20BFEBB500053863 /* KNTransactionStatusView.xib */; };
+		25BA0D99225B325C00B0EF2D /* KNSocialAccountsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BA0D98225B325C00B0EF2D /* KNSocialAccountsCoordinator.swift */; };
+		25BA0D9E225B32C000B0EF2D /* KNSignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BA0D9C225B32C000B0EF2D /* KNSignInViewController.swift */; };
+		25BA0D9F225B32C000B0EF2D /* KNSignInViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25BA0D9D225B32C000B0EF2D /* KNSignInViewController.xib */; };
 		25BE329C209096E800D760FB /* KNListWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BE329A209096E800D760FB /* KNListWalletsViewController.swift */; };
 		25BE329D209096E800D760FB /* KNListWalletsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25BE329B209096E800D760FB /* KNListWalletsViewController.xib */; };
 		25BE32A12090970F00D760FB /* KNListWalletsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BE32A02090970F00D760FB /* KNListWalletsCoordinator.swift */; };
@@ -541,6 +544,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		250CA1EB225B3FC200DF28A4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0AEE09E815DB68F6634F89AA /* Pods_TrustUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TrustUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E184FBCF2BDE7BF38D41021 /* Pods-KyberNetworkUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KyberNetworkUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-KyberNetworkUITests/Pods-KyberNetworkUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -569,6 +585,8 @@
 		25073D16211AF20C00833C92 /* Montserrat-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Medium.ttf"; sourceTree = "<group>"; };
 		25073D17211AF20D00833C92 /* Montserrat-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-BoldItalic.ttf"; sourceTree = "<group>"; };
 		25073D18211AF20D00833C92 /* Montserrat-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBold.ttf"; sourceTree = "<group>"; };
+		250CA1EC225B3FC900DF28A4 /* FacebookCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		250CA1EE225B3FC900DF28A4 /* FacebookLogin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FacebookLogin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		250EE8E02221A40800121138 /* KNShowBackUpDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNShowBackUpDataViewController.swift; sourceTree = "<group>"; };
 		250EE8E12221A40800121138 /* KNShowBackUpDataViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNShowBackUpDataViewController.xib; sourceTree = "<group>"; };
 		25117D3C2248D68300B5C495 /* KNAlertLeaderBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNAlertLeaderBoardViewController.swift; sourceTree = "<group>"; };
@@ -822,6 +840,9 @@
 		25ACC263225E11EF0081D2B9 /* KNListAlertHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNListAlertHeaderView.xib; sourceTree = "<group>"; };
 		25BA01CD20BFEBA700053863 /* KNTransactionStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNTransactionStatusView.swift; sourceTree = "<group>"; };
 		25BA01CF20BFEBB500053863 /* KNTransactionStatusView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNTransactionStatusView.xib; sourceTree = "<group>"; };
+		25BA0D98225B325C00B0EF2D /* KNSocialAccountsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNSocialAccountsCoordinator.swift; sourceTree = "<group>"; };
+		25BA0D9C225B32C000B0EF2D /* KNSignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNSignInViewController.swift; sourceTree = "<group>"; };
+		25BA0D9D225B32C000B0EF2D /* KNSignInViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNSignInViewController.xib; sourceTree = "<group>"; };
 		25BE329A209096E800D760FB /* KNListWalletsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNListWalletsViewController.swift; sourceTree = "<group>"; };
 		25BE329B209096E800D760FB /* KNListWalletsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNListWalletsViewController.xib; sourceTree = "<group>"; };
 		25BE32A02090970F00D760FB /* KNListWalletsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNListWalletsCoordinator.swift; sourceTree = "<group>"; };
@@ -2027,6 +2048,7 @@
 		257740C2205793C6003323EB /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				25BA0D95225B323500B0EF2D /* SocialAccounts */,
 				25E9E1F3208F036F00A9090D /* Passcode */,
 				25682B6D20EE0365009738C4 /* Tabbars */,
 				25682B6C20EE0315009738C4 /* Wallet */,
@@ -2528,6 +2550,40 @@
 				25BA01CF20BFEBB500053863 /* KNTransactionStatusView.xib */,
 			);
 			path = StatusView;
+			sourceTree = "<group>";
+		};
+		25BA0D95225B323500B0EF2D /* SocialAccounts */ = {
+			isa = PBXGroup;
+			children = (
+				25BA0D9A225B32A300B0EF2D /* Controllers */,
+				25BA0D97225B324B00B0EF2D /* Coordinator */,
+			);
+			path = SocialAccounts;
+			sourceTree = "<group>";
+		};
+		25BA0D97225B324B00B0EF2D /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				25BA0D98225B325C00B0EF2D /* KNSocialAccountsCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		25BA0D9A225B32A300B0EF2D /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				25BA0D9B225B32AF00B0EF2D /* SignIn */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		25BA0D9B225B32AF00B0EF2D /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				25BA0D9C225B32C000B0EF2D /* KNSignInViewController.swift */,
+				25BA0D9D225B32C000B0EF2D /* KNSignInViewController.xib */,
+			);
+			path = SignIn;
 			sourceTree = "<group>";
 		};
 		25BE32952090961600D760FB /* ListWalletsVC */ = {
@@ -3573,6 +3629,8 @@
 		FAD3F374A5C639BD900944DB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				250CA1EC225B3FC900DF28A4 /* FacebookCore.framework */,
+				250CA1EE225B3FC900DF28A4 /* FacebookLogin.framework */,
 				646C8C822C986358D7388602 /* Pods_Trust.framework */,
 				A48A17FC2CC895AF2BB871D0 /* Pods_TrustTests.framework */,
 				0AEE09E815DB68F6634F89AA /* Pods_TrustUITests.framework */,
@@ -3597,7 +3655,9 @@
 				F291FF6299FBB0600050DA49 /* [CP] Embed Pods Frameworks */,
 				29282B511F7629DB0067F88D /* Run SwiftLint */,
 				294DFB961FDF8C6A004CEB56 /* ShellScript */,
-				EB3184C0BC107081C6CC1497 /* [CP] Copy Pods Resources */,
+				250CA1EB225B3FC200DF28A4 /* Embed Frameworks */,
+				D9F645674916A4782560555E /* [CP] Copy Pods Resources */,
+				250CA1F0225BA6BB00DF28A4 /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -3842,6 +3902,7 @@
 				2503440020DA37F700528810 /* KNSaveContactViewController.xib in Resources */,
 				25073D19211AF20D00833C92 /* Montserrat-LightItalic.ttf in Resources */,
 				25AAE7DF214BA2D800231A85 /* KYCProfileVerificationStatusViewController.xib in Resources */,
+				25BA0D9F225B32C000B0EF2D /* KNSignInViewController.xib in Resources */,
 				2545C9052223FF2D00CA99C5 /* KNNewAlertViewController.xib in Resources */,
 				251ABCB120578F6E0069687F /* config_env_mainnet_test.json in Resources */,
 				25929C6020DA5C760045CFA3 /* SF-Pro-Display-ThinItalic.otf in Resources */,
@@ -3905,6 +3966,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		250CA1F0225BA6BB00DF28A4 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "readonly MODULEMAP=\"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework/Modules/module.private.modulemap\"\nreadonly HEADER=\"${PODS_ROOT}/TwitterCore/iOS/TwitterCore.framework/Headers/TwitterCore.h\"\n\nif ! grep -q \"TwitterCore_Private\" \"${MODULEMAP}\"; then\ncat >\"${MODULEMAP}\" <<EOL\nmodule TwitterCore_Private {\n}\nEOL\nfi\n\nif ! grep -q \"TWTRColorUtil.h\" \"${HEADER}\"; then\ncat >>\"${HEADER}\" <<EOL\n#import \"TWTRColorUtil.h\"\nEOL\nfi\n";
+		};
 		29282B511F7629DB0067F88D /* Run SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3948,6 +4027,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D9F645674916A4782560555E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-KyberNetwork/Pods-KyberNetwork-resources.sh",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KyberNetwork/Pods-KyberNetwork-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EB2D49CBEF37022D8861D8E0 /* [CP] Check Pods Manifest.lock */ = {
@@ -4283,6 +4382,7 @@
 				250EE8E22221A40800121138 /* KNShowBackUpDataViewController.swift in Sources */,
 				25C151C420C5414500A6F684 /* KNCreateWalletCoordinator.swift in Sources */,
 				2545C8ED2223F08900CA99C5 /* KNAlertStorage.swift in Sources */,
+				25BA0D99225B325C00B0EF2D /* KNSocialAccountsCoordinator.swift in Sources */,
 				255A68E720AADB2000F39749 /* Double+Kyber.swift in Sources */,
 				2932045C1F8DCD6E0095B7C1 /* CurrencyRate.swift in Sources */,
 				25CC0AA82058F1A00009D0D5 /* KNExchangeRequest.swift in Sources */,
@@ -4342,6 +4442,7 @@
 				29B6AED61F7CA4A700EC6DE3 /* TransactionConfiguration.swift in Sources */,
 				251ABCBD205790210069687F /* KNCustomRPC.swift in Sources */,
 				254CD0E62148F7930079EA7A /* KNProfileHomeCoordinator.swift in Sources */,
+				25BA0D9E225B32C000B0EF2D /* KNSignInViewController.swift in Sources */,
 				29BB94951F6FC54C009B09CC /* EthereumUnit.swift in Sources */,
 				29C70C712016C7780072E454 /* SentTransaction.swift in Sources */,
 				254EBED6225F5D8300042FA2 /* KNEligibleTokensTableViewCell.swift in Sources */,

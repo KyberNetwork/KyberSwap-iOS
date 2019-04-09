@@ -511,3 +511,22 @@
 "Switch Wallet" = "Switch Wallet";
 "Switch" = "Switch";
 "Choose your action" = "Choose your action";
+
+// Native sign in/up
+"Email Address" = "Email Address";
+"Password" = "Password";
+"Forgot Password?" = "Forgot Password?";
+"Please enter a valid email address to continue" = "Please enter a valid email address to continue";
+"Please enter a password to continue" = "Please enter a password to continue";
+"Don't have an account?" = "Don't have an account?";
+"Sign Up Now" = "Sign Up Now";
+"Can not get your information from Facebook. Please try again" = "Can not get your information from Facebook. Please try again";
+"Can not get your information from Google. Please try again" = "Can not get your information from Google. Please try again";
+"Can not get your information from Twitter. Please try again" = "Can not get your information from Twitter. Please try again";
+"or" = "or";
+"Display Name" = "Display Name";
+"Subscribe to Newsletters" = "Subscribe to Newsletters";
+"Agree to" = "Agree to";
+"Terms & Conditions" = "Terms & Conditions";
+"Already a member?" = "Already a member?";
+"Please enter a display name to continue" = "Please enter a display name to continue";

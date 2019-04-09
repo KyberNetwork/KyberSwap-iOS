@@ -8,6 +8,10 @@ import Crashlytics
 import UserNotificationsUI
 import UserNotifications
 import OneSignal
+import TwitterKit
+import FacebookCore
+import FacebookLogin
+import GoogleSignIn
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -109,6 +113,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
       Branch.getInstance().application(app, open: url, options: options)
+      TWTRTwitter.sharedInstance().application(app, open: url, options: options)
       return true
     }
 
@@ -120,6 +125,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         sourceApplication: sourceApplication,
         annotation: annotation
       )
+      GIDSignIn.sharedInstance()?.handle(url, sourceApplication: sourceApplication, annotation: annotation)
       return true
     }
 

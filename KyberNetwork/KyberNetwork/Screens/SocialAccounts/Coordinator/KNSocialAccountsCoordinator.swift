@@ -155,7 +155,6 @@ extension KNProfileHomeCoordinator {
           return data["url"] as? String ?? ""
         }()
         let accountType = KNSocialAccountsType.facebook(name: name, email: email, icon: icon, accessToken: accessToken.authenticationToken)
-        self.navigationController.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(name), you are using \(email)", time: 2.0) // TODO: Remove
         completion(.success(accountType))
       case .failed(let error):
         print(error)
@@ -200,8 +199,11 @@ extension KNProfileHomeCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
       }()
       print("Get user information with: \(fullName) \(email) \(icon) \(idToken)")
       let accountType = KNSocialAccountsType.google(name: fullName, email: email, icon: icon, accessToken: idToken)
-      self.navigationController.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(fullName), you are using \(email)", time: 2.0) // TODO: Remove
-      self.proceedSignIn(accountType: accountType)
+      if self.isSignIn {
+        self.proceedSignIn(accountType: accountType)
+      } else {
+        self.proceedSignUp(accountType: accountType)
+      }
     }
   }
 
@@ -244,7 +246,6 @@ extension KNProfileHomeCoordinator {
           return
         }
         let accountType = KNSocialAccountsType.twitter(name: name, email: email, icon: "", userID: userID)
-        self.navigationController.showSuccessTopBannerMessage(with: "Successfully", message: "Hi \(name), you are using \(email)", time: 2.0) // TODO: Remove
         if self.isSignIn {
           self.proceedSignIn(accountType: accountType)
         } else {
@@ -261,5 +262,32 @@ extension KNProfileHomeCoordinator {
   }
 
   fileprivate func proceedSignUp(accountType: KNSocialAccountsType) {
+    switch accountType {
+    case .normal:
+      print("Sign up with normal method")
+    default:
+      self.confirmSignUpVC = nil
+      self.confirmSignUpVC = {
+        let viewModel = KNConfirmSignUpViewModel(accountType: accountType, isSubscribe: false)
+        let controller = KNConfirmSignUpViewController(viewModel: viewModel)
+        controller.loadViewIfNeeded()
+        controller.delegate = self
+        return controller
+      }()
+      self.navigationController.pushViewController(self.confirmSignUpVC!, animated: true)
+    }
+  }
+}
+
+extension KNProfileHomeCoordinator: KNConfirmSignUpViewControllerDelegate {
+  func confirmSignUpViewController(_ controller: KNConfirmSignUpViewController, run event: KNConfirmSignUpViewEvent) {
+    switch event {
+    case .back: self.navigationController.popViewController(animated: true)
+    case .alreadyMemberSignIn: self.navigationController.popToRootViewController(animated: true)
+    case .openTAC:
+      UIApplication.shared.open(URL(string: "https://files.kyberswap.com/tac.pdf")!, options: [:], completionHandler: nil)
+    case .confirmSignUp(let accountType, let isSubscribe):
+      print("Proceed confirm sign up is subs: \(isSubscribe)")
+    }
   }
 }

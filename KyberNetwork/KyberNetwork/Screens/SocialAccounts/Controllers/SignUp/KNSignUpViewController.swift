@@ -182,6 +182,8 @@ class KNSignUpViewController: KNBaseViewController {
       )
       return
     }
+    let account = KNSocialAccountsType.normal(email: email, password: password, name: name)
+    self.delegate?.signUpViewController(self, run: .signUp(accountType: account, isSubscribe: self.viewModel.isSubscribe))
   }
 
   @IBAction func signInButtonPressed(_ sender: Any) {

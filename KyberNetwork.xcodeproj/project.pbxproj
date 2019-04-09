@@ -361,6 +361,8 @@
 		25F9C7672213D0D20001064D /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F9C7662213D0D20001064D /* UIColor.swift */; };
 		25F9C7692213D0D80001064D /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25F9C7682213D0D80001064D /* Double.swift */; };
 		25FCB18C2100405A00F030A8 /* KNGeneralProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25FCB18B2100405A00F030A8 /* KNGeneralProvider.swift */; };
+		25FF9181225CE4A600946414 /* KNConfirmSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25FF917F225CE4A600946414 /* KNConfirmSignUpViewController.swift */; };
+		25FF9182225CE4A600946414 /* KNConfirmSignUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25FF9180225CE4A600946414 /* KNConfirmSignUpViewController.xib */; };
 		290B2B541F8F50030053C83E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 290B2B561F8F50030053C83E /* Localizable.strings */; };
 		290B2B5F1F9177860053C83E /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290B2B5E1F9177860053C83E /* UIImage.swift */; };
 		290B2B6A1F92C0440053C83E /* ConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290B2B691F92C0440053C83E /* ConfigTests.swift */; };
@@ -919,6 +921,8 @@
 		25F9C7662213D0D20001064D /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		25F9C7682213D0D80001064D /* Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		25FCB18B2100405A00F030A8 /* KNGeneralProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNGeneralProvider.swift; sourceTree = "<group>"; };
+		25FF917F225CE4A600946414 /* KNConfirmSignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNConfirmSignUpViewController.swift; sourceTree = "<group>"; };
+		25FF9180225CE4A600946414 /* KNConfirmSignUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNConfirmSignUpViewController.xib; sourceTree = "<group>"; };
 		290B2B551F8F50030053C83E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		290B2B5E1F9177860053C83E /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		290B2B691F92C0440053C83E /* ConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigTests.swift; sourceTree = "<group>"; };
@@ -2585,6 +2589,7 @@
 		25BA0D9A225B32A300B0EF2D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				25FF917E225CE49500946414 /* ConfirmSignUp */,
 				250CA1F3225C7F7F00DF28A4 /* SignUp */,
 				25BA0D9B225B32AF00B0EF2D /* SignIn */,
 			);
@@ -3034,6 +3039,15 @@
 				25F96F7F21537B6400D7F927 /* KNHoldingDocumentInfoPopUp.xib */,
 			);
 			path = HoldingDocumentPhoto;
+			sourceTree = "<group>";
+		};
+		25FF917E225CE49500946414 /* ConfirmSignUp */ = {
+			isa = PBXGroup;
+			children = (
+				25FF917F225CE4A600946414 /* KNConfirmSignUpViewController.swift */,
+				25FF9180225CE4A600946414 /* KNConfirmSignUpViewController.xib */,
+			);
+			path = ConfirmSignUp;
 			sourceTree = "<group>";
 		};
 		290B2B511F8F4F840053C83E /* Localization */ = {
@@ -3812,6 +3826,7 @@
 				254BB330211BEC8200B8E75D /* KWalletBalanceViewController.xib in Resources */,
 				2545C8FD2223F6F400CA99C5 /* KNAlertTableViewCell.xib in Resources */,
 				25696F5F20BE6B4E002CC53F /* KNSetGasPriceViewController.xib in Resources */,
+				25FF9182225CE4A600946414 /* KNConfirmSignUpViewController.xib in Resources */,
 				25929C8C20DA5CC10045CFA3 /* SFCompactDisplay-Thin.otf in Resources */,
 				25929C6120DA5C760045CFA3 /* SF-Pro-Display-UltralightItalic.otf in Resources */,
 				25073D23211AF20D00833C92 /* Montserrat-Regular.ttf in Resources */,
@@ -4354,6 +4369,7 @@
 				25931F0F20AEE85200BAC774 /* KNBackUpWalletViewController.swift in Sources */,
 				298542E81FBAD0B200CB5081 /* OperationType.swift in Sources */,
 				2531388E205A565E00B5BD51 /* UIDevice+Kyber.swift in Sources */,
+				25FF9181225CE4A600946414 /* KNConfirmSignUpViewController.swift in Sources */,
 				252B174B20D3A0CE005B282D /* KNCustomToolbar.swift in Sources */,
 				29E14FD11F7F457D00185568 /* TransactionsStorage.swift in Sources */,
 				253FD59C219048DF00CACDEB /* KYCPersonalOptionalDataView.swift in Sources */,

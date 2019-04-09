@@ -527,17 +527,11 @@ Increase KyberSwap's trade limits</string>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="65J-Yy-bJ6">
-                                    <rect key="frame" x="16" y="46" width="38" height="22"/>
-                                    <state key="normal" image="back_white_icon"/>
-                                </button>
                             </subviews>
                             <color key="backgroundColor" red="0.058823529409999999" green="0.66666666669999997" blue="0.63529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="bottom" secondItem="o5R-66-yUi" secondAttribute="bottom" constant="16" id="2H0-o1-0qu"/>
                                 <constraint firstAttribute="height" constant="84" id="4sL-CQ-QuQ"/>
-                                <constraint firstItem="65J-Yy-bJ6" firstAttribute="leading" secondItem="NdH-dQ-8nW" secondAttribute="leading" constant="16" id="Tl9-Tr-n7e"/>
-                                <constraint firstItem="65J-Yy-bJ6" firstAttribute="centerY" secondItem="o5R-66-yUi" secondAttribute="centerY" id="z6b-30-ket"/>
                                 <constraint firstItem="o5R-66-yUi" firstAttribute="centerX" secondItem="NdH-dQ-8nW" secondAttribute="centerX" id="zuO-wn-7ns"/>
                             </constraints>
                         </view>
@@ -738,7 +732,6 @@ Increase KyberSwap's trade limits</string>
     <resources>
         <image name="account" width="56" height="56"/>
         <image name="add_alert_gray" width="18" height="21"/>
-        <image name="back_white_icon" width="38" height="19"/>
         <image name="hide_secure_text" width="22" height="19"/>
         <image name="leaderboard" width="20" height="22"/>
         <image name="qr_code_icon" width="22" height="22"/>

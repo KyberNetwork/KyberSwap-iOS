@@ -38,6 +38,7 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
   internal var isSubscribe: Bool = false
 
   internal var signUpViewController: KNSignUpViewController?
+  internal var confirmSignUpVC: KNConfirmSignUpViewController?
 
   init(
     navigationController: UINavigationController = UINavigationController(),

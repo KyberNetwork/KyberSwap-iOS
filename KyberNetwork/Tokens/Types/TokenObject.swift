@@ -73,7 +73,6 @@ class TokenObject: Object {
 
     var isPromoToken: Bool {
       let promoTokenSymbol: String = {
-//        if KNEnvironment.default == .production || KNEnvironment.default == .mainnetTest || KNEnvironment.default == .staging { return "PT" }
         if KNEnvironment.default == .production || KNEnvironment.default == .mainnetTest { return "PT" }
         return "OMG" // set OMG as PT token for other networks
       }()

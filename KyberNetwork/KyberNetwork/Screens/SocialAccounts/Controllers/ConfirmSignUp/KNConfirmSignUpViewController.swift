@@ -50,6 +50,15 @@ class KNConfirmSignUpViewModel {
     }
   }
 
+  var userName: String {
+    switch self.accountType {
+    case .facebook(let name, _, _, _): return name
+    case .twitter(let name, _, _, _): return name
+    case .google(let name, _, _, _): return name
+    case .normal(let name, _, _): return name
+    }
+  }
+
   var alreadyMemberAttributedText: NSAttributedString = {
     let normalAttributes: [NSAttributedStringKey: Any] = [
       NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
@@ -76,6 +85,7 @@ class KNConfirmSignUpViewController: KNBaseViewController {
   @IBOutlet weak var socialIconImageView: UIImageView!
   @IBOutlet weak var userIconImageView: UIImageView!
   @IBOutlet weak var userEmailLabel: UILabel!
+  @IBOutlet weak var userNameLabel: UILabel!
 
   @IBOutlet weak var separatorViews: UIView!
 
@@ -112,6 +122,7 @@ class KNConfirmSignUpViewController: KNBaseViewController {
     self.userIconImageView.setImage(with: self.viewModel.userIconURL, placeholder: UIImage(named: "account"))
     self.userIconImageView.rounded(radius: self.userIconImageView.frame.height / 2.0)
     self.userEmailLabel.text = self.viewModel.userEmail
+    self.userNameLabel.text = self.viewModel.userName
 
     self.subscribeButton.setImage(self.viewModel.isSubscribe ? UIImage(named: "check_box_icon") : nil, for: .normal)
     self.subscribeButton.rounded(color: self.viewModel.isSubscribe ? UIColor.clear : UIColor.Kyber.border, width: 1.0, radius: 2.5)

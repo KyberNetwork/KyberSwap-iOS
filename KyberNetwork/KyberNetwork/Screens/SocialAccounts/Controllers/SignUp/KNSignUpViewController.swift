@@ -108,8 +108,8 @@ class KNSignUpViewController: KNBaseViewController {
     self.emailAddressTextField.becomeFirstResponder()
   }
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
     self.view.endEditing(true)
   }
 
@@ -131,14 +131,17 @@ class KNSignUpViewController: KNBaseViewController {
   }
 
   @IBAction func googleButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.signUpViewController(self, run: .pressedGoogle)
   }
 
   @IBAction func facebookButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.signUpViewController(self, run: .pressedFacebook)
   }
 
   @IBAction func twitterButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.signUpViewController(self, run: .pressedTwitter)
   }
 
@@ -182,11 +185,13 @@ class KNSignUpViewController: KNBaseViewController {
       )
       return
     }
-    let account = KNSocialAccountsType.normal(email: email, password: password, name: name)
+    self.view.endEditing(true)
+    let account = KNSocialAccountsType.normal(name: name, email: email, password: password)
     self.delegate?.signUpViewController(self, run: .signUp(accountType: account, isSubscribe: self.viewModel.isSubscribe))
   }
 
   @IBAction func signInButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.signUpViewController(self, run: .alreadyMemberSignIn)
   }
 
@@ -205,6 +210,7 @@ class KNSignUpViewController: KNBaseViewController {
   }
 
   @IBAction func termsAndConditionsButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.signUpViewController(self, run: .openTAC)
   }
 }

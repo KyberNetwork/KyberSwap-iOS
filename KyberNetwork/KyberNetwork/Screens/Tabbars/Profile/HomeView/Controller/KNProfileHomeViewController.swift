@@ -149,6 +149,7 @@ class KNProfileHomeViewController: KNBaseViewController {
 
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
+    self.view.endEditing(true)
     self.walletTimer?.invalidate()
   }
 
@@ -432,18 +433,22 @@ class KNProfileHomeViewController: KNBaseViewController {
   }
 
   @IBAction func forgotButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.profileHomeViewController(self, run: .forgotPassword)
   }
 
   @IBAction func facebookButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.profileHomeViewController(self, run: .signInWithFacebook)
   }
 
   @IBAction func googleButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.profileHomeViewController(self, run: .signInWithGoogle)
   }
 
   @IBAction func twitterButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.profileHomeViewController(self, run: .signInWithTwitter)
   }
 
@@ -473,10 +478,12 @@ class KNProfileHomeViewController: KNBaseViewController {
       )
       return
     }
+    self.view.endEditing(true)
     self.delegate?.profileHomeViewController(self, run: .signInWithEmail(email: email, password: pass))
   }
 
   @IBAction func dontHaveAccountButtonPressed(_ sender: Any) {
+    self.view.endEditing(true)
     self.delegate?.profileHomeViewController(self, run: .dontHaveAccountSignUp)
   }
 

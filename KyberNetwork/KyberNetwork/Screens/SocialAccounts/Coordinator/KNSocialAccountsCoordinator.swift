@@ -11,7 +11,7 @@ enum KNSocialAccountsType {
   case facebook(name: String, email: String, icon: String, accessToken: String)
   case google(name: String, email: String, icon: String, accessToken: String)
   case twitter(name: String, email: String, icon: String, userID: String)
-  case normal(email: String, password: String, name: String)
+  case normal(name: String, email: String, password: String)
 
   var isEmail: Bool {
     if case .normal = self { return true }
@@ -51,7 +51,7 @@ extension KNProfileHomeCoordinator {
     case .forgotPassword:
       print("Forgot password")
     case .signInWithEmail(let email, let password):
-      let accountType = KNSocialAccountsType.normal(email: email, password: password, name: "")
+      let accountType = KNSocialAccountsType.normal(name: "", email: email, password: password)
       self.showSuccessTopBannerMessage(with: "Successfully!", message: "You are using \(email) to sign in", time: 2.0) // TODO: Remove
       self.proceedSignIn(accountType: accountType)
     case .signInWithFacebook:

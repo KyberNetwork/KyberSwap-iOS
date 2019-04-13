@@ -18,19 +18,18 @@ class KNRateCoordinator {
 
   fileprivate let provider = MoyaProvider<KNTrackerService>()
 
-  fileprivate var cacheRates: [KNRate] = []
+  fileprivate var cacheTokenETHRates: [String: KNRate] = [:] // Rate token to ETH
+  fileprivate var cachedETHTokenRates: [String: KNRate] = [:] // Rate ETH to token
   fileprivate var cacheRateTimer: Timer?
 
-  fileprivate var cachedUSDRates: [KNRate] = []
+  fileprivate var cachedUSDRates: [String: KNRate] = [:] // Rate token to USD
 
   fileprivate var exchangeTokenRatesTimer: Timer?
   fileprivate var isLoadingExchangeTokenRates: Bool = false
 
   func getRate(from: TokenObject, to: TokenObject) -> KNRate? {
-    if let rate = self.cacheRates.first(where: { $0.source == from.symbol && $0.dest == to.symbol }) {
-      return rate
-    }
     if from.isETH {
+      if let rate = self.cachedETHTokenRates[to.symbol] { return rate }
       if let trackerRate = KNTrackerRateStorage.shared.trackerRate(for: to) {
         return KNRate(
           source: from.symbol,
@@ -40,6 +39,7 @@ class KNRateCoordinator {
         )
       }
     } else if to.isETH {
+      if let rate = self.cacheTokenETHRates[from.symbol] { return rate }
       if let rate = KNTrackerRateStorage.shared.trackerRate(for: from) {
         return KNRate.rateETH(from: rate)
       }
@@ -56,19 +56,14 @@ class KNRateCoordinator {
   }
 
   func getCacheRate(from: String, to: String) -> KNRate? {
-    if to == "ETH" {
-      return self.cacheRates.first(where: { $0.source == from && $0.dest == to })
-    }
-    if to == "USD" {
-      return self.cachedUSDRates.first(where: { $0.source == from && $0.dest == to })
-    }
+    if to == "ETH" { return self.cacheTokenETHRates[from] }
+    if to == "USD" { return self.cachedUSDRates[from] }
+    if from == "ETH" { return self.cachedETHTokenRates[to] }
     return nil
   }
 
   func usdRate(for token: TokenObject) -> KNRate? {
-    if let cachedRate = self.cachedUSDRates.first(where: { $0.source == token.symbol }) {
-      return cachedRate
-    }
+    if let cachedRate = self.cachedUSDRates[token.symbol] { return cachedRate }
     if let trackerRate = KNTrackerRateStorage.shared.trackerRate(for: token) {
       return KNRate.rateUSD(from: trackerRate)
     }
@@ -151,22 +146,35 @@ class KNRateCoordinator {
     KNInternalProvider.shared.getKNExchangeTokenRate { [weak self] result in
       guard let `self` = self else { return }
       if case .success(let rates) = result {
-        self.cacheRates = rates
+        rates.forEach({
+          if $0.dest == "ETH" { self.cacheTokenETHRates[$0.source] = $0 }
+        })
         self.updateTrackerRateWithCachedRates(isUSD: false)
       }
     }
     KNInternalProvider.shared.getKNExchangeRateUSD { [weak self] result in
       guard let `self` = self else { return }
       if case .success(let rates) = result {
-        self.cachedUSDRates = rates
+        rates.forEach({
+          if $0.dest == "USD" { self.cachedUSDRates[$0.source] = $0 }
+        })
         self.updateTrackerRateWithCachedRates(isUSD: true)
+      }
+    }
+    KNInternalProvider.shared.getProductionCachedRate { [weak self] result in
+      guard let `self` = self else { return }
+      if case .success(let rates) = result {
+        rates.forEach({
+          if $0.source == "ETH" { self.cachedETHTokenRates[$0.dest] = $0 }
+        })
+        KNNotificationUtil.postNotification(for: kExchangeTokenRateNotificationKey)
       }
     }
   }
 
   fileprivate func updateTrackerRateWithCachedRates(isUSD: Bool, isNotify: Bool = true) {
     KNTrackerRateStorage.shared.updateCachedRates(
-      cachedRates: isUSD ? self.cachedUSDRates : self.cacheRates
+      cachedRates: isUSD ? self.cachedUSDRates.map({ $0.1 }) : self.cacheTokenETHRates.map({ $0.1 })
     )
     KNNotificationUtil.postNotification(for: kExchangeTokenRateNotificationKey)
   }

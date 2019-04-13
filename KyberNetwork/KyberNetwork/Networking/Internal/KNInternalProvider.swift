@@ -50,6 +50,36 @@ class KNInternalProvider {
     }
   }
 
+  func getProductionCachedRate(completion: @escaping (Result<[KNRate], AnyError>) -> Void) {
+    DispatchQueue.global(qos: .background).async {
+      self.provider.request(.getCachedRate) { [weak self] (result) in
+        guard let _ = `self` else { return }
+        DispatchQueue.main.async {
+          switch result {
+          case .success(let response):
+            do {
+              _ = try response.filterSuccessfulStatusCodes()
+              let json: JSONDictionary = try response.mapJSON() as? JSONDictionary ?? [:]
+              let jsonArr = json["data"] as? [JSONDictionary] ?? []
+              var rates: [KNRate] = []
+              for json in jsonArr {
+                do {
+                  let rate = try KNRate(cachedDict: json)
+                  if rate.source == "ETH" { rates.append(rate) }
+                } catch {}
+              }
+              completion(.success(rates))
+            } catch let error {
+              completion(.failure(AnyError(error)))
+            }
+          case .failure(let error):
+            completion(.failure(AnyError(error)))
+          }
+        }
+      }
+    }
+  }
+
   func getKNExchangeRateUSD(completion: @escaping (Result<[KNRate], AnyError>) -> Void) {
     DispatchQueue.global(qos: .background).async {
       self.provider.request(.getRateUSD) { [weak self] (result) in

@@ -54,8 +54,14 @@ class KNRateCoordinator {
     )
   }
 
-  func getCachedProdRate(from: String, to: String) -> KNRate? {
-    return self.cachedProdTokenRates["\(from)_\(to)"]
+  func getCachedProdRate(from: TokenObject, to: TokenObject) -> BigInt? {
+    if let rate = self.cachedProdTokenRates["\(from.symbol)_\(to.symbol)"] { return rate.rate }
+    if let rateToETH = self.cachedProdTokenRates["\(from.symbol)_ETH"],
+      let rateETHTo = self.cachedProdTokenRates["ETH_\(to.symbol)"] {
+      let swapRate = rateToETH.rate * rateETHTo.rate / BigInt(10).power(18)
+      return swapRate
+    }
+    return self.getRate(from: from, to: to)?.rate
   }
 
   func getCacheRate(from: String, to: String) -> KNRate? {

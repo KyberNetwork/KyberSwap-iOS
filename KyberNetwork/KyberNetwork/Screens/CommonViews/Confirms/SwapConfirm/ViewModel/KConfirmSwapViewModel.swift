@@ -45,11 +45,11 @@ struct KConfirmSwapViewModel {
   }
 
   var percentageRateDiff: Double {
-    guard let rate = KNRateCoordinator.shared.getCachedProdRate(from: self.transaction.from.symbol, to: self.transaction.to.symbol), !rate.rate.isZero else {
+    guard let rate = KNRateCoordinator.shared.getCachedProdRate(from: self.transaction.from, to: self.transaction.to), !rate.isZero else {
       return 0.0
     }
     if self.transaction.expectedRate.isZero { return 0.0 }
-    let marketRateDouble = Double(rate.rate) / pow(10.0, Double(self.transaction.to.decimals))
+    let marketRateDouble = Double(rate) / pow(10.0, Double(self.transaction.to.decimals))
     let estimatedRateDouble = Double(self.transaction.expectedRate) / pow(10.0, Double(self.transaction.to.decimals))
     let change = (estimatedRateDouble - marketRateDouble) / marketRateDouble * 100.0
     if change >= -0.1 { return 0.0 }

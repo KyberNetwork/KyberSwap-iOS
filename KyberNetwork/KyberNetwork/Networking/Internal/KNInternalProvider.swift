@@ -65,7 +65,7 @@ class KNInternalProvider {
               for json in jsonArr {
                 do {
                   let rate = try KNRate(cachedDict: json)
-                  if rate.source == "ETH" { rates.append(rate) }
+                  rates.append(rate)
                 } catch {}
               }
               completion(.success(rates))

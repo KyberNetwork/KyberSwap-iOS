@@ -126,11 +126,11 @@ class KSwapViewModel {
   }
 
   var percentageRateDiff: Double {
-    guard let rate = KNRateCoordinator.shared.getCachedProdRate(from: self.from.symbol, to: self.to.symbol), !rate.rate.isZero else {
+    guard let rate = KNRateCoordinator.shared.getCachedProdRate(from: self.from, to: self.to), !rate.isZero else {
       return 0.0
     }
     if self.estimatedRateDouble == 0 { return 0.0 }
-    let marketRateDouble = Double(rate.rate) / pow(10.0, Double(self.to.decimals))
+    let marketRateDouble = Double(rate) / pow(10.0, Double(self.to.decimals))
     let change = (self.estimatedRateDouble - marketRateDouble) / marketRateDouble * 100.0
     if change > -0.1 { return 0.0 }
     return change

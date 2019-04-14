@@ -19,7 +19,7 @@ class KNRateCoordinator {
   fileprivate let provider = MoyaProvider<KNTrackerService>()
 
   fileprivate var cacheTokenETHRates: [String: KNRate] = [:] // Rate token to ETH
-  fileprivate var cachedETHTokenRates: [String: KNRate] = [:] // Rate ETH to token
+  fileprivate var cachedProdTokenRates: [String: KNRate] = [:] // Prod cached rate to compare when swapping
   fileprivate var cacheRateTimer: Timer?
 
   fileprivate var cachedUSDRates: [String: KNRate] = [:] // Rate token to USD
@@ -29,7 +29,6 @@ class KNRateCoordinator {
 
   func getRate(from: TokenObject, to: TokenObject) -> KNRate? {
     if from.isETH {
-      if let rate = self.cachedETHTokenRates[to.symbol] { return rate }
       if let trackerRate = KNTrackerRateStorage.shared.trackerRate(for: to) {
         return KNRate(
           source: from.symbol,
@@ -55,11 +54,14 @@ class KNRateCoordinator {
     )
   }
 
+  func getCachedProdRate(from: String, to: String) -> KNRate? {
+    return self.cachedProdTokenRates["\(from)_\(to)"]
+  }
+
   func getCacheRate(from: String, to: String) -> KNRate? {
     if to == "ETH" { return self.cacheTokenETHRates[from] }
     if to == "USD" { return self.cachedUSDRates[from] }
-    if from == "ETH" { return self.cachedETHTokenRates[to] }
-    return nil
+    return self.cachedProdTokenRates["\(from)_\(to)"]
   }
 
   func usdRate(for token: TokenObject) -> KNRate? {
@@ -165,7 +167,7 @@ class KNRateCoordinator {
       guard let `self` = self else { return }
       if case .success(let rates) = result {
         rates.forEach({
-          if $0.source == "ETH" { self.cachedETHTokenRates[$0.dest] = $0 }
+          self.cachedProdTokenRates["\($0.source)_\($0.dest)"] = $0
         })
         KNNotificationUtil.postNotification(for: kExchangeTokenRateNotificationKey)
       }

@@ -136,6 +136,7 @@ extension KNAppCoordinator {
       totalBalanceInUSD: loadBalanceCoordinator.totalBalanceInUSD,
       totalBalanceInETH: loadBalanceCoordinator.totalBalanceInETH
     )
+    self.exchangeCoordinator?.appCoordinatorUpdateExchangeTokenRates()
   }
 
   @objc func exchangeRateUSDDidUpdateNotification(_ sender: Notification) {

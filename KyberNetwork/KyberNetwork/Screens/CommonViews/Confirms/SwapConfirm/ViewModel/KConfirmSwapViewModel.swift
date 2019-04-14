@@ -45,7 +45,7 @@ struct KConfirmSwapViewModel {
   }
 
   var percentageRateDiff: Double {
-    guard let rate = KNRateCoordinator.shared.getRate(from: self.transaction.from, to: self.transaction.to), !rate.rate.isZero else {
+    guard let rate = KNRateCoordinator.shared.getCachedProdRate(from: self.transaction.from.symbol, to: self.transaction.to.symbol), !rate.rate.isZero else {
       return 0.0
     }
     if self.transaction.expectedRate.isZero { return 0.0 }

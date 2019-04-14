@@ -131,6 +131,10 @@ extension KNExchangeTokenCoordinator {
     self.confirmSwapVC?.coordinatorUpdateCurrentMarketRate()
   }
 
+  func appCoordinatorUpdateExchangeTokenRates() {
+    self.confirmSwapVC?.coordinatorUpdateCurrentMarketRate()
+  }
+
   func appCoordinatorShouldOpenExchangeForToken(_ token: TokenObject, isReceived: Bool = false) {
     self.navigationController.popToRootViewController(animated: true)
     self.rootViewController.coordinatorUpdateSelectedToken(token, isSource: !isReceived)

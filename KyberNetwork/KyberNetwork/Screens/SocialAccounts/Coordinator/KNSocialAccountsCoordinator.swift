@@ -49,7 +49,11 @@ extension KNProfileHomeCoordinator {
     self.isSignIn = true
     switch event {
     case .forgotPassword:
-      print("Forgot password")
+      let forgotPassVC = KNForgotPasswordViewController()
+      forgotPassVC.loadViewIfNeeded()
+      forgotPassVC.modalPresentationStyle = .overFullScreen
+      forgotPassVC.modalTransitionStyle = .crossDissolve
+      self.navigationController.present(forgotPassVC, animated: true, completion: nil)
     case .signInWithEmail(let email, let password):
       let accountType = KNSocialAccountsType.normal(name: "", email: email, password: password)
       self.showSuccessTopBannerMessage(with: "Successfully!", message: "You are using \(email) to sign in", time: 2.0) // TODO: Remove

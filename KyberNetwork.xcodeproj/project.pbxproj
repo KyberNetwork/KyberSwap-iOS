@@ -273,6 +273,8 @@
 		259BF5C321918B50004D70F9 /* kyc_occupation_code.json in Resources */ = {isa = PBXBuildFile; fileRef = 259BF5C221918B50004D70F9 /* kyc_occupation_code.json */; };
 		259BF5C721919491004D70F9 /* KYCSelectOptionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259BF5C521919491004D70F9 /* KYCSelectOptionViewController.swift */; };
 		259BF5C821919492004D70F9 /* KYCSelectOptionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 259BF5C621919491004D70F9 /* KYCSelectOptionViewController.xib */; };
+		259D646322630DE000A9CA52 /* KNForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259D646122630DE000A9CA52 /* KNForgotPasswordViewController.swift */; };
+		259D646422630DE000A9CA52 /* KNForgotPasswordViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 259D646222630DE000A9CA52 /* KNForgotPasswordViewController.xib */; };
 		259EC46920E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259EC46720E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.swift */; };
 		259EC46A20E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 259EC46820E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.xib */; };
 		25A4B4B321242DE000924351 /* KNCreateWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25A4B4B121242DE000924351 /* KNCreateWalletViewController.swift */; };
@@ -833,6 +835,8 @@
 		259BF5C221918B50004D70F9 /* kyc_occupation_code.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = kyc_occupation_code.json; sourceTree = "<group>"; };
 		259BF5C521919491004D70F9 /* KYCSelectOptionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KYCSelectOptionViewController.swift; sourceTree = "<group>"; };
 		259BF5C621919491004D70F9 /* KYCSelectOptionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KYCSelectOptionViewController.xib; sourceTree = "<group>"; };
+		259D646122630DE000A9CA52 /* KNForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		259D646222630DE000A9CA52 /* KNForgotPasswordViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNForgotPasswordViewController.xib; sourceTree = "<group>"; };
 		259EC46720E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNHistoryTransactionCollectionViewCell.swift; sourceTree = "<group>"; };
 		259EC46820E2A4A20081B2FC /* KNHistoryTransactionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNHistoryTransactionCollectionViewCell.xib; sourceTree = "<group>"; };
 		25A4B4B121242DE000924351 /* KNCreateWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNCreateWalletViewController.swift; sourceTree = "<group>"; };
@@ -2457,6 +2461,15 @@
 			path = SelectOption;
 			sourceTree = "<group>";
 		};
+		259D646022630DC600A9CA52 /* ForgotPassword */ = {
+			isa = PBXGroup;
+			children = (
+				259D646122630DE000A9CA52 /* KNForgotPasswordViewController.swift */,
+				259D646222630DE000A9CA52 /* KNForgotPasswordViewController.xib */,
+			);
+			path = ForgotPassword;
+			sourceTree = "<group>";
+		};
 		25A293F620CE7AD4008C6759 /* Users */ = {
 			isa = PBXGroup;
 			children = (
@@ -2589,6 +2602,7 @@
 		25BA0D9A225B32A300B0EF2D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				259D646022630DC600A9CA52 /* ForgotPassword */,
 				25FF917E225CE49500946414 /* ConfirmSignUp */,
 				250CA1F3225C7F7F00DF28A4 /* SignUp */,
 				25BA0D9B225B32AF00B0EF2D /* SignIn */,
@@ -3843,6 +3857,7 @@
 				25696F4920BD0F07002CC53F /* KNWalletHeaderView.xib in Resources */,
 				25369F1220F88C52007231FE /* KNWelcomeScreenCollectionView.xib in Resources */,
 				254CD0DA21425F300079EA7A /* KNBalanceTokenTableViewCell.xib in Resources */,
+				259D646422630DE000A9CA52 /* KNForgotPasswordViewController.xib in Resources */,
 				25929C5B20DA5C760045CFA3 /* SF-Pro-Display-SemiboldItalic.otf in Resources */,
 				25929C9820DA5CC10045CFA3 /* SFCompactText-Semibold.otf in Resources */,
 				25929C5420DA5C760045CFA3 /* SF-Pro-Display-LightItalic.otf in Resources */,
@@ -4504,6 +4519,7 @@
 				CCA4FE381FD428B300749AE4 /* JailbreakChecker.swift in Sources */,
 				25369F0620F88693007231FE /* KNWelcomeScreenViewModel.swift in Sources */,
 				25EE47EE21267B97002657DF /* KNAppStyle.swift in Sources */,
+				259D646322630DE000A9CA52 /* KNForgotPasswordViewController.swift in Sources */,
 				25D325A720C075DE008BB235 /* KNSendTokenViewCoordinator.swift in Sources */,
 				25E9E1FB208F0D9900A9090D /* KNPasscodeUtil.swift in Sources */,
 				291794FF1F95F5CE00539A30 /* Web3Request.swift in Sources */,

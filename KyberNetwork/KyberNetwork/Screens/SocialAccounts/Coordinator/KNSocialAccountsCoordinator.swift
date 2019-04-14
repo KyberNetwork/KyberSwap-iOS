@@ -158,6 +158,7 @@ extension KNProfileHomeCoordinator {
           let data = picture["data"] as? JSONDictionary ?? [:]
           return data["url"] as? String ?? ""
         }()
+        self.showSuccessTopBannerMessage(with: "Successfully!", message: "Hi \(name), You are using \(email)", time: 2.0) // TODO: Remove
         let accountType = KNSocialAccountsType.facebook(name: name, email: email, icon: icon, accessToken: accessToken.authenticationToken)
         completion(.success(accountType))
       case .failed(let error):
@@ -201,6 +202,7 @@ extension KNProfileHomeCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
         if url == nil { return "" }
         return url?.absoluteString ?? ""
       }()
+      self.showSuccessTopBannerMessage(with: "Successfully!", message: "Hi \(fullName), You are using \(email)", time: 2.0) // TODO: Remove
       print("Get user information with: \(fullName) \(email) \(icon) \(idToken)")
       let accountType = KNSocialAccountsType.google(name: fullName, email: email, icon: icon, accessToken: idToken)
       if self.isSignIn {
@@ -236,26 +238,59 @@ extension KNProfileHomeCoordinator {
         )
         return
       }
-      let name = session.userName
       let userID = session.userID
-      let client = TWTRAPIClient.withCurrentUser()
-      client.requestEmail(forCurrentUser: { [weak self] (email, error) in
+      self.requestTwitterUserData(for: userID, completion: { [weak self] result in
         guard let `self` = self else { return }
-        guard let email = email, !email.isEmpty, error == nil else {
+        switch result {
+        case .success(let accountType):
+          if self.isSignIn {
+            self.proceedSignIn(accountType: accountType)
+          } else {
+            self.proceedSignUp(accountType: accountType)
+          }
+        case .failure:
           self.navigationController.showErrorTopBannerMessage(
             with: NSLocalizedString("error", value: "Error", comment: ""),
             message: "Can not get your information from Twitter. Please try again".toBeLocalised(),
             time: 2.0
           )
-          return
-        }
-        let accountType = KNSocialAccountsType.twitter(name: name, email: email, icon: "", userID: userID)
-        if self.isSignIn {
-          self.proceedSignIn(accountType: accountType)
-        } else {
-          self.proceedSignUp(accountType: accountType)
         }
       })
+    }
+  }
+
+  fileprivate func requestTwitterUserData(for userID: String, completion: @escaping (Result<KNSocialAccountsType, AnyError>) -> Void) {
+    var user: TWTRUser?
+    var email: String?
+    var error: Error?
+
+    let client = TWTRAPIClient.withCurrentUser()
+    let group = DispatchGroup()
+    group.enter()
+    client.loadUser(withID: userID, completion: { (userData, errorData) in
+      user = userData
+      if let err = errorData { error = err }
+      group.leave()
+    })
+    group.enter()
+    client.requestEmail(forCurrentUser: { (emailData, errorData) in
+      email = emailData
+      if let err = errorData { error = err }
+      group.leave()
+    })
+    group.notify(queue: .main) {
+      if let user = user, let email = email, !email.isEmpty {
+        let accountType = KNSocialAccountsType.twitter(
+          name: user.name,
+          email: email,
+          icon: user.profileImageLargeURL,
+          userID: user.userID
+        )
+        self.showSuccessTopBannerMessage(with: "Successfully!", message: "Hi \(user.name), You are using \(email)", time: 2.0) // TODO: Remove
+        completion(.success(accountType))
+      } else if let error = error {
+        completion(.failure(AnyError(error)))
+      }
     }
   }
 }

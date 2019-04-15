@@ -42,7 +42,7 @@ enum KNEnvironment: Int {
   }()
 
   static var `default`: KNEnvironment {
-    return .production//KNAppTracker.externalEnvironment()
+    return KNAppTracker.externalEnvironment()
   }
 
   var isMainnet: Bool {

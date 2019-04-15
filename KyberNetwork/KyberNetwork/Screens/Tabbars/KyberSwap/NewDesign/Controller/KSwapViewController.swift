@@ -10,6 +10,7 @@ import Crashlytics
 enum KSwapViewEvent {
   case searchToken(from: TokenObject, to: TokenObject, isSource: Bool)
   case estimateRate(from: TokenObject, to: TokenObject, amount: BigInt, showError: Bool)
+  case estimateComparedRate(from: TokenObject, to: TokenObject) // compare to show warning
   case estimateGas(from: TokenObject, to: TokenObject, amount: BigInt, gasPrice: BigInt)
   case getUserCapInWei
   case setGasPrice(gasPrice: BigInt, gasLimit: BigInt)
@@ -87,6 +88,10 @@ class KSwapViewController: KNBaseViewController {
       delegate: self)
   }()
 
+  deinit {
+    self.removeObserveNotification()
+  }
+
   init(viewModel: KSwapViewModel) {
     self.viewModel = viewModel
     super.init(nibName: KSwapViewController.className, bundle: nil)
@@ -100,6 +105,8 @@ class KSwapViewController: KNBaseViewController {
     super.viewDidLoad()
     self.headerContainerView.applyGradient(with: UIColor.Kyber.headerColors)
     self.continueButton.applyGradient()
+
+    self.addObserveNotifications()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -291,6 +298,14 @@ class KSwapViewController: KNBaseViewController {
       message: message,
       time: 2.0
     )
+  }
+
+  @objc func prodCachedRateFailedToLoad(_ sender: Any?) {
+    let event = KSwapViewEvent.estimateComparedRate(
+      from: self.viewModel.from,
+      to: self.viewModel.to
+    )
+    self.delegate?.kSwapViewController(self, run: event)
   }
 
   /*
@@ -554,6 +569,23 @@ extension KSwapViewController {
   }
 }
 
+extension KSwapViewController {
+  fileprivate func addObserveNotifications() {
+    let name = Notification.Name(kProdCachedRateFailedToLoadNotiKey)
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(self.prodCachedRateFailedToLoad(_:)),
+      name: name,
+      object: nil
+    )
+  }
+
+  fileprivate func removeObserveNotification() {
+    let name = Notification.Name(kProdCachedRateFailedToLoadNotiKey)
+    NotificationCenter.default.removeObserver(self, name: name, object: nil)
+  }
+}
+
 // MARK: Update from coordinator
 extension KSwapViewController {
   /*
@@ -741,6 +773,18 @@ extension KSwapViewController {
   func coordinatorTrackerRateDidUpdate() {
     self.equivalentUSDValueLabel.text = self.viewModel.displayEquivalentUSDAmount
     self.updateExchangeRateField()
+  }
+
+  func coordinatorUpdateProdCachedRates() {
+    self.viewModel.updateProdCachedRate()
+    self.updateExchangeRateField()
+  }
+
+  func coordinatorUpdateComparedRateFromNode(from: TokenObject, to: TokenObject, rate: BigInt) {
+    if self.viewModel.from == from, self.viewModel.to == to {
+      self.viewModel.updateProdCachedRate(rate)
+      self.updateExchangeRateField()
+    }
   }
 
   /*

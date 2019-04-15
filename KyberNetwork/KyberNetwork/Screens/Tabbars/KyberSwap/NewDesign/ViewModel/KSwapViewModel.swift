@@ -49,6 +49,7 @@ class KSwapViewModel {
     self.from = from
     self.to = to
     self.supportedTokens = supportedTokens
+    self.updateProdCachedRate()
   }
 
   var headerBackgroundColor: UIColor { return KNAppStyleType.current.swapFlowHeaderColor }
@@ -125,8 +126,10 @@ class KSwapViewModel {
     return expectedExchange.string(decimals: self.from.decimals, minFractionDigits: 6, maxFractionDigits: 6)
   }
 
+  fileprivate var cachedProdRate: BigInt?
+
   var percentageRateDiff: Double {
-    guard let rate = KNRateCoordinator.shared.getCachedProdRate(from: self.from, to: self.to), !rate.isZero else {
+    guard let rate = self.cachedProdRate ?? KNRateCoordinator.shared.getCachedProdRate(from: self.from, to: self.to), !rate.isZero else {
       return 0.0
     }
     if self.estimatedRateDouble == 0 { return 0.0 }
@@ -337,10 +340,15 @@ class KSwapViewModel {
     self.estRate = nil
     self.slippageRate = nil
     self.estimateGasLimit = KNGasConfiguration.calculateDefaultGasLimit(from: self.from, to: self.to)
+    self.updateProdCachedRate()
   }
 
   func updateWalletObject() {
     self.walletObject = KNWalletStorage.shared.get(forPrimaryKey: self.walletObject.address) ?? self.walletObject
+  }
+
+  func updateProdCachedRate(_ rate: BigInt? = nil) {
+    self.cachedProdRate = rate ?? KNRateCoordinator.shared.getCachedProdRate(from: self.from, to: self.to)
   }
 
   func swapTokens() {
@@ -353,6 +361,7 @@ class KSwapViewModel {
     self.slippageRate = nil
     self.estimateGasLimit = KNGasConfiguration.calculateDefaultGasLimit(from: self.from, to: self.to)
     self.balance = self.balances[self.from.contract]
+    self.updateProdCachedRate()
   }
 
   func updateSelectedToken(_ token: TokenObject, isSource: Bool) {
@@ -372,6 +381,7 @@ class KSwapViewModel {
     self.slippageRate = nil
     self.estimateGasLimit = KNGasConfiguration.calculateDefaultGasLimit(from: self.from, to: self.to)
     self.balance = self.balances[self.from.contract]
+    self.updateProdCachedRate()
   }
 
   func updateEstimatedRateFromCachedIfNeeded() {

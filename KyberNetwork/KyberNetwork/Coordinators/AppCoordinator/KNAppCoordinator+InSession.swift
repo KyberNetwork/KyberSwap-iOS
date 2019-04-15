@@ -164,13 +164,20 @@ extension KNAppCoordinator {
 
   // Remove a wallet
   func removeWallet(_ wallet: Wallet) {
+    self.navigationController.displayLoading()
     if self.keystore.wallets.count == 1 {
-      self.stopAllSessions()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        self.stopAllSessions()
+        self.navigationController.hideLoading()
+      }
       return
     }
     // User remove current wallet, switch to another wallet first
     if self.session == nil {
-      self.stopAllSessions()
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        self.stopAllSessions()
+        self.navigationController.hideLoading()
+      }
       return
     }
     let isRemovingCurrentWallet: Bool = self.session.wallet == wallet
@@ -178,7 +185,7 @@ extension KNAppCoordinator {
     if isRemovingCurrentWallet {
       guard let newWallet = self.keystore.wallets.last(where: { $0 != wallet }) else { return }
       self.restartNewSession(newWallet)
-      delayTime = 1.0
+      delayTime = 0.25
     }
     self.loadBalanceCoordinator?.exit()
     DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
@@ -205,6 +212,7 @@ extension KNAppCoordinator {
           message: NSLocalizedString("something.went.wrong.can.not.remove.wallet", value: "Something went wrong. Can not remove wallet.", comment: "")
         )
       }
+      self.navigationController.hideLoading()
     }
   }
 

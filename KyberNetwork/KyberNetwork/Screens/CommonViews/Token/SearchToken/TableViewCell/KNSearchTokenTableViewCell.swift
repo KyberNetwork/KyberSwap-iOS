@@ -26,7 +26,7 @@ class KNSearchTokenTableViewCell: UITableViewCell {
         with: token.iconURL,
         placeholder: UIImage(named: "default_token"))
     }
-    self.tokenSymbolLabel.text = token.symbol
+    self.tokenSymbolLabel.text = "\(token.symbol.prefix(8))"
     self.tokenSymbolLabel.addLetterSpacing()
     self.tokenNameLabel.text = token.name
     self.tokenNameLabel.addLetterSpacing()

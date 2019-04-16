@@ -81,7 +81,7 @@ class KNTokenChartViewModel {
     self.data = []
   }
 
-  var navigationTitle: String { return "\(self.token.symbol)" }
+  var navigationTitle: String { return "\(self.token.symbol.prefix(8))" }
   var isTokenSupported: Bool { return self.token.isSupported }
 
   var rateAttributedString: NSAttributedString {
@@ -376,7 +376,7 @@ class KNTokenChartViewController: KNBaseViewController {
     )
     self.navigationLabel.text = self.viewModel.navigationTitle
     self.navigationLabel.addLetterSpacing()
-    self.symbolLabel.text = self.viewModel.token.symbol
+    self.symbolLabel.text = "\(self.viewModel.token.symbol.prefix(8))"
     self.symbolLabel.addLetterSpacing()
     self.nameLabel.text = self.viewModel.token.name
     self.nameLabel.addLetterSpacing()

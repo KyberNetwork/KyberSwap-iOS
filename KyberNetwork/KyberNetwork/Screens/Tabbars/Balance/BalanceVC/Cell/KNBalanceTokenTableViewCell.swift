@@ -40,13 +40,7 @@ struct KNBalanceTokenTableViewCellModel {
       NSAttributedStringKey.foregroundColor: UIColor(red: 29, green: 48, blue: 58),
       NSAttributedStringKey.kern: 0.0,
     ]
-//    let nameAttributes: [NSAttributedStringKey: Any] = [
-//      NSAttributedStringKey.font: UIFont.Kyber.regular(with: 12),
-//      NSAttributedStringKey.foregroundColor: UIColor(red: 158, green: 161, blue: 170),
-//      NSAttributedStringKey.kern: 0.0,
-//      ]
-    attributedString.append(NSAttributedString(string: self.token.symbol, attributes: symbolAttributes))
-//    attributedString.append(NSAttributedString(string: " - \(self.token.name)", attributes: nameAttributes))
+    attributedString.append(NSAttributedString(string: String(self.token.symbol.prefix(8)), attributes: symbolAttributes))
     return attributedString
   }
 

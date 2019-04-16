@@ -71,7 +71,7 @@ class KNSendTokenViewModel: NSObject {
   }
 
   var navTitle: String {
-    return "\(NSLocalizedString("send", value: "Send", comment: "")) \(self.from.symbol)" // "Send Token"
+    return "\(NSLocalizedString("send", value: "Send", comment: "")) \(self.from.symbol.prefix(8))" // "Send Token"
   }
 
   var tokenButtonAttributedText: NSAttributedString {
@@ -82,13 +82,13 @@ class KNSendTokenViewModel: NSObject {
       NSAttributedStringKey.foregroundColor: UIColor(red: 29, green: 48, blue: 58),
       NSAttributedStringKey.kern: 0.0,
     ]
-    attributedString.append(NSAttributedString(string: self.from.symbol, attributes: symbolAttributes))
+    attributedString.append(NSAttributedString(string: "\(self.from.symbol.prefix(8))", attributes: symbolAttributes))
     return attributedString
   }
 
   var balanceText: String {
     let balanceText = NSLocalizedString("balance", value: "balance", comment: "")
-    return "\(self.from.symbol) \(balanceText)".uppercased()
+    return "\(self.from.symbol.prefix(8)) \(balanceText)".uppercased()
   }
 
   var displayBalance: String {

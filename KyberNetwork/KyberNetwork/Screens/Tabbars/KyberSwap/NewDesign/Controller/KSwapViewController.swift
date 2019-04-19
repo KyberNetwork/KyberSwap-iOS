@@ -217,6 +217,10 @@ class KSwapViewController: KNBaseViewController {
     self.toAmountTextField.delegate = self
 
     self.viewModel.updateAmount("", isSource: false)
+
+    let tapBalanceGesture = UITapGestureRecognizer(target: self, action: #selector(self.balanceLabelTapped(_:)))
+    self.balanceLabel.addGestureRecognizer(tapBalanceGesture)
+
     self.updateTokensView()
   }
 
@@ -520,8 +524,6 @@ extension KSwapViewController {
     self.updateEstimatedRate(showError: updatedFrom || updatedTo, showLoading: updatedFrom || updatedTo)
 
     self.balanceLabel.text = self.viewModel.balanceText
-    let tapBalanceGesture = UITapGestureRecognizer(target: self, action: #selector(self.balanceLabelTapped(_:)))
-    self.balanceLabel.addGestureRecognizer(tapBalanceGesture)
 
     self.updateExchangeRateField()
 
@@ -816,6 +818,7 @@ extension KSwapViewController: UITextFieldDelegate {
   }
 
   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    let prevDest = self.toAmountTextField.text ?? ""
     let text = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string).cleanStringToNumber()
     if textField == self.fromAmountTextField && text.fullBigInt(decimals: self.viewModel.from.decimals) == nil { return false }
     if textField == self.toAmountTextField && text.fullBigInt(decimals: self.viewModel.to.decimals) == nil { return false }
@@ -823,6 +826,10 @@ extension KSwapViewController: UITextFieldDelegate {
     self.viewModel.updateFocusingField(textField == self.fromAmountTextField)
     self.viewModel.updateAmount(text, isSource: textField == self.fromAmountTextField)
     self.updateViewAmountDidChange()
+    if textField == self.toAmountTextField {
+      let prevDestAmountBigInt = prevDest.removeGroupSeparator().fullBigInt(decimals: self.viewModel.to.decimals) ?? BigInt(0)
+      self.updateRateDestAmountDidChangeIfNeeded(prevDest: prevDestAmountBigInt)
+    }
     return false
   }
 
@@ -872,6 +879,51 @@ extension KSwapViewController: UITextFieldDelegate {
     self.equivalentUSDValueLabel.text = self.viewModel.displayEquivalentUSDAmount
     self.updateExchangeRateField()
     self.view.layoutIfNeeded()
+  }
+
+  fileprivate func updateRateDestAmountDidChangeIfNeeded(prevDest: BigInt) {
+    let destAmount = self.viewModel.amountToBigInt
+    let isChanged: Bool = {
+      if prevDest.isZero { return !destAmount.isZero }
+      let percent = (Double(destAmount) - Double(prevDest)) / Double(prevDest) * 100.0
+      return fabs(percent) >= 1.0
+    }()
+    if !isChanged { return } // no need to call if change is small
+    let isAmountBig: Bool = {
+      let minAmount = BigInt(100) * BigInt(EthereumUnit.ether.rawValue) // should call api when amount is greater than 100
+      let destAmountInETH: BigInt = {
+        if self.viewModel.to.isETH { return destAmount }
+        if let cachedRate = KNRateCoordinator.shared.getCachedProdRate(from: self.viewModel.to, to: self.viewModel.eth) {
+          return cachedRate * destAmount / BigInt(10).power(self.viewModel.to.decimals)
+        }
+        return BigInt(0)
+      }()
+      return destAmountInETH > minAmount
+    }()
+    if !isAmountBig { return } // no need to call API
+    KNRateCoordinator.shared.getCachedSourceAmount(
+      from: self.viewModel.from,
+      to: self.viewModel.to,
+      destAmount: Double(destAmount) / pow(10.0, Double(self.viewModel.to.decimals))
+    ) { [weak self] result in
+      guard let `self` = self else { return }
+      if case .success(let data) = result, let srcAmount = data, !srcAmount.isZero {
+        let rate = destAmount * BigInt(10).power(self.viewModel.from.decimals) / srcAmount
+        self.viewModel.updateAmount(
+          srcAmount.fullString(decimals: self.viewModel.from.decimals).removeGroupSeparator(),
+          isSource: true
+        )
+        self.viewModel.updateExchangeRate(
+          for: self.viewModel.from,
+          to: self.viewModel.to,
+          amount: srcAmount,
+          rate: rate,
+          slippageRate: rate * BigInt(97) / BigInt(100)
+        )
+        self.updateTokensView(updatedFrom: false, updatedTo: false)
+      }
+      self.updateEstimatedRate(showError: true, showLoading: true)
+    }
   }
 }
 

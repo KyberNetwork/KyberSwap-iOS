@@ -188,6 +188,34 @@ class KNRateCoordinator {
     )
     KNNotificationUtil.postNotification(for: kExchangeTokenRateNotificationKey)
   }
+
+  func getCachedSourceAmount(from: TokenObject, to: TokenObject, destAmount: Double, completion: @escaping (Result<BigInt?, AnyError>) -> Void) {
+    let baseURL: String = KNEnvironment.default.cachedSourceAmountRateURL
+    let urlString = String(format: baseURL, arguments: [from.symbol, to.symbol, "\(destAmount)"])
+    let task = URLSession.shared.dataTask(with: URL(string: urlString)!) { (data, _, error) in
+      DispatchQueue.main.async {
+        if let data = data, error == nil {
+          do {
+            let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments) as? JSONDictionary ?? [:]
+            let success = json["success"] as? Bool ?? false
+            let value = json["value"] as? String ?? ""
+            if let srcAmount = value.fullBigInt(decimals: from.decimals), success {
+              completion(.success(srcAmount))
+            } else {
+              completion(.success(nil))
+            }
+          } catch let err {
+            completion(.failure(AnyError(err)))
+          }
+        } else if let err = error {
+          completion(.failure(AnyError(err)))
+        } else {
+          completion(.success(nil))
+        }
+      }
+    }
+    task.resume()
+  }
 }
 
 class KNRateHelper {

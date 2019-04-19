@@ -81,6 +81,7 @@ class KNConfirmSignUpViewController: KNBaseViewController {
   @IBOutlet weak var headerContainerView: UIView!
 
   @IBOutlet weak var navTitleLabel: UILabel!
+  @IBOutlet weak var topPaddingConfirmSignUpTextLabel: NSLayoutConstraint!
   @IBOutlet weak var confirmSignUpTextLabel: UILabel!
   @IBOutlet weak var socialIconImageView: UIImageView!
   @IBOutlet weak var userIconImageView: UIImageView!
@@ -115,6 +116,8 @@ class KNConfirmSignUpViewController: KNBaseViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.headerContainerView.applyGradient(with: UIColor.Kyber.headerColors)
+
+    self.topPaddingConfirmSignUpTextLabel.constant = (UIDevice.isIphone5 || UIDevice.isIphone6) ? 32.0 : 60.0
     self.separatorViews.backgroundColor = .clear
     self.separatorViews.dashLine(width: 1.0, color: UIColor.Kyber.dashLine)
 

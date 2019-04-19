@@ -19,6 +19,10 @@ class KNForgotPasswordViewController: KNBaseViewController {
     self.sendButton.rounded(radius: KNAppStyleType.current.buttonRadius(for: self.sendButton.frame.height))
     self.sendButton.setTitle(NSLocalizedString("continue", value: "Continue", comment: ""), for: .normal)
     self.sendButton.applyGradient()
+
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapOutSideToDismiss(_:)))
+    self.view.addGestureRecognizer(tapGesture)
+    self.view.isUserInteractionEnabled = true
   }
 
   override func viewWillAppear(_ animated: Bool) {

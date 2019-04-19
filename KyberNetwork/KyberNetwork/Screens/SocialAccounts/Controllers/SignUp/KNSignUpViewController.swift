@@ -43,6 +43,7 @@ class KNSignUpViewController: KNBaseViewController {
   @IBOutlet weak var headerContainerView: UIView!
   @IBOutlet weak var navTitleLabel: UILabel!
   @IBOutlet weak var orTextLabel: UILabel!
+  @IBOutlet weak var topPaddingSocialIcon: NSLayoutConstraint!
 
   @IBOutlet var separatorViews: [UIView]!
 
@@ -80,6 +81,7 @@ class KNSignUpViewController: KNBaseViewController {
       $0.dashLine(width: 1.0, color: UIColor.Kyber.dashLine)
     })
 
+    self.topPaddingSocialIcon.constant = (UIDevice.isIphone5 || UIDevice.isIphone6) ? 24.0 : 40.0
     self.emailAddressTextField.placeholder = "Email Address".toBeLocalised()
     self.displayNameTextField.placeholder = "Display Name".toBeLocalised()
     self.passwordTextField.placeholder = "Password".toBeLocalised()

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -37,6 +37,7 @@
                 <outlet property="subscribeButton" destination="QbZ-jW-iGq" id="oLL-hQ-O2a"/>
                 <outlet property="subscribeNewsLetters" destination="3be-fA-QrX" id="WpK-Vn-hFW"/>
                 <outlet property="termsAndConditionsButton" destination="icZ-k4-Dau" id="F7i-8n-fOy"/>
+                <outlet property="topPaddingSocialIcon" destination="yqz-5S-98n" id="c1X-2a-tqZ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outletCollection property="separatorViews" destination="Jv4-b9-49H" collectionClass="NSMutableArray" id="7U2-rE-9dp"/>
                 <outletCollection property="separatorViews" destination="12M-rl-5Of" collectionClass="NSMutableArray" id="eir-qt-SUA"/>
@@ -256,6 +257,7 @@
                             </connections>
                         </button>
                     </subviews>
+                    <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="PUM-Bp-yAe" firstAttribute="leading" secondItem="619-ad-6aO" secondAttribute="leading" id="2Ui-ch-7vY"/>
                         <constraint firstItem="EnS-jP-oHi" firstAttribute="top" secondItem="k7g-p0-ZZa" secondAttribute="bottom" constant="-10" id="3Fj-dc-xSu"/>
@@ -314,7 +316,7 @@
                     </constraints>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="vcl-Nv-WMJ" secondAttribute="trailing" id="B4D-NP-Qcn"/>
                 <constraint firstItem="6ZF-fP-eVn" firstAttribute="top" secondItem="vcl-Nv-WMJ" secondAttribute="bottom" id="BKB-E5-TMx"/>

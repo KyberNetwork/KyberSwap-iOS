@@ -71,6 +71,7 @@ class KNProfileHomeViewController: KNBaseViewController {
   @IBOutlet var dashLineViews: [UIView]!
 
   @IBOutlet weak var signInHeaderView: UIView!
+  @IBOutlet weak var topPaddingForSocialIcon: NSLayoutConstraint!
   @IBOutlet weak var myProfileTextLabel: UILabel!
   @IBOutlet weak var myWalletsTextLabel: UILabel!
   @IBOutlet weak var signedInView: UIView!
@@ -205,6 +206,7 @@ class KNProfileHomeViewController: KNBaseViewController {
 
   fileprivate func setupUserSignedInView() {
     self.signInHeaderView.applyGradient(with: UIColor.Kyber.headerColors)
+    self.topPaddingForSocialIcon.constant = (UIDevice.isIphone5 || UIDevice.isIphone6) ? 24.0 : 40.0
     self.bottomPaddingConstraintForSignedInView.constant = self.bottomPaddingSafeArea()
     self.signedInView.isHidden = !self.viewModel.isUserSignedIn
     self.myProfileTextLabel.text = NSLocalizedString("my.profile", value: "My Profile", comment: "")

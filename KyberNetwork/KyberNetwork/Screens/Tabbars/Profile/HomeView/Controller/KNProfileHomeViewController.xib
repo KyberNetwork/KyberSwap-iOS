@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -62,6 +62,7 @@
                 <outlet property="signInHeaderView" destination="UH0-5f-Ssg" id="QtK-Yg-nFU"/>
                 <outlet property="signedInView" destination="UrY-qu-28V" id="XZ9-we-wyO"/>
                 <outlet property="topPaddingConstraintForMyWalletsSection" destination="NTu-h7-Ga8" id="ucN-XG-zzG"/>
+                <outlet property="topPaddingForSocialIcon" destination="8Z1-QX-me1" id="4eH-yO-Wp5"/>
                 <outlet property="userEmailLabel" destination="kTw-hp-avF" id="QEB-Fh-fsg"/>
                 <outlet property="userImageView" destination="YjR-XA-Zz1" id="9qS-TR-RLz"/>
                 <outlet property="userKYCActionButton" destination="JdJ-Un-hJO" id="JFh-X5-Q5g"/>
@@ -659,6 +660,7 @@ Increase KyberSwap's trade limits</string>
                                     </connections>
                                 </button>
                             </subviews>
+                            <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="d1T-2r-j1L" firstAttribute="top" secondItem="Xvc-pT-KJt" secondAttribute="bottom" constant="16" id="2Yd-Ei-7By"/>
                                 <constraint firstItem="Xvc-pT-KJt" firstAttribute="leading" secondItem="BTo-af-uiK" secondAttribute="leading" id="50u-jv-E4X"/>

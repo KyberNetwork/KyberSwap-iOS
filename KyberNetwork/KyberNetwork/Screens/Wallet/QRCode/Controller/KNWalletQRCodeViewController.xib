@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,14 +36,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9wd-Gg-Jw3">
-                    <rect key="frame" x="40" y="122" width="295" height="295"/>
+                    <rect key="frame" x="40" y="164" width="295" height="295"/>
                     <color key="backgroundColor" white="0.0" alpha="0.25409881161971831" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="9wd-Gg-Jw3" secondAttribute="height" multiplier="1:1" id="QMN-E6-rvI"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Ethereum wallet address" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6US-bk-Sk8">
-                    <rect key="frame" x="24" y="437" width="327" height="17.5"/>
+                    <rect key="frame" x="24" y="479" width="327" height="17.5"/>
                     <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                     <color key="textColor" red="0.61960784313725492" green="0.63137254901960782" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -118,11 +118,11 @@
                 <constraint firstItem="ayx-K1-otl" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="N8r-ht-opl"/>
                 <constraint firstItem="JIX-CP-yTw" firstAttribute="height" secondItem="soD-bJ-naO" secondAttribute="height" id="SRB-eM-8qB"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="soD-bJ-naO" secondAttribute="bottom" constant="40" id="bZ6-Zb-aFm"/>
+                <constraint firstItem="9wd-Gg-Jw3" firstAttribute="centerY" secondItem="fnl-2z-Ty3" secondAttribute="centerY" constant="-32" id="ffx-3l-6M2"/>
                 <constraint firstItem="6US-bk-Sk8" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="gG8-g7-PB4"/>
                 <constraint firstItem="soD-bJ-naO" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="24" id="lUU-ga-ji4"/>
                 <constraint firstItem="6US-bk-Sk8" firstAttribute="top" secondItem="9wd-Gg-Jw3" secondAttribute="bottom" constant="20" id="pyT-Hn-dZW"/>
                 <constraint firstItem="JIX-CP-yTw" firstAttribute="width" secondItem="soD-bJ-naO" secondAttribute="width" id="sdp-ir-Zws"/>
-                <constraint firstItem="9wd-Gg-Jw3" firstAttribute="top" secondItem="ayx-K1-otl" secondAttribute="bottom" constant="40" id="tUq-P1-uC9"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="JIX-CP-yTw" secondAttribute="trailing" constant="24" id="z1c-k1-lqL"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>

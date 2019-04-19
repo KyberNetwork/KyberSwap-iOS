@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,6 +32,7 @@
                 <outlet property="subscribeButton" destination="80c-uo-tmF" id="AYM-gF-Lzu"/>
                 <outlet property="subscribeNewsLettersButton" destination="ERI-X8-szc" id="bOj-HM-bUE"/>
                 <outlet property="termsAndConditionsButton" destination="6Aa-bv-til" id="xpU-kZ-6hI"/>
+                <outlet property="topPaddingConfirmSignUpTextLabel" destination="JsN-g7-QJF" id="pwd-Qj-vKB"/>
                 <outlet property="userEmailLabel" destination="cst-7p-Ul2" id="Amy-SM-e0A"/>
                 <outlet property="userIconImageView" destination="aeB-EE-1m9" id="5Nn-iG-rbq"/>
                 <outlet property="userNameLabel" destination="Lxf-Sr-Juo" id="sZC-Dn-JoV"/>
@@ -228,7 +229,7 @@
                     </constraints>
                 </scrollView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bDP-pq-vvi" secondAttribute="trailing" id="7Jb-yN-qWp"/>
                 <constraint firstAttribute="bottom" secondItem="bDP-pq-vvi" secondAttribute="bottom" id="8kq-5W-hJU"/>

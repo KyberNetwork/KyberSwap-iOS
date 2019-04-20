@@ -47,6 +47,7 @@ class KNSignUpViewController: KNBaseViewController {
 
   @IBOutlet var separatorViews: [UIView]!
 
+  @IBOutlet weak var confirmEmailTextLabel: UILabel!
   @IBOutlet weak var emailAddressTextField: UITextField!
   @IBOutlet weak var displayNameTextField: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
@@ -82,6 +83,9 @@ class KNSignUpViewController: KNBaseViewController {
     })
 
     self.topPaddingSocialIcon.constant = (UIDevice.isIphone5 || UIDevice.isIphone6) ? 24.0 : 40.0
+
+    self.confirmEmailTextLabel.text = "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account.".toBeLocalised()
+    self.confirmEmailTextLabel.isHidden = true
     self.emailAddressTextField.placeholder = "Email Address".toBeLocalised()
     self.displayNameTextField.placeholder = "Display Name".toBeLocalised()
     self.passwordTextField.placeholder = "Password".toBeLocalised()
@@ -134,16 +138,19 @@ class KNSignUpViewController: KNBaseViewController {
 
   @IBAction func googleButtonPressed(_ sender: Any) {
     self.view.endEditing(true)
+    self.confirmEmailTextLabel.isHidden = true
     self.delegate?.signUpViewController(self, run: .pressedGoogle)
   }
 
   @IBAction func facebookButtonPressed(_ sender: Any) {
     self.view.endEditing(true)
+    self.confirmEmailTextLabel.isHidden = true
     self.delegate?.signUpViewController(self, run: .pressedFacebook)
   }
 
   @IBAction func twitterButtonPressed(_ sender: Any) {
     self.view.endEditing(true)
+    self.confirmEmailTextLabel.isHidden = true
     self.delegate?.signUpViewController(self, run: .pressedTwitter)
   }
 
@@ -155,6 +162,7 @@ class KNSignUpViewController: KNBaseViewController {
   }
 
   @IBAction func signUpButtonPressed(_ sender: Any) {
+    self.confirmEmailTextLabel.isHidden = true
     guard let email = self.emailAddressTextField.text, email.isValidEmail() else {
       self.showErrorTopBannerMessage(
         with: NSLocalizedString("error", value: "Error", comment: ""),
@@ -214,5 +222,9 @@ class KNSignUpViewController: KNBaseViewController {
   @IBAction func termsAndConditionsButtonPressed(_ sender: Any) {
     self.view.endEditing(true)
     self.delegate?.signUpViewController(self, run: .openTAC)
+  }
+
+  func userDidSignedWithEmail() {
+    self.confirmEmailTextLabel.isHidden = false
   }
 }

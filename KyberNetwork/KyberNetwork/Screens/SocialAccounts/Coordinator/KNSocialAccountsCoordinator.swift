@@ -6,6 +6,7 @@ import FacebookLogin
 import GoogleSignIn
 import Result
 import TwitterKit
+import Moya
 
 enum KNSocialAccountsType {
   case facebook(name: String, email: String, icon: String, accessToken: String)
@@ -56,7 +57,6 @@ extension KNProfileHomeCoordinator {
       self.navigationController.present(forgotPassVC, animated: true, completion: nil)
     case .signInWithEmail(let email, let password):
       let accountType = KNSocialAccountsType.normal(name: "", email: email, password: password)
-      self.showSuccessTopBannerMessage(with: "Successfully!", message: "You are using \(email) to sign in", time: 2.0) // TODO: Remove
       self.proceedSignIn(accountType: accountType)
     case .signInWithFacebook:
       self.authenticateFacebook()
@@ -298,12 +298,99 @@ extension KNProfileHomeCoordinator {
 // MARK: Handle sign in/up
 extension KNProfileHomeCoordinator {
   fileprivate func proceedSignIn(accountType: KNSocialAccountsType) {
+    switch accountType {
+    case .normal(_, let email, let password):
+      self.signInEmail(email: email, password: password)
+    case .facebook(let name, let email, let icon, let accessToken):
+      self.signInSocialWithData(type: "facebook", email: email, name: name, photo: icon, accessToken: accessToken)
+    case .twitter(let name, let email, let icon, let userID):
+      self.signInSocialWithData(type: "twitter", email: email, name: name, photo: icon, accessToken: userID)
+    case .google(let name, let email, let icon, let accessToken):
+      self.signInSocialWithData(type: "facebook", email: email, name: name, photo: icon, accessToken: accessToken)
+    }
+  }
+
+  fileprivate func signInEmail(email: String, password: String) {
+    self.navigationController.displayLoading()
+    KNSocialAccountsCoordinator.shared.getUserAuthData(email: email, password: password) { [weak self] result in
+      guard let `self` = self else { return }
+      switch result {
+      case .success(let data):
+        let success = data["success"] as? Bool ?? false
+        let message = data["message"] as? String ?? ""
+        if success {
+          self.userDidSignInWithData(data["data"] as? JSONDictionary ?? [:])
+        } else {
+          self.navigationController.hideLoading()
+          self.navigationController.showErrorTopBannerMessage(
+            with: NSLocalizedString("error", value: "Error", comment: ""),
+            message: message,
+            time: 1.5
+          )
+        }
+      case .failure(let error):
+        self.navigationController.hideLoading()
+        self.navigationController.displayError(error: error)
+      }
+    }
+  }
+
+  fileprivate func signInSocialWithData(type: String, email: String, name: String, photo: String, accessToken: String) {
+    self.navigationController.displayLoading()
+    KNSocialAccountsCoordinator.shared.signInSocial(
+      type: type,
+      email: email,
+      name: name,
+      photo: photo,
+      accessToken: accessToken) { [weak self] result in
+        guard let `self` = self else { return }
+        switch result {
+        case .success(let data):
+          let success = data["success"] as? Bool ?? false
+          let message = data["message"] as? String ?? ""
+          if success {
+            self.userDidSignInWithData(data["data"] as? JSONDictionary ?? [:])
+          } else {
+            self.navigationController.hideLoading()
+            self.navigationController.showErrorTopBannerMessage(
+              with: NSLocalizedString("error", value: "Error", comment: ""),
+              message: message,
+              time: 1.5
+            )
+          }
+        case .failure(let error):
+          self.navigationController.hideLoading()
+          self.navigationController.displayError(error: error)
+        }
+    }
+  }
+
+  fileprivate func userDidSignInWithData(_ data: JSONDictionary) {
+    let authToken = data["auth_token"] as? String ?? ""
+    let refreshToken = data["refresh_token"] as? String ?? ""
+    let expiredTime: Double = {
+      let time = data["expiration_time"] as? String ?? ""
+      let date = DateFormatterUtil.shared.promoCodeDateFormatter.date(from: time)
+      return date?.timeIntervalSince1970 ?? 0.0
+    }()
+    self.getUserInfo(type: "", accessToken: authToken, refreshToken: refreshToken, expireTime: expiredTime, hasUser: false) { [weak self] success in
+      if success {
+        KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_successfully"])
+        let name = IEOUserStorage.shared.user?.name ?? ""
+        let text = NSLocalizedString("welcome.back.user", value: "Welcome back, %@", comment: "")
+        let message = String(format: text, name)
+        self?.navigationController.showSuccessTopBannerMessage(with: "", message: message)
+        if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.resume() }
+      } else {
+        KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_failed"])
+      }
+    }
   }
 
   fileprivate func proceedSignUp(accountType: KNSocialAccountsType) {
     switch accountType {
-    case .normal:
-      print("Sign up with normal method")
+    case .normal(let name, let email, let password):
+      self.signUpEmail(email, password: password, name: name, isSubs: self.isSubscribe)
     default:
       self.confirmSignUpVC = nil
       self.confirmSignUpVC = {
@@ -314,6 +401,29 @@ extension KNProfileHomeCoordinator {
         return controller
       }()
       self.navigationController.pushViewController(self.confirmSignUpVC!, animated: true)
+    }
+  }
+
+  fileprivate func signUpEmail(_ email: String, password: String, name: String, isSubs: Bool) {
+    self.navigationController.displayLoading()
+    KNSocialAccountsCoordinator.shared.signUpEmail(email, password: password, name: name, isSubs: isSubs) { [weak self] result in
+      guard let `self` = self else { return }
+      self.navigationController.hideLoading()
+      switch result {
+      case .success(let data):
+        if data.0 {
+          // signed up successfully
+          self.signUpViewController?.userDidSignedWithEmail()
+        } else {
+          self.navigationController.showErrorTopBannerMessage(
+            with: NSLocalizedString("error", value: "Error", comment: ""),
+            message: data.1,
+            time: 1.5
+          )
+        }
+      case .failure(let error):
+        self.navigationController.displayError(error: error)
+      }
     }
   }
 }
@@ -327,6 +437,135 @@ extension KNProfileHomeCoordinator: KNConfirmSignUpViewControllerDelegate {
       UIApplication.shared.open(URL(string: "https://files.kyberswap.com/tac.pdf")!, options: [:], completionHandler: nil)
     case .confirmSignUp(let accountType, let isSubscribe):
       print("Proceed confirm sign up is subs: \(isSubscribe)")
+    }
+  }
+}
+
+class KNSocialAccountsCoordinator {
+  let provider = MoyaProvider<NativeSignInUpService>()
+
+  static let shared = KNSocialAccountsCoordinator()
+
+  func signUpEmail(_ email: String, password: String, name: String, isSubs: Bool, completion: @escaping (Result<(Bool, String), AnyError>) -> Void) {
+    let request = NativeSignInUpService.signUpEmail(
+      email: email,
+      password: password,
+      name: name,
+      isSubs: isSubs
+    )
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      switch result {
+      case .success(let json):
+        let success = json["success"] as? Bool ?? false
+        let message = json["message"] as? String ?? ""
+        completion(.success((success, message)))
+      case .failure(let error):
+        completion(.failure(AnyError(error)))
+      }
+    }
+  }
+
+  func signInEmail(_ email: String, password: String, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+    let request = NativeSignInUpService.signInEmail(email: email, password: password)
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      completion(result)
+    }
+  }
+
+  func resetPassword(_ email: String, completion: @escaping (Result<(Bool, String), AnyError>) -> Void) {
+    let request = NativeSignInUpService.resetPassword(email: email)
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      switch result {
+      case .success(let json):
+        let success = json["success"] as? Bool ?? false
+        let message = json["message"] as? String ?? ""
+        completion(.success((success, message)))
+      case .failure(let error):
+        completion(.failure(AnyError(error)))
+      }
+    }
+  }
+
+  func signInSocial(type: String, email: String, name: String, photo: String, accessToken: String, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+    let request = NativeSignInUpService.signInSocial(
+      type: type,
+      email: email,
+      name: name,
+      photo: photo,
+      accessToken: accessToken
+    )
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      completion(result)
+    }
+  }
+
+  func updatePassword(_ email: String, oldPassword: String, newPassword: String, accessToken: String, completion: @escaping (Result<(Bool, String), AnyError>) -> Void) {
+    let request = NativeSignInUpService.updatePassword(
+      email: email,
+      oldPassword: oldPassword,
+      newPassword: newPassword,
+      authenToken: accessToken
+    )
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      switch result {
+      case .success(let json):
+        let success = json["success"] as? Bool ?? false
+        let message = json["message"] as? String ?? ""
+        completion(.success((success, message)))
+      case .failure(let error):
+        completion(.failure(AnyError(error)))
+      }
+    }
+  }
+
+  func callRefreshToken(_ refreshToken: String, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+    let request = NativeSignInUpService.refreshToken(refreshToken: refreshToken)
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      completion(result)
+    }
+  }
+
+  func getUserAuthData(email: String, password: String, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+    let request = NativeSignInUpService.getUserAuthToken(email: email, password: password)
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      completion(result)
+    }
+  }
+
+  func getUserInfo(authToken: String, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+    let request = NativeSignInUpService.getUserInfo(authToken: authToken)
+    self.sendRequest(request) { [weak self] result in
+      guard let _ = self else { return }
+      completion(result)
+    }
+  }
+
+  fileprivate func sendRequest(_ request: NativeSignInUpService, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+    DispatchQueue.global(qos: .background).async {
+      self.provider.request(request) { [weak self] (result) in
+        guard let _ = self else { return }
+        DispatchQueue.main.async {
+          switch result {
+          case .success(let resp):
+            do {
+              _ = try resp.filterSuccessfulStatusCodes()
+              let json = try resp.mapJSON(failsOnEmptyData: false) as? JSONDictionary ?? [:]
+              completion(.success(json))
+            } catch let err {
+              completion(.failure(AnyError(err)))
+            }
+          case .failure(let error):
+            completion(.failure(AnyError(error)))
+          }
+        }
+      }
     }
   }
 }

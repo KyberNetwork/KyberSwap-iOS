@@ -254,6 +254,145 @@ extension UserInfoService: TargetType {
   }
 }
 
+enum NativeSignInUpService {
+  case signUpEmail(email: String, password: String, name: String, isSubs: Bool)
+  case signInEmail(email: String, password: String)
+  case resetPassword(email: String)
+  case signInSocial(type: String, email: String, name: String, photo: String, accessToken: String)
+  case confirmSignUpSocial(type: String, email: String, name: String, photo: String, isSubs: Bool, accessToken: String)
+  case updatePassword(email: String, oldPassword: String, newPassword: String, authenToken: String)
+  case getUserAuthToken(email: String, password: String)
+  case refreshToken(refreshToken: String)
+  case getUserInfo(authToken: String)
+}
+
+extension NativeSignInUpService: TargetType {
+  var baseURL: URL {
+    let baseString = KNAppTracker.getKyberProfileBaseString()
+    let endpoint: String = {
+      switch self {
+      case .signUpEmail: return KNSecret.signUpURL
+      case .signInEmail: return KNSecret.signInURL
+      case .resetPassword: return KNSecret.resetPassURL
+      case .signInSocial: return KNSecret.signInSocialURL
+      case .confirmSignUpSocial: return KNSecret.confirmSignUpSocialURL
+      case .updatePassword: return KNSecret.updatePasswordURL
+      case .getUserAuthToken: return KNSecret.getAuthTokenURL
+      case .refreshToken: return KNSecret.refreshTokenURL
+      case .getUserInfo: return KNSecret.getUserInfoURL
+      }
+    }()
+    return URL(string: "\(baseString)\(endpoint)")!
+  }
+
+  var path: String { return "" }
+
+  var method: Moya.Method {
+    switch self {
+    case .signUpEmail, .signInEmail, .resetPassword, .signInSocial, .confirmSignUpSocial, .refreshToken, .getUserAuthToken: return .post
+    case .updatePassword: return .patch
+    case .getUserInfo: return .get
+    }
+  }
+
+  var task: Task {
+    switch self {
+    case .signUpEmail(let email, let password, let name, let isSubs):
+      let json: JSONDictionary = [
+        "email": email,
+        "password": password,
+        "password_confirmation": password,
+        "display_name": name,
+        "subscription": isSubs,
+        "photo_url": "",
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .signInEmail(let email, let password):
+      let json: JSONDictionary = [
+        "email": email,
+        "password": password,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .resetPassword(let email):
+      let json: JSONDictionary = [
+        "email": email,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .signInSocial(let type, let email, let name, let photo, let accessToken):
+      let json: JSONDictionary = [
+        "type": type,
+        "email": email,
+        "display_name": name,
+        "photo_url": photo,
+        "access_token": accessToken,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .confirmSignUpSocial(let type, let email, let name, let photo, let isSubs, let accessToken):
+      let json: JSONDictionary = [
+        "type": type,
+        "email": email,
+        "display_name": name,
+        "subscription": isSubs,
+        "photo_url": photo,
+        "access_token": accessToken,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .updatePassword(let email, let oldPassword, let newPassword, _):
+      let json: JSONDictionary = [
+        "email": email,
+        "current_password": oldPassword,
+        "password_confirmation": newPassword,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .getUserAuthToken(let email, let password):
+      let json: JSONDictionary = [
+        "email": email,
+        "password": password,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    case .getUserInfo:
+      return .requestPlain
+    case .refreshToken(let refreshToken):
+      let json: JSONDictionary = [
+        "refresh_token": refreshToken,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    }
+  }
+  var sampleData: Data { return Data() }
+  var headers: [String: String]? {
+    if case .updatePassword(_, _, _, let authenToken) = self {
+      return [
+        "content-type": "application/json",
+        "client": Bundle.main.bundleIdentifier ?? "",
+        "client-build": Bundle.main.buildNumber ?? "",
+        "Authorization": authenToken,
+      ]
+    }
+    if case .getUserInfo(let authenToken) = self {
+      return [
+        "content-type": "application/json",
+        "client": Bundle.main.bundleIdentifier ?? "",
+        "client-build": Bundle.main.buildNumber ?? "",
+        "Authorization": authenToken,
+      ]
+    }
+    return [
+      "content-type": "application/json",
+      "client": Bundle.main.bundleIdentifier ?? "",
+      "client-build": Bundle.main.buildNumber ?? "",
+    ]
+  }
+}
+
 enum ProfileKYCService {
   case personalInfo(
     accessToken: String,

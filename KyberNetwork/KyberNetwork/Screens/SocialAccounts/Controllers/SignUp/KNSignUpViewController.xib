@@ -24,6 +24,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KNSignUpViewController" customModule="KyberNetwork" customModuleProvider="target">
             <connections>
                 <outlet property="agreeToTextLabel" destination="47u-ee-fpz" id="Kne-ep-W0x"/>
+                <outlet property="confirmEmailTextLabel" destination="1yd-hj-k90" id="kqK-vf-xtc"/>
                 <outlet property="displayNameTextField" destination="619-ad-6aO" id="De0-wu-Z5e"/>
                 <outlet property="emailAddressTextField" destination="9lG-gQ-1xN" id="9hW-op-Sx6"/>
                 <outlet property="headerContainerView" destination="vcl-Nv-WMJ" id="ykI-4f-OxB"/>
@@ -191,7 +192,7 @@
                             </constraints>
                             <color key="textColor" red="0.078431372550000003" green="0.098039215690000001" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="16"/>
-                            <textInputTraits key="textInputTraits"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                         </textField>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="41h-jY-HE9">
                             <rect key="frame" x="20" y="268" width="335" height="1"/>
@@ -256,6 +257,12 @@
                                 <action selector="termsAndConditionsButtonPressed:" destination="-1" eventType="touchUpInside" id="fUa-5r-zPl"/>
                             </connections>
                         </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A message with a confirmation link has been sent to your email address. Please follow the link to activate your account." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1yd-hj-k90">
+                            <rect key="frame" x="20" y="201" width="335" height="40.5"/>
+                            <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="11"/>
+                            <color key="textColor" red="0.19215686269999999" green="0.79607843140000001" blue="0.61960784310000006" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" red="0.96470588239999999" green="0.96862745100000003" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
@@ -272,6 +279,7 @@
                         <constraint firstItem="UvI-Kh-tIe" firstAttribute="leading" secondItem="6ZF-fP-eVn" secondAttribute="leading" constant="20" id="CQr-5K-Goo"/>
                         <constraint firstAttribute="trailing" secondItem="EnS-jP-oHi" secondAttribute="trailing" constant="20" id="DS8-4Y-4yc"/>
                         <constraint firstAttribute="trailing" secondItem="9lG-gQ-1xN" secondAttribute="trailing" constant="20" id="GJX-8b-fk7"/>
+                        <constraint firstItem="1yd-hj-k90" firstAttribute="centerX" secondItem="6ZF-fP-eVn" secondAttribute="centerX" id="HtM-Jg-zVF"/>
                         <constraint firstItem="oHt-BK-yKo" firstAttribute="leading" secondItem="9lG-gQ-1xN" secondAttribute="leading" id="IWb-aA-o7F"/>
                         <constraint firstItem="47u-ee-fpz" firstAttribute="centerY" secondItem="1zJ-XH-kIw" secondAttribute="centerY" id="Iee-SN-Dua"/>
                         <constraint firstAttribute="trailing" secondItem="619-ad-6aO" secondAttribute="trailing" constant="20" id="IxG-Ut-mmy"/>
@@ -281,6 +289,7 @@
                         <constraint firstItem="3be-fA-QrX" firstAttribute="leading" secondItem="QbZ-jW-iGq" secondAttribute="trailing" constant="12" id="Q8i-JR-o4b"/>
                         <constraint firstItem="wTg-RL-S0h" firstAttribute="centerX" secondItem="6ZF-fP-eVn" secondAttribute="centerX" id="Qbg-Ha-6Ky"/>
                         <constraint firstAttribute="trailing" secondItem="hhL-NG-82A" secondAttribute="trailing" constant="20" id="Qwn-ns-xjg"/>
+                        <constraint firstAttribute="trailing" secondItem="1yd-hj-k90" secondAttribute="trailing" constant="20" id="SJ0-6w-5lq"/>
                         <constraint firstItem="1zJ-XH-kIw" firstAttribute="top" secondItem="QbZ-jW-iGq" secondAttribute="bottom" constant="18" id="TTe-Yi-V6A"/>
                         <constraint firstItem="k7g-p0-ZZa" firstAttribute="top" secondItem="619-ad-6aO" secondAttribute="bottom" constant="32" id="TfB-le-ssa"/>
                         <constraint firstItem="QbZ-jW-iGq" firstAttribute="leading" secondItem="6ZF-fP-eVn" secondAttribute="leading" constant="20" id="XAG-27-cSq"/>
@@ -302,11 +311,13 @@
                         <constraint firstItem="12M-rl-5Of" firstAttribute="centerY" secondItem="wTg-RL-S0h" secondAttribute="centerY" constant="1" id="qAh-b0-1Hz"/>
                         <constraint firstItem="QbZ-jW-iGq" firstAttribute="top" secondItem="k7g-p0-ZZa" secondAttribute="bottom" constant="60" id="rbI-LX-6FD"/>
                         <constraint firstItem="Jv4-b9-49H" firstAttribute="leading" secondItem="6ZF-fP-eVn" secondAttribute="leading" constant="20" id="rt5-7f-jeS"/>
+                        <constraint firstItem="1yd-hj-k90" firstAttribute="top" secondItem="oHt-BK-yKo" secondAttribute="bottom" constant="8" id="sgZ-0J-gsC"/>
                         <constraint firstItem="UvI-Kh-tIe" firstAttribute="top" secondItem="1zJ-XH-kIw" secondAttribute="bottom" constant="40" id="u9T-Vb-uxs"/>
                         <constraint firstItem="Kth-nk-TgP" firstAttribute="leading" secondItem="kFt-fJ-0BJ" secondAttribute="trailing" constant="24" id="ucw-wM-faJ"/>
                         <constraint firstItem="619-ad-6aO" firstAttribute="leading" secondItem="6ZF-fP-eVn" secondAttribute="leading" constant="20" id="ugR-fN-Jkk"/>
                         <constraint firstItem="wTg-RL-S0h" firstAttribute="top" secondItem="kFt-fJ-0BJ" secondAttribute="bottom" constant="32" id="vSb-ae-kDb"/>
                         <constraint firstItem="icZ-k4-Dau" firstAttribute="leading" secondItem="47u-ee-fpz" secondAttribute="trailing" constant="4" id="vl8-Rf-4rA"/>
+                        <constraint firstItem="1yd-hj-k90" firstAttribute="leading" secondItem="6ZF-fP-eVn" secondAttribute="leading" constant="20" id="y0c-h6-SeV"/>
                         <constraint firstAttribute="trailing" secondItem="k7g-p0-ZZa" secondAttribute="trailing" constant="40" id="ygc-gS-GLi"/>
                         <constraint firstItem="kFt-fJ-0BJ" firstAttribute="top" secondItem="6ZF-fP-eVn" secondAttribute="top" constant="24" id="yqz-5S-98n"/>
                         <constraint firstItem="oHt-BK-yKo" firstAttribute="trailing" secondItem="9lG-gQ-1xN" secondAttribute="trailing" id="z2P-Jv-7UI"/>

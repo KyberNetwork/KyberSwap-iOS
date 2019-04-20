@@ -254,57 +254,53 @@ extension KNProfileHomeCoordinator {
     }
   }
 
-  fileprivate func getUserInfo(type: String, accessToken: String, refreshToken: String, expireTime: Double, hasUser: Bool, showError: Bool = false, completion: @escaping (Bool) -> Void) {
+  func getUserInfo(type: String, accessToken: String, refreshToken: String, expireTime: Double, hasUser: Bool, showError: Bool = false, completion: @escaping (Bool) -> Void) {
     // got access token, user access token  to retrieve user information
-    DispatchQueue.global(qos: .background).async {
-      let provider = MoyaProvider<UserInfoService>()
-      let userInfoRequest = UserInfoService.getUserInfo(accessToken: accessToken)
-      provider.request(userInfoRequest, completion: { [weak self] userInfoResult in
-        DispatchQueue.main.async {
-          guard let _ = `self` else { return }
-          self?.navigationController.hideLoading()
-          if hasUser && IEOUserStorage.shared.user == nil {
-            self?.loadUserInfoTimer?.invalidate()
-            return
-          }
-          switch userInfoResult {
-          case .success(let userInfo):
-            guard let userDataJSON = try? userInfo.mapJSON(failsOnEmptyData: false) as? JSONDictionary, let userJSON = userDataJSON else {
-              if showError {
-                self?.navigationController.showWarningTopBannerMessage(
-                  with: NSLocalizedString("error", value: "Error", comment: ""),
-                  message: NSLocalizedString("can.not.get.user.info", value: "Can not get user info", comment: "")
-                )
-                KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "get_user_info_failed"])
-              }
-              completion(false)
-              return
-            }
-            let user = IEOUser(dict: userJSON)
-            IEOUserStorage.shared.update(objects: [user])
-            IEOUserStorage.shared.updateToken(
-              object: user,
-              type: type,
-              accessToken: accessToken,
-              refreshToken: refreshToken,
-              expireTime: expireTime
+    KNSocialAccountsCoordinator.shared.getUserInfo(authToken: accessToken) { [weak self] result in
+      guard let _ = `self` else { return }
+      self?.navigationController.hideLoading()
+      if hasUser && IEOUserStorage.shared.user == nil {
+        self?.loadUserInfoTimer?.invalidate()
+        return
+      }
+      switch result {
+      case .success(let userInfo):
+        let success = userInfo["success"] as? Bool ?? true
+        let message = userInfo["message"] as? String ?? ""
+        guard success else {
+          if showError {
+            self?.navigationController.showWarningTopBannerMessage(
+              with: NSLocalizedString("error", value: "Error", comment: ""),
+              message: NSLocalizedString("can.not.get.user.info", value: "Can not get user info", comment: "") + ": \(message)"
             )
-            self?.timerAccessTokenExpired()
-            if !hasUser { self?.timerLoadUserInfo() }
-            self?.rootViewController.coordinatorUserDidSignInSuccessfully()
-            self?.lastUpdatedUserInfo = Date()
-            if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.updateUserSignedInPushTokenWithRetry() }
-            completion(true)
-          // Already have user
-          case .failure(let error):
             KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "get_user_info_failed"])
-            if showError {
-              self?.navigationController.displayError(error: error)
-            }
-            completion(false)
           }
+          completion(false)
+          return
         }
-      })
+        let user = IEOUser(dict: userInfo)
+        IEOUserStorage.shared.update(objects: [user])
+        IEOUserStorage.shared.updateToken(
+          object: user,
+          type: type,
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          expireTime: expireTime
+        )
+        self?.timerAccessTokenExpired()
+        if !hasUser { self?.timerLoadUserInfo() }
+        self?.rootViewController.coordinatorUserDidSignInSuccessfully()
+        self?.lastUpdatedUserInfo = Date()
+        if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.updateUserSignedInPushTokenWithRetry() }
+        completion(true)
+      // Already have user
+      case .failure(let error):
+        KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "get_user_info_failed"])
+        if showError {
+          self?.navigationController.displayError(error: error)
+        }
+        completion(false)
+      }
     }
   }
 

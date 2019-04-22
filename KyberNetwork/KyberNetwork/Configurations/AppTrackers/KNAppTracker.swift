@@ -31,6 +31,8 @@ class KNAppTracker {
 
   static let kForceUpdateAlertKey: String = "kForceUpdateAlertKey"
 
+  static let kHasLoggedUserOutWithNativeSignInKey: String = "kHasLoggedUserOutWithNativeSignInKey"
+
   static let userDefaults: UserDefaults = UserDefaults.standard
 
   static let minimumPriceAlertPercent: Double = -99.0
@@ -191,4 +193,13 @@ class KNAppTracker {
   }
 
   static var isPriceAlertEnabled: Bool { return true }
+
+  static func hasLoggedUserOutWithNativeSignIn() -> Bool {
+    return userDefaults.object(forKey: kHasLoggedUserOutWithNativeSignInKey) as? Bool ?? false
+  }
+
+  static func updateHasLoggedUserOutWithNativeSignIn(isTrue: Bool = true) {
+    userDefaults.set(isTrue, forKey: kHasLoggedUserOutWithNativeSignInKey)
+    userDefaults.synchronize()
+  }
 }

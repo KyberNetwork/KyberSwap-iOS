@@ -110,6 +110,17 @@ extension KNAppCoordinator {
       withConsumerKey: KNEnvironment.default.twitterConsumerID,
       consumerSecret: KNEnvironment.default.twitterSecretKey
     )
+    if !KNAppTracker.hasLoggedUserOutWithNativeSignIn() {
+      if IEOUserStorage.shared.user != nil {
+        IEOUserStorage.shared.signedOut()
+        self.navigationController.showWarningTopBannerMessage(
+          with: NSLocalizedString("session.expired", value: "Session expired", comment: ""),
+          message: NSLocalizedString("your.session.has.expired.sign.in.to.continue", value: "Your session has expired, please sign in again to continue", comment: ""),
+          time: 1.5
+        )
+      }
+      KNAppTracker.updateHasLoggedUserOutWithNativeSignIn()
+    }
   }
 
   func appDidBecomeActive() {

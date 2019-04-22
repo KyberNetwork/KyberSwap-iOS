@@ -32,7 +32,7 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
   fileprivate var manageAlertCoordinator: KNManageAlertCoordinator?
 
   fileprivate var loadUserInfoTimer: Timer?
-  fileprivate var lastUpdatedUserInfo: Date?
+  internal var lastUpdatedUserInfo: Date?
 
   internal var isSignIn: Bool = false
   internal var isSubscribe: Bool = false
@@ -84,7 +84,7 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
     self.loadUserInfoTimer = nil
   }
 
-  fileprivate func timerAccessTokenExpired() {
+  internal func timerAccessTokenExpired() {
     if let user = IEOUserStorage.shared.user {
       let time = Date(timeIntervalSince1970: user.expireTime).timeIntervalSinceNow
       guard time > 0 else {
@@ -102,7 +102,7 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
     }
   }
 
-  fileprivate func timerLoadUserInfo() {
+  internal func timerLoadUserInfo() {
     self.loadUserInfoTimer?.invalidate()
     guard let user = IEOUserStorage.shared.user else {
       self.loadUserInfoTimer?.invalidate()
@@ -307,46 +307,41 @@ extension KNProfileHomeCoordinator {
   fileprivate func handleUserAccessTokenExpired() {
     guard let user = IEOUserStorage.shared.user else { return }
     let refreshToken = user.refreshToken
-    DispatchQueue.global(qos: .background).async {
-      let provider = MoyaProvider<UserInfoService>()
-      let request = UserInfoService.getAccessToken(code: refreshToken, isRefresh: true)
-      provider.request(request) { [weak self] result in
-        DispatchQueue.main.async {
-          switch result {
-          case .success(let data):
-            do {
-              _ = try data.filterSuccessfulStatusCodes()
-              if let json = try data.mapJSON(failsOnEmptyData: false) as? JSONDictionary,
-                let accessToken = json["access_token"] as? String,
-                let tokenType = json["token_type"] as? String,
-                let refreshToken = json["refresh_token"] as? String,
-                let expireTime = json["expires_in"] as? Double {
-                IEOUserStorage.shared.updateToken(
-                  object: user,
-                  type: tokenType,
-                  accessToken: accessToken,
-                  refreshToken: refreshToken,
-                  expireTime: Date().addingTimeInterval(expireTime).timeIntervalSince1970
-                )
-                self?.timerAccessTokenExpired()
-                KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "expiry_session_reload_successfully"])
-                return
-              }
-            } catch {}
-          case .failure:
-            break
-          }
-          // Error for some reason
-          KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "expiry_session_failed_reload"])
-          KNNotificationUtil.localPushNotification(
-            title: NSLocalizedString("session.expired", value: "Session expired", comment: ""),
-            body: NSLocalizedString("your.session.has.expired.sign.in.to.continue", value: "Your session has expired, please sign in again to continue", comment: "")
+    KNSocialAccountsCoordinator.shared.callRefreshToken(refreshToken) { [weak self] result in
+      switch result {
+      case .success(let data):
+        if let success = data["success"] as? Bool, success,
+          let json = data["data"] as? JSONDictionary,
+          let authToken = json["auth_token"] as? String,
+          let refreshToken = json["refresh_token"] as? String {
+          let expireTime: Double = {
+            let time = json["expiration_time"] as? String ?? ""
+            let date = DateFormatterUtil.shared.promoCodeDateFormatter.date(from: time)
+            return date?.timeIntervalSince1970 ?? 0.0
+          }()
+          IEOUserStorage.shared.updateToken(
+            object: user,
+            type: "",
+            accessToken: authToken,
+            refreshToken: refreshToken,
+            expireTime: expireTime
           )
-          IEOUserStorage.shared.signedOut()
-          self?.navigationController.popToRootViewController(animated: true)
-          self?.rootViewController.coordinatorDidSignOut()
+          self?.timerAccessTokenExpired()
+          KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "expiry_session_reload_successfully"])
+          return
         }
+      case .failure:
+        break
       }
+      // Error for some reason
+      KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "expiry_session_failed_reload"])
+      KNNotificationUtil.localPushNotification(
+        title: NSLocalizedString("session.expired", value: "Session expired", comment: ""),
+        body: NSLocalizedString("your.session.has.expired.sign.in.to.continue", value: "Your session has expired, please sign in again to continue", comment: "")
+      )
+      IEOUserStorage.shared.signedOut()
+      self?.navigationController.popToRootViewController(animated: true)
+      self?.rootViewController.coordinatorDidSignOut()
     }
   }
 }

@@ -312,14 +312,14 @@ extension KNProfileHomeCoordinator {
 
   fileprivate func signInEmail(email: String, password: String) {
     self.navigationController.displayLoading()
-    KNSocialAccountsCoordinator.shared.getUserAuthData(email: email, password: password) { [weak self] result in
+    KNSocialAccountsCoordinator.shared.signInEmail(email, password: password) { [weak self] result in
       guard let `self` = self else { return }
       switch result {
       case .success(let data):
         let success = data["success"] as? Bool ?? false
         let message = data["message"] as? String ?? ""
         if success {
-          self.userDidSignInWithData(data["data"] as? JSONDictionary ?? [:])
+          self.userDidSignInWithData(data)
         } else {
           self.navigationController.hideLoading()
           self.navigationController.showErrorTopBannerMessage(
@@ -349,7 +349,7 @@ extension KNProfileHomeCoordinator {
           let success = data["success"] as? Bool ?? false
           let message = data["message"] as? String ?? ""
           if success {
-            self.userDidSignInWithData(data["data"] as? JSONDictionary ?? [:])
+            self.userDidSignInWithData(data)
           } else {
             self.navigationController.hideLoading()
             self.navigationController.showErrorTopBannerMessage(
@@ -366,25 +366,38 @@ extension KNProfileHomeCoordinator {
   }
 
   fileprivate func userDidSignInWithData(_ data: JSONDictionary) {
-    let authToken = data["auth_token"] as? String ?? ""
-    let refreshToken = data["refresh_token"] as? String ?? ""
+    guard let authInfoDict = data["auth_info"] as? JSONDictionary, let userInfo = data["user_info"] as? JSONDictionary else {
+      return
+    }
+    let authToken = authInfoDict["auth_token"] as? String ?? ""
+    let refreshToken = authInfoDict["refresh_token"] as? String ?? ""
     let expiredTime: Double = {
-      let time = data["expiration_time"] as? String ?? ""
+      let time = authInfoDict["expiration_time"] as? String ?? ""
       let date = DateFormatterUtil.shared.promoCodeDateFormatter.date(from: time)
       return date?.timeIntervalSince1970 ?? 0.0
     }()
-    self.getUserInfo(type: "", accessToken: authToken, refreshToken: refreshToken, expireTime: expiredTime, hasUser: false) { [weak self] success in
-      if success {
-        KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_successfully"])
-        let name = IEOUserStorage.shared.user?.name ?? ""
-        let text = NSLocalizedString("welcome.back.user", value: "Welcome back, %@", comment: "")
-        let message = String(format: text, name)
-        self?.navigationController.showSuccessTopBannerMessage(with: "", message: message)
-        if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.resume() }
-      } else {
-        KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_failed"])
-      }
-    }
+
+    // create and update user info
+    let user = IEOUser(dict: userInfo)
+    IEOUserStorage.shared.update(objects: [user])
+    IEOUserStorage.shared.updateToken(
+      object: user,
+      type: "",
+      accessToken: authToken,
+      refreshToken: refreshToken,
+      expireTime: expiredTime
+    )
+    self.timerAccessTokenExpired()
+    self.timerLoadUserInfo()
+    self.rootViewController.coordinatorUserDidSignInSuccessfully()
+    self.lastUpdatedUserInfo = Date()
+    if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.updateUserSignedInPushTokenWithRetry() }
+    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_successfully"])
+    let name = IEOUserStorage.shared.user?.name ?? ""
+    let text = NSLocalizedString("welcome.back.user", value: "Welcome back, %@", comment: "")
+    let message = String(format: text, name)
+    self.navigationController.showSuccessTopBannerMessage(with: "", message: message)
+    if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.resume() }
   }
 
   fileprivate func proceedSignUp(accountType: KNSocialAccountsType) {

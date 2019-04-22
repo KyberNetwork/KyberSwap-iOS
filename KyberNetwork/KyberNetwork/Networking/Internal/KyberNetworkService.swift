@@ -437,7 +437,7 @@ extension ProfileKYCService: TargetType {
   var task: Task {
     switch self {
     case .personalInfo(
-      let accessToken,
+      _,
       let firstName,
       let middleName,
       let lastName,
@@ -470,7 +470,6 @@ extension ProfileKYCService: TargetType {
         return string
       }()
       var json: JSONDictionary = [
-        "access_token": accessToken,
         "first_name": firstName,
         "middle_name": middleName,
         "last_name": lastName,
@@ -500,9 +499,8 @@ extension ProfileKYCService: TargetType {
       json["tax_identification_number"] = taxIDNo ?? ""
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .identityInfo(let accessToken, let documentType, let documentID, let issueDate, let expiryDate, let docFrontImage, let docBackImage, let docHoldingImage):
+    case .identityInfo(_, let documentType, let documentID, let issueDate, let expiryDate, let docFrontImage, let docBackImage, let docHoldingImage):
       var json: JSONDictionary = [
-        "access_token": accessToken,
         "document_type": documentType,
         "document_id": documentID,
         "document_issue_date": issueDate ?? "",
@@ -515,31 +513,19 @@ extension ProfileKYCService: TargetType {
       }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .submitKYC(let accessToken):
-      let json: JSONDictionary = ["access_token": accessToken]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .userWallets(let accessToken):
-      let json: JSONDictionary = ["access_token": accessToken]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .checkWalletExist(let accessToken, let wallet):
+    case .userWallets, .resubmitKYC, .submitKYC:
+      return .requestPlain
+    case .checkWalletExist(_, let wallet):
       let json: JSONDictionary = [
-        "access_token": accessToken,
         "address": wallet,
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .addWallet(let accessToken, let label, let address):
+    case .addWallet(_, let label, let address):
       let json: JSONDictionary = [
-        "access_token": accessToken,
         "label": label,
         "address": address,
       ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .resubmitKYC(let accessToken):
-      let json: JSONDictionary = ["access_token": accessToken]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
     case .promoCode(let promoCode, let nonce):

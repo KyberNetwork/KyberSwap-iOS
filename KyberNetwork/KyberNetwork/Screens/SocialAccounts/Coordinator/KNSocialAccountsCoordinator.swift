@@ -85,7 +85,6 @@ extension KNProfileHomeCoordinator {
 // MARK: Handle Facebook authentication
 extension KNProfileHomeCoordinator {
   fileprivate func authenticateFacebook() {
-    LoginManager().logOut() // TODO: Remove
     self.retrieveFacebokAccessToken { (accessToken, isError) in
       guard let accessToken = accessToken else {
         if isError {
@@ -158,7 +157,6 @@ extension KNProfileHomeCoordinator {
           let data = picture["data"] as? JSONDictionary ?? [:]
           return data["url"] as? String ?? ""
         }()
-        self.showSuccessTopBannerMessage(with: "Successfully!", message: "Hi \(name), You are using \(email)", time: 2.0) // TODO: Remove
         let accountType = KNSocialAccountsType.facebook(name: name, email: email, icon: icon, accessToken: accessToken.authenticationToken)
         completion(.success(accountType))
       case .failed(let error):
@@ -202,7 +200,6 @@ extension KNProfileHomeCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
         if url == nil { return "" }
         return url?.absoluteString ?? ""
       }()
-      self.showSuccessTopBannerMessage(with: "Successfully!", message: "Hi \(fullName), You are using \(email)", time: 2.0) // TODO: Remove
       print("Get user information with: \(fullName) \(email) \(icon) \(idToken)")
       let accountType = KNSocialAccountsType.google(name: fullName, email: email, icon: icon, accessToken: idToken)
       if self.isSignIn {
@@ -286,7 +283,6 @@ extension KNProfileHomeCoordinator {
           icon: user.profileImageLargeURL,
           userID: user.userID
         )
-        self.showSuccessTopBannerMessage(with: "Successfully!", message: "Hi \(user.name), You are using \(email)", time: 2.0) // TODO: Remove
         completion(.success(accountType))
       } else if let error = error {
         completion(.failure(AnyError(error)))

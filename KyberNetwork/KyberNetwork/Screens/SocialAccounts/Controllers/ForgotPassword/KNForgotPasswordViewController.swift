@@ -64,14 +64,33 @@ class KNForgotPasswordViewController: KNBaseViewController {
 
   fileprivate func sendResetPasswordRequest(_ email: String) {
     self.displayLoading()
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+    KNSocialAccountsCoordinator.shared.resetPassword(email) { [weak self] result in
+      guard let `self` = self else { return }
       self.hideLoading()
-      self.showSuccessTopBannerMessage(
-        with: "",
-        message: "Request sent successfully!",
-        time: 1.5
-      )
-      self.dismiss(animated: true, completion: nil)
+      switch result {
+      case .success(let data):
+        if data.0 {
+          // success
+          self.showSuccessTopBannerMessage(
+            with: NSLocalizedString("success", comment: ""),
+            message: data.1,
+            time: 1.5
+          )
+          self.dismiss(animated: true, completion: nil)
+        } else {
+          self.showErrorTopBannerMessage(
+            with: NSLocalizedString("error", comment: ""),
+            message: data.1,
+            time: 1.5
+          )
+        }
+      case .failure:
+        self.showErrorTopBannerMessage(
+          with: NSLocalizedString("error", comment: ""),
+          message: "Can not send your request, please try again".toBeLocalised(),
+          time: 1.5
+        )
+      }
     }
   }
 }

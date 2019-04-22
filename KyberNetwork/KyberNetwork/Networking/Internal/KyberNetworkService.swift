@@ -177,80 +177,71 @@ extension UserInfoService: TargetType {
       }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .getUserInfo(let accessToken):
+    case .getUserInfo:
       let json: JSONDictionary = [
-        "access_token": accessToken,
         "lang": Locale.current.kyberSupportedLang,
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .addPushToken(let accessToken, let pushToken):
+    case .addPushToken(_, let pushToken):
       let json: JSONDictionary = [
-        "access_token": accessToken,
         "push_token_mobile": pushToken,
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .getListAlerts(let accessToken):
-      let json: JSONDictionary = [
-        "access_token": accessToken,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .addNewAlert(let accessToken, let jsonData):
+    case .addNewAlert(_, let jsonData):
       var json: JSONDictionary = jsonData
       json["id"] = nil
-      json["access_token"] = accessToken
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .updateAlert(let accessToken, let jsonData):
+    case .updateAlert(_, let jsonData):
       var json: JSONDictionary = jsonData
       json["id"] = nil
-      json["access_token"] = accessToken
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .removeAnAlert(let accessToken, _):
+    case .setAlertMethods(_, let email, let telegram, let pushNoti):
       let json: JSONDictionary = [
-        "access_token": accessToken,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .getListAlertMethods(let accessToken):
-      let json: JSONDictionary = [
-        "access_token": accessToken,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .setAlertMethods(let accessToken, let email, let telegram, let pushNoti):
-      let json: JSONDictionary = [
-        "access_token": accessToken,
         "email": email,
         "telegram": telegram,
         "push_notification": pushNoti,
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .getLeaderBoardData(let accessToken):
-      let json: JSONDictionary = [
-        "access_token": accessToken,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .getLatestCampaignResult(let accessToken):
-      let json: JSONDictionary = [
-        "access_token": accessToken,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
+    case .getListAlerts, .removeAnAlert, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult:
+      return .requestPlain
     }
   }
   var sampleData: Data { return Data() }
   var headers: [String: String]? {
-    return [
+    var json: [String: String] = [
       "content-type": "application/json",
       "client": Bundle.main.bundleIdentifier ?? "",
       "client-build": Bundle.main.buildNumber ?? "",
     ]
+    switch self {
+    case .getUserInfo(let accessToken):
+      json["Authorization"] = accessToken
+    case .addPushToken(let accessToken, _):
+      json["Authorization"] = accessToken
+    case .addNewAlert(let accessToken, _):
+      json["Authorization"] = accessToken
+    case .updateAlert(let accessToken, _):
+      json["Authorization"] = accessToken
+    case .setAlertMethods(let accessToken, _, _, _):
+      json["Authorization"] = accessToken
+    case .getListAlerts(let accessToken):
+      json["Authorization"] = accessToken
+    case .removeAnAlert(let accessToken, _):
+      json["Authorization"] = accessToken
+    case .getListAlertMethods(let accessToken):
+      json["Authorization"] = accessToken
+    case .getLeaderBoardData(let accessToken):
+      json["Authorization"] = accessToken
+    case .getLatestCampaignResult(let accessToken):
+      json["Authorization"] = accessToken
+    default: break
+    }
+    return json
   }
 }
 
@@ -563,7 +554,28 @@ extension ProfileKYCService: TargetType {
 
   var sampleData: Data { return Data() }
   var headers: [String: String]? {
+    var json: [String: String] = [
+      "content-type": "application/json",
+      "client": Bundle.main.bundleIdentifier ?? "",
+      "client-build": Bundle.main.buildNumber ?? "",
+    ]
     switch self {
+    case .personalInfo(
+      let accessToken, _, _, _, _, _, _, _, _, _,
+      _, _, _, _, _, _, _, _, _, _):
+      json["Authorization"] = accessToken
+    case .identityInfo(let accessToken, _, _, _, _, _, _, _):
+      json["Authorization"] = accessToken
+    case .submitKYC(let accessToken):
+      json["Authorization"] = accessToken
+    case .userWallets(let accessToken):
+      json["Authorization"] = accessToken
+    case .checkWalletExist(let accessToken, _):
+      json["Authorization"] = accessToken
+    case .addWallet(let accessToken, _, _):
+      json["Authorization"] = accessToken
+    case .resubmitKYC(let accessToken):
+      json["Authorization"] = accessToken
     case .promoCode(let promoCode, let nonce):
       let key: String = {
         if KNEnvironment.default == .production || KNEnvironment.default == .mainnetTest {
@@ -580,12 +592,7 @@ extension ProfileKYCService: TargetType {
         "client": Bundle.main.bundleIdentifier ?? "",
         "client-build": Bundle.main.buildNumber ?? "",
       ]
-    default:
-      return [
-        "content-type": "application/json",
-        "client": Bundle.main.bundleIdentifier ?? "",
-        "client-build": Bundle.main.buildNumber ?? "",
-      ]
     }
+    return json
   }
 }

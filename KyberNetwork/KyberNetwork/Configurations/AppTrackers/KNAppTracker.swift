@@ -33,6 +33,8 @@ class KNAppTracker {
 
   static let kHasLoggedUserOutWithNativeSignInKey: String = "kHasLoggedUserOutWithNativeSignInKey"
 
+  static let kHasSentPushTokenKey: String = "kHasLoggedUserOutWithNativeSignInKey"
+
   static let userDefaults: UserDefaults = UserDefaults.standard
 
   static let minimumPriceAlertPercent: Double = -99.0
@@ -200,6 +202,21 @@ class KNAppTracker {
 
   static func updateHasLoggedUserOutWithNativeSignIn(isTrue: Bool = true) {
     userDefaults.set(isTrue, forKey: kHasLoggedUserOutWithNativeSignInKey)
+    userDefaults.synchronize()
+  }
+
+  static func hasSentPushTokenRequest(userID: String) -> Bool {
+    let key = "\(KNEnvironment.default.displayName)_\(kHasSentPushTokenKey)_\(userID)"
+    return userDefaults.object(forKey: key) as? Bool ?? false
+  }
+
+  static func updateHasSentPushTokenRequest(userID: String, hasSent: Bool) {
+    let key = "\(KNEnvironment.default.displayName)_\(kHasSentPushTokenKey)_\(userID)"
+    if hasSent {
+      userDefaults.set(true, forKey: key)
+    } else {
+      userDefaults.removeObject(forKey: key)
+    }
     userDefaults.synchronize()
   }
 }

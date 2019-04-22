@@ -8,6 +8,7 @@ import Crashlytics
 import FacebookLogin
 import FacebookCore
 import GoogleSignIn
+import TwitterKit
 
 class KNProfileHomeCoordinator: NSObject, Coordinator {
 
@@ -54,14 +55,6 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
   func start() {
     self.navigationController.viewControllers = [self.rootViewController]
     self.timerAccessTokenExpired()
-    // Add notification observer
-    let callbackName = Notification.Name(kIEODidReceiveCallbackNotificationKey)
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(self.appCoordinatorDidReceiveCallback(_:)),
-      name: callbackName,
-      object: nil
-    )
     if IEOUserStorage.shared.user != nil {
       if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.resume() }
       self.timerLoadUserInfo()
@@ -73,12 +66,6 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
     // Remove notification observer
     self.accessTokenExpireTimer?.invalidate()
     self.accessTokenExpireTimer = nil
-
-    NotificationCenter.default.removeObserver(
-      self,
-      name: NSNotification.Name(kIEODidReceiveCallbackNotificationKey),
-      object: nil
-    )
 
     self.loadUserInfoTimer?.invalidate()
     self.loadUserInfoTimer = nil
@@ -109,7 +96,6 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
       return
     }
     self.getUserInfo(
-      type: user.tokenType,
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,
       expireTime: user.expireTime,
@@ -131,7 +117,6 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
           return
         }
         self?.getUserInfo(
-          type: user.tokenType,
           accessToken: user.accessToken,
           refreshToken: user.refreshToken,
           expireTime: user.expireTime,
@@ -168,9 +153,14 @@ extension KNProfileHomeCoordinator {
     alertController.addAction(UIAlertAction(title: NSLocalizedString("log.out", value: "Log Out", comment: ""), style: .default, handler: { _ in
       // log user out of facebook
       if AccessToken.current != nil { LoginManager().logOut() }
+      // logout google
       GIDSignIn.sharedInstance().signOut()
+
+      // stop loading data
       self.loadUserInfoTimer?.invalidate()
       self.lastUpdatedUserInfo = nil
+
+      // remove user's data
       IEOUserStorage.shared.signedOut()
       Branch.getInstance().logout()
       self.rootViewController.coordinatorDidSignOut()
@@ -179,82 +169,9 @@ extension KNProfileHomeCoordinator {
     self.rootViewController.present(alertController, animated: true, completion: nil)
   }
 
-  @objc func appCoordinatorDidReceiveCallback(_ sender: Notification) {
-    if IEOUserStorage.shared.user != nil { return } // return if user exists
-    guard let params = sender.object as? JSONDictionary else { return }
-    guard let code = params["code"] as? String, let state = params["state"] as? String, state.contains(KNSecret.state) else { return }
-    if self.webViewSignInVC != nil {
-      self.navigationController.popViewController(animated: true) {
-        self.webViewSignInVC = nil
-      }
-    }
-    // got authentication code
-    // use the code to get access token for user
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "received_call_back"])
-    self.navigationController.displayLoading(text: "\(NSLocalizedString("initializing.session", value: "Initializing Session", comment: ""))...", animated: true)
-    DispatchQueue.global(qos: .background).async {
-      let provider = MoyaProvider<UserInfoService>()
-      let accessToken = UserInfoService.getAccessToken(code: code, isRefresh: false)
-      provider.request(accessToken, completion: { [weak self] result in
-        DispatchQueue.main.async {
-          guard let _ = `self` else { return }
-          switch result {
-          case .success(let data):
-            do {
-              _ = try data.filterSuccessfulStatusCodes()
-              let dataJSON: JSONDictionary = try data.mapJSON(failsOnEmptyData: false) as? JSONDictionary ?? [:]
-              guard let accessToken = dataJSON["access_token"] as? String,
-                let tokenType = dataJSON["token_type"] as? String,
-                let refreshToken = dataJSON["refresh_token"] as? String,
-                let expireTime = dataJSON["expires_in"] as? Double
-                else {
-                  self?.navigationController.hideLoading()
-                  self?.navigationController.showWarningTopBannerMessage(
-                    with: NSLocalizedString("error", value: "Error", comment: ""),
-                    message: NSLocalizedString("can.not.get.access.token", value: "Can not get access token", comment: "")
-                  )
-                  KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "can_not_get_access_token"])
-                  return
-              }
-              self?.getUserInfo(
-                type: tokenType,
-                accessToken: accessToken,
-                refreshToken: refreshToken,
-                expireTime:
-                Date().addingTimeInterval(expireTime).timeIntervalSince1970,
-                hasUser: false,
-                showError: true,
-                completion: { success in
-                  if success {
-                    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_successfully"])
-                    let name = IEOUserStorage.shared.user?.name ?? ""
-                    let text = NSLocalizedString("welcome.back.user", value: "Welcome back, %@", comment: "")
-                    let message = String(format: text, name)
-                    self?.navigationController.showSuccessTopBannerMessage(with: "", message: message)
-                    if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.resume() }
-                  } else {
-                    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "signed_in_failed"])
-                  }
-                }
-              )
-            } catch {
-              KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "can_not_get_access_token"])
-              self?.navigationController.hideLoading()
-              self?.navigationController.showWarningTopBannerMessage(
-                with: NSLocalizedString("error", value: "Error", comment: ""),
-                message: NSLocalizedString("can.not.get.access.token", value: "Can not get access token", comment: "")
-              )
-            }
-          case .failure(let error):
-            self?.navigationController.hideLoading()
-            self?.navigationController.displayError(error: error)
-          }
-        }
-      })
-    }
-  }
-
-  func getUserInfo(type: String, accessToken: String, refreshToken: String, expireTime: Double, hasUser: Bool, showError: Bool = false, completion: @escaping (Bool) -> Void) {
+  // Get current user's info data, to sync between mobile (iOS + Android) and web
+  // this method will be called repeatedly
+  func getUserInfo(accessToken: String, refreshToken: String, expireTime: Double, hasUser: Bool, showError: Bool = false, completion: @escaping (Bool) -> Void) {
     // got access token, user access token  to retrieve user information
     KNSocialAccountsCoordinator.shared.getUserInfo(authToken: accessToken) { [weak self] result in
       guard let _ = `self` else { return }
@@ -282,7 +199,7 @@ extension KNProfileHomeCoordinator {
         IEOUserStorage.shared.update(objects: [user])
         IEOUserStorage.shared.updateToken(
           object: user,
-          type: type,
+          type: "",
           accessToken: accessToken,
           refreshToken: refreshToken,
           expireTime: expireTime
@@ -304,6 +221,7 @@ extension KNProfileHomeCoordinator {
     }
   }
 
+  // Call refresh token API to refresh token
   fileprivate func handleUserAccessTokenExpired() {
     guard let user = IEOUserStorage.shared.user else { return }
     let refreshToken = user.refreshToken
@@ -404,7 +322,6 @@ extension KNProfileHomeCoordinator: KNProfileHomeViewControllerDelegate {
     }
     self.navigationController.displayLoading(text: "\(NSLocalizedString("checking", value: "Checking", comment: ""))...", animated: true)
     self.getUserInfo(
-      type: user.tokenType,
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,
       expireTime: user.expireTime,
@@ -473,7 +390,6 @@ extension KNProfileHomeCoordinator: KYCCoordinatorDelegate {
       animated: true
     )
     self.getUserInfo(
-      type: user.tokenType,
       accessToken: user.accessToken,
       refreshToken: user.refreshToken,
       expireTime: user.expireTime,

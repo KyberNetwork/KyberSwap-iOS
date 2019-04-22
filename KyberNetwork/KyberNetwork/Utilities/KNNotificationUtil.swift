@@ -39,7 +39,6 @@ let kUpdateListAlertsNotificationKey = "kUpdateListAlertsNotificationKey"
 
 // IEO
 let kIEOUserDidUpdateNotificationKey = "kIEOUserDidUpdateNotificationKey"
-let kIEODidReceiveCallbackNotificationKey = "kIEODidReceiveCallbackNotificationKey"
 let kIEOTxListUpdateNotificationKey = "kIEOTxListUpdateNotificationKey"
 
 let kUserWalletsListUpdatedNotificationKey = "kUserWalletsListUpdatedNotificationKey"

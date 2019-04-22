@@ -199,7 +199,8 @@ class KNPriceAlertCoordinator: NSObject {
   }
 
   func updateUserSignedInPushTokenWithRetry() {
-    guard let accessToken = IEOUserStorage.shared.user?.accessToken, let pushToken = KNAppTracker.getPushNotificationToken() else { return }
+    guard let accessToken = IEOUserStorage.shared.user?.accessToken, let pushToken = KNAppTracker.getPushNotificationToken(), let userID = IEOUserStorage.shared.user?.userID else { return }
+    if KNAppTracker.hasSentPushTokenRequest(userID: "\(userID)") { return }
     DispatchQueue.global(qos: .background).async {
       self.provider.request(.addPushToken(accessToken: accessToken, pushToken: pushToken)) { [weak self] result in
         DispatchQueue.main.async {
@@ -207,6 +208,11 @@ class KNPriceAlertCoordinator: NSObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
               self?.updateUserSignedInPushTokenWithRetry()
             })
+          } else {
+            KNAppTracker.updateHasSentPushTokenRequest(
+              userID: "\(userID)",
+              hasSent: true
+            )
           }
         }
       }

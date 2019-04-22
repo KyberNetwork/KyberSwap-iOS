@@ -106,8 +106,6 @@ extension KNTrackerService: TargetType {
 }
 
 enum UserInfoService {
-  case getAccessToken(code: String, isRefresh: Bool)
-  case getUserInfo(accessToken: String)
   case addPushToken(accessToken: String, pushToken: String)
   case addNewAlert(accessToken: String, jsonData: JSONDictionary)
   case removeAnAlert(accessToken: String, alertID: Int)
@@ -123,10 +121,6 @@ extension UserInfoService: TargetType {
   var baseURL: URL {
     let baseString = KNAppTracker.getKyberProfileBaseString()
     switch self {
-    case .getAccessToken:
-      return URL(string: "\(baseString)/oauth/token")!
-    case .getUserInfo:
-      return URL(string: "\(baseString)/api/user_info")!
     case .addPushToken:
       return URL(string: "\(baseString)/api/update_push_token")!
     case .addNewAlert, .getListAlerts:
@@ -151,7 +145,7 @@ extension UserInfoService: TargetType {
 
   var method: Moya.Method {
     switch self {
-    case .getUserInfo, .getListAlerts, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult: return .get
+    case .getListAlerts, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult: return .get
     case .removeAnAlert: return .delete
     case .setAlertMethods, .addPushToken, .updateAlert: return .patch
     default: return .post
@@ -159,30 +153,7 @@ extension UserInfoService: TargetType {
   }
 
   var task: Task {
-    let clientID: String = KNEnvironment.default.clientID
-    let clientSecret: String = KNEnvironment.default.clientSecret
-    let redirectURL: String = KNEnvironment.default.redirectLink
     switch self {
-    case .getAccessToken(let code, let isRefresh):
-      var json: JSONDictionary = [
-        "grant_type": isRefresh ? "refresh_token" : "authorization_code",
-        "redirect_uri": redirectURL,
-        "client_id": clientID,
-        "client_secret": clientSecret,
-      ]
-      if isRefresh {
-        json["refresh_token"] = code
-      } else {
-        json["code"] = code
-      }
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .getUserInfo:
-      let json: JSONDictionary = [
-        "lang": Locale.current.kyberSupportedLang,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
     case .addPushToken(_, let pushToken):
       let json: JSONDictionary = [
         "push_token_mobile": pushToken,
@@ -219,8 +190,6 @@ extension UserInfoService: TargetType {
       "client-build": Bundle.main.buildNumber ?? "",
     ]
     switch self {
-    case .getUserInfo(let accessToken):
-      json["Authorization"] = accessToken
     case .addPushToken(let accessToken, _):
       json["Authorization"] = accessToken
     case .addNewAlert(let accessToken, _):
@@ -239,7 +208,6 @@ extension UserInfoService: TargetType {
       json["Authorization"] = accessToken
     case .getLatestCampaignResult(let accessToken):
       json["Authorization"] = accessToken
-    default: break
     }
     return json
   }

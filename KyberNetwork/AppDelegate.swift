@@ -39,15 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
           Branch.setUseTestBranchKey(true)
           Branch.getInstance().setDebug()
         }
-        Branch.getInstance().initSession(launchOptions: launchOptions) { (params, error) in
-          if let params = params, error == nil {
-            KNNotificationUtil.postNotification(
-              for: kIEODidReceiveCallbackNotificationKey,
-              object: params,
-              userInfo: nil
-            )
-          }
-        }
+        Branch.getInstance().initSession(launchOptions: launchOptions) { (_, _) in }
         KNReachability.shared.startNetworkReachabilityObserver()
         Fabric.with([Crashlytics.self])
         OneSignal.setRequiresUserPrivacyConsent(false)

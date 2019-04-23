@@ -215,9 +215,9 @@ extension UserInfoService: TargetType {
 
 enum NativeSignInUpService {
   case signUpEmail(email: String, password: String, name: String, isSubs: Bool)
-  case signInEmail(email: String, password: String)
+  case signInEmail(email: String, password: String, twoFA: String?)
   case resetPassword(email: String)
-  case signInSocial(type: String, email: String, name: String, photo: String, accessToken: String)
+  case signInSocial(type: String, email: String, name: String, photo: String, accessToken: String, twoFA: String?)
   case confirmSignUpSocial(type: String, email: String, name: String, photo: String, isSubs: Bool, accessToken: String)
   case updatePassword(email: String, oldPassword: String, newPassword: String, authenToken: String)
   case getUserAuthToken(email: String, password: String)
@@ -267,11 +267,12 @@ extension NativeSignInUpService: TargetType {
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .signInEmail(let email, let password):
-      let json: JSONDictionary = [
+    case .signInEmail(let email, let password, let twoFA):
+      var json: JSONDictionary = [
         "email": email,
         "password": password,
       ]
+      if let token = twoFA { json["two_factor_code"] = token }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
     case .resetPassword(let email):
@@ -280,14 +281,15 @@ extension NativeSignInUpService: TargetType {
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .signInSocial(let type, let email, let name, let photo, let accessToken):
-      let json: JSONDictionary = [
+    case .signInSocial(let type, let email, let name, let photo, let accessToken, let twoFA):
+      var json: JSONDictionary = [
         "type": type,
         "email": email,
         "display_name": name,
         "photo_url": photo,
         "access_token": accessToken,
       ]
+      if let token = twoFA { json["two_factor_code"] = token }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
     case .confirmSignUpSocial(let type, let email, let name, let photo, let isSubs, let accessToken):
@@ -298,6 +300,7 @@ extension NativeSignInUpService: TargetType {
         "subscription": isSubs,
         "photo_url": photo,
         "access_token": accessToken,
+        "confirm_signup": true,
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)

@@ -581,8 +581,11 @@ class KYCPersonalInfoViewController: KNBaseViewController {
             time: 1.5
           )
         }
-      case .failure(let error):
-        self.displayError(error: error)
+      case .failure:
+        self.showWarningTopBannerMessage(
+          with: NSLocalizedString("error", value: "Error", comment: ""),
+          message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: "")
+        )
       }
     }
   }

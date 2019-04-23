@@ -10,6 +10,7 @@ class KNForgotPasswordViewController: KNBaseViewController {
   @IBOutlet weak var emailTextField: UITextField!
 
   @IBOutlet weak var sendButton: UIButton!
+  @IBOutlet weak var cancelButton: UIButton!
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -18,6 +19,7 @@ class KNForgotPasswordViewController: KNBaseViewController {
     self.emailTextField.placeholder = "Email Address".toBeLocalised()
     self.sendButton.rounded(radius: KNAppStyleType.current.buttonRadius(for: self.sendButton.frame.height))
     self.sendButton.setTitle(NSLocalizedString("continue", value: "Continue", comment: ""), for: .normal)
+    self.cancelButton.setTitle(NSLocalizedString("cancel", comment: ""), for: .normal)
     self.sendButton.applyGradient()
 
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapOutSideToDismiss(_:)))
@@ -36,8 +38,8 @@ class KNForgotPasswordViewController: KNBaseViewController {
     self.sendButton.applyGradient()
   }
 
-  override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
     self.view.endEditing(true)
   }
 
@@ -55,11 +57,15 @@ class KNForgotPasswordViewController: KNBaseViewController {
       self.showErrorTopBannerMessage(
         with: NSLocalizedString("error", value: "Error", comment: ""),
         message: "Please enter a valid email address to continue".toBeLocalised(),
-        time: 2.0
+        time: 1.0
       )
       return
     }
     self.sendResetPasswordRequest(email)
+  }
+
+  @IBAction func cancelButtonPressed(_ sender: Any) {
+    self.dismiss(animated: true, completion: nil)
   }
 
   fileprivate func sendResetPasswordRequest(_ email: String) {
@@ -74,21 +80,21 @@ class KNForgotPasswordViewController: KNBaseViewController {
           self.showSuccessTopBannerMessage(
             with: NSLocalizedString("success", comment: ""),
             message: data.1,
-            time: 1.5
+            time: 1.0
           )
           self.dismiss(animated: true, completion: nil)
         } else {
           self.showErrorTopBannerMessage(
             with: NSLocalizedString("error", comment: ""),
             message: data.1,
-            time: 1.5
+            time: 1.0
           )
         }
       case .failure:
         self.showErrorTopBannerMessage(
           with: NSLocalizedString("error", comment: ""),
           message: "Can not send your request, please try again".toBeLocalised(),
-          time: 1.5
+          time: 1.0
         )
       }
     }

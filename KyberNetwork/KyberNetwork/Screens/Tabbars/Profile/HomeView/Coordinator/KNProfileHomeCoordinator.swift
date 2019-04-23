@@ -37,6 +37,7 @@ class KNProfileHomeCoordinator: NSObject, Coordinator {
 
   internal var isSignIn: Bool = false
   internal var isSubscribe: Bool = false
+  internal var accountType: KNSocialAccountsType?
 
   internal var signUpViewController: KNSignUpViewController?
   internal var confirmSignUpVC: KNConfirmSignUpViewController?
@@ -211,10 +212,13 @@ extension KNProfileHomeCoordinator {
         if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.updateUserSignedInPushTokenWithRetry() }
         completion(true)
       // Already have user
-      case .failure(let error):
+      case .failure:
         KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["type": "get_user_info_failed"])
         if showError {
-          self?.navigationController.displayError(error: error)
+          self?.navigationController.showWarningTopBannerMessage(
+            with: NSLocalizedString("error", value: "Error", comment: ""),
+            message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: "")
+          )
         }
         completion(false)
       }
@@ -372,8 +376,11 @@ extension KNProfileHomeCoordinator: KNProfileHomeViewControllerDelegate {
                 time: 1.5
               )
             }
-          case .failure(let error):
-            self.navigationController.displayError(error: error)
+          case .failure:
+            self.navigationController.showWarningTopBannerMessage(
+              with: NSLocalizedString("error", value: "Error", comment: ""),
+              message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: "")
+            )
           }
         }
       }

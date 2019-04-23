@@ -607,7 +607,7 @@ Increase KyberSwap's trade limits</string>
                                         <action selector="signInButtonPressed:" destination="-1" eventType="touchUpInside" id="plN-SG-53U"/>
                                     </connections>
                                 </button>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="okd-dX-AYx">
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email Address" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="okd-dX-AYx">
                                     <rect key="frame" x="20" y="158" width="335" height="44"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="44" id="FXE-gI-zBy"/>
@@ -623,7 +623,7 @@ Increase KyberSwap's trade limits</string>
                                         <constraint firstAttribute="height" constant="1" id="h8m-1l-p9b"/>
                                     </constraints>
                                 </view>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BTo-af-uiK">
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="BTo-af-uiK">
                                     <rect key="frame" x="20" y="234" width="315" height="44"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="44" id="W25-fr-cwz"/>

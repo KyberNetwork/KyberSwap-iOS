@@ -118,7 +118,6 @@ extension KNProfileHomeCoordinator {
     loginManager.logIn(readPermissions: [.publicProfile, .email], viewController: self.navigationController) { loginResult in
       switch loginResult {
       case .failed(let error):
-        print("Retrieving facebook access token failed: \(error.prettyError)")
         completion(nil, true)
       case .cancelled:
         completion(nil, false)
@@ -154,7 +153,6 @@ extension KNProfileHomeCoordinator {
         self.accountType = accountType
         completion(.success(accountType))
       case .failed(let error):
-        print(error)
         completion(.failure(AnyError(error)))
       }
     }
@@ -194,7 +192,6 @@ extension KNProfileHomeCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
         if url == nil { return "" }
         return url?.absoluteString ?? ""
       }()
-      print("Get user information with: \(fullName) \(email) \(icon) \(idToken)")
       let accountType = KNSocialAccountsType.google(name: fullName, email: email, icon: icon, accessToken: idToken)
       self.accountType = accountType
       if self.isSignIn {
@@ -364,7 +361,6 @@ extension KNProfileHomeCoordinator {
           completion?(false)
         }
       case .failure(let error):
-        print("Error: " + error.prettyError)
         self.navigationController.showErrorTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
           message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: ""),

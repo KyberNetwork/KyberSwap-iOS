@@ -30,6 +30,7 @@
                 <outlet property="headerContainerView" destination="vcl-Nv-WMJ" id="ykI-4f-OxB"/>
                 <outlet property="navTitleLabel" destination="Oov-94-Zq9" id="6Nn-Ba-B6k"/>
                 <outlet property="orTextLabel" destination="wTg-RL-S0h" id="Ftd-Jg-tQe"/>
+                <outlet property="passwordGuideTextLabel" destination="PUM-Bp-yAe" id="IZz-m8-hb3"/>
                 <outlet property="passwordTextField" destination="k7g-p0-ZZa" id="0J1-j0-t4q"/>
                 <outlet property="secureTextButton" destination="hhL-NG-82A" id="gQf-4F-98y"/>
                 <outlet property="selectTermConditionButton" destination="1zJ-XH-kIw" id="vl8-eA-c3r"/>

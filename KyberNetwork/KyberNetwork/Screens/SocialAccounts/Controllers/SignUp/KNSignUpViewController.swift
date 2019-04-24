@@ -52,6 +52,7 @@ class KNSignUpViewController: KNBaseViewController {
   @IBOutlet weak var displayNameTextField: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var secureTextButton: UIButton!
+  @IBOutlet weak var passwordGuideTextLabel: UILabel!
 
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var signInButton: UIButton!
@@ -92,6 +93,7 @@ class KNSignUpViewController: KNBaseViewController {
     self.passwordTextField.isSecureTextEntry = self.viewModel.isSecureText
     let image = self.viewModel.isSecureText ? UIImage(named: "hide_secure_text") : UIImage(named: "show_secure_text")
     self.secureTextButton.setImage(image, for: .normal)
+    self.passwordGuideTextLabel.text = "At least 8 characters including upper case, lower case, special character and digit.".toBeLocalised()
 
     self.subscribeButton.setImage(self.viewModel.isSubscribe ? UIImage(named: "check_box_icon") : nil, for: .normal)
     self.subscribeButton.rounded(color: self.viewModel.isSubscribe ? UIColor.clear : UIColor.Kyber.border, width: 1.0, radius: 2.5)

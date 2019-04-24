@@ -261,7 +261,20 @@ extension KNProfileHomeCoordinator {
         title: NSLocalizedString("session.expired", value: "Session expired", comment: ""),
         body: NSLocalizedString("your.session.has.expired.sign.in.to.continue", value: "Your session has expired, please sign in again to continue", comment: "")
       )
+
+      if AccessToken.current != nil { LoginManager().logOut() }
+      // logout google
+      GIDSignIn.sharedInstance().signOut()
+
+      // stop loading data
+      self?.loadUserInfoTimer?.invalidate()
+      self?.lastUpdatedUserInfo = nil
+
+      // remove user's data
       IEOUserStorage.shared.signedOut()
+      Branch.getInstance().logout()
+      if KNAppTracker.isPriceAlertEnabled { KNPriceAlertCoordinator.shared.pause() }
+
       self?.navigationController.popToRootViewController(animated: true)
       self?.rootViewController.coordinatorDidSignOut()
     }

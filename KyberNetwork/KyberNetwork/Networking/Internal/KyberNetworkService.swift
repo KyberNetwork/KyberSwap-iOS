@@ -217,8 +217,8 @@ enum NativeSignInUpService {
   case signUpEmail(email: String, password: String, name: String, isSubs: Bool)
   case signInEmail(email: String, password: String, twoFA: String?)
   case resetPassword(email: String)
-  case signInSocial(type: String, email: String, name: String, photo: String, accessToken: String, twoFA: String?)
-  case confirmSignUpSocial(type: String, email: String, name: String, photo: String, isSubs: Bool, accessToken: String)
+  case signInSocial(type: String, email: String, name: String, photo: String, accessToken: String, secret: String?, twoFA: String?)
+  case confirmSignUpSocial(type: String, email: String, name: String, photo: String, isSubs: Bool, accessToken: String, secret: String?)
   case updatePassword(email: String, oldPassword: String, newPassword: String, authenToken: String)
   case getUserAuthToken(email: String, password: String)
   case refreshToken(refreshToken: String)
@@ -281,27 +281,31 @@ extension NativeSignInUpService: TargetType {
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .signInSocial(let type, let email, let name, let photo, let accessToken, let twoFA):
+    case .signInSocial(let type, let email, let name, let photo, let accessToken, let secret, let twoFA):
       var json: JSONDictionary = [
         "type": type,
         "email": email,
         "display_name": name,
         "photo_url": photo,
         "access_token": accessToken,
+        "oauth_token": accessToken,
       ]
+      if let secret = secret { json["oauth_token_secret"] = secret }
       if let token = twoFA { json["two_factor_code"] = token }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .confirmSignUpSocial(let type, let email, let name, let photo, let isSubs, let accessToken):
-      let json: JSONDictionary = [
+    case .confirmSignUpSocial(let type, let email, let name, let photo, let isSubs, let accessToken, let secret):
+      var json: JSONDictionary = [
         "type": type,
         "email": email,
         "display_name": name,
         "subscription": isSubs,
         "photo_url": photo,
         "access_token": accessToken,
+        "oauth_token": accessToken,
         "confirm_signup": true,
       ]
+      if let secret = secret { json["oauth_token_secret"] = secret }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
     case .updatePassword(let email, let oldPassword, let newPassword, _):

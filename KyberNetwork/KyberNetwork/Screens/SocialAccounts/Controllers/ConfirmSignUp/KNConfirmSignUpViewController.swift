@@ -35,7 +35,7 @@ class KNConfirmSignUpViewModel {
   var userIconURL: String {
     switch self.accountType {
     case .facebook(_, _, let icon, _): return icon
-    case .twitter(_, _, let icon, _): return icon
+    case .twitter(_, _, let icon, _, _): return icon
     case .google(_, _, let icon, _): return icon
     default: return ""
     }
@@ -44,7 +44,7 @@ class KNConfirmSignUpViewModel {
   var userEmail: String {
     switch self.accountType {
     case .facebook(_, let email, _, _): return email
-    case .twitter(_, let email, _, _): return email
+    case .twitter(_, let email, _, _, _): return email
     case .google(_, let email, _, _): return email
     case .normal(let email, _, _): return email
     }
@@ -53,7 +53,7 @@ class KNConfirmSignUpViewModel {
   var userName: String {
     switch self.accountType {
     case .facebook(let name, _, _, _): return name
-    case .twitter(let name, _, _, _): return name
+    case .twitter(let name, _, _, _, _): return name
     case .google(let name, _, _, _): return name
     case .normal(let name, _, _): return name
     }

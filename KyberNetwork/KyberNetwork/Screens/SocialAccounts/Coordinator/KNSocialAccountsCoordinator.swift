@@ -11,7 +11,7 @@ import Moya
 enum KNSocialAccountsType {
   case facebook(name: String, email: String, icon: String, accessToken: String)
   case google(name: String, email: String, icon: String, accessToken: String)
-  case twitter(name: String, email: String, icon: String, authToken: String)
+  case twitter(name: String, email: String, icon: String, authToken: String, authTokenSecret: String)
   case normal(name: String, email: String, password: String)
 
   var isEmail: Bool {
@@ -68,13 +68,14 @@ class KNSocialAccountsCoordinator {
     }
   }
 
-  func signInSocial(type: String, email: String, name: String, photo: String, accessToken: String, twoFA: String?, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+  func signInSocial(type: String, email: String, name: String, photo: String, accessToken: String, secret: String?, twoFA: String?, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
     let request = NativeSignInUpService.signInSocial(
       type: type,
       email: email,
       name: name,
       photo: photo,
       accessToken: accessToken,
+      secret: secret,
       twoFA: twoFA
     )
     self.sendRequest(request) { [weak self] result in
@@ -83,14 +84,15 @@ class KNSocialAccountsCoordinator {
     }
   }
 
-  func confirmSignUpSocial(type: String, email: String, name: String, photo: String, accessToken: String, subscription: Bool, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
+  func confirmSignUpSocial(type: String, email: String, name: String, photo: String, accessToken: String, secret: String?, subscription: Bool, completion: @escaping (Result<JSONDictionary, AnyError>) -> Void) {
     let request = NativeSignInUpService.confirmSignUpSocial(
       type: type,
       email: email,
       name: name,
       photo: photo,
       isSubs: subscription,
-      accessToken: accessToken
+      accessToken: accessToken,
+      secret: secret
     )
     self.sendRequest(request) { [weak self] result in
       guard let _ = self else { return }

@@ -176,14 +176,14 @@ extension KNProfileHomeCoordinator: GIDSignInDelegate, GIDSignInUIDelegate {
       self.navigationController.showErrorTopBannerMessage(
         with: NSLocalizedString("error", value: "Error", comment: ""),
         message: "Can not get your information from Google. Please try again".toBeLocalised(),
-        time: 2.0
+        time: 1.5
       )
     } else {
       guard let email = user.profile.email, !email.isEmpty else {
         self.navigationController.showErrorTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
           message: "Can not get email from your Google account".toBeLocalised(),
-          time: 2.0
+          time: 1.5
         )
         return
       }
@@ -226,12 +226,12 @@ extension KNProfileHomeCoordinator {
         self.navigationController.showErrorTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
           message: "Can not get your information from Twitter. Please try again".toBeLocalised(),
-          time: 2.0
+          time: 1.5
         )
         return
       }
       let userID = session.userID
-      self.requestTwitterUserData(for: userID, authToken: session.authToken, completion: { [weak self] result in
+      self.requestTwitterUserData(for: userID, authToken: session.authToken, authTokenSecret: session.authTokenSecret, completion: { [weak self] result in
         guard let `self` = self else { return }
         switch result {
         case .success(let accountType):
@@ -252,7 +252,7 @@ extension KNProfileHomeCoordinator {
     }
   }
 
-  fileprivate func requestTwitterUserData(for userID: String, authToken: String, completion: @escaping (Result<KNSocialAccountsType, AnyError>) -> Void) {
+  fileprivate func requestTwitterUserData(for userID: String, authToken: String, authTokenSecret: String, completion: @escaping (Result<KNSocialAccountsType, AnyError>) -> Void) {
     var user: TWTRUser?
     var email: String?
     var error: Error?
@@ -277,7 +277,8 @@ extension KNProfileHomeCoordinator {
           name: user.name,
           email: email,
           icon: user.profileImageLargeURL,
-          authToken: authToken
+          authToken: authToken,
+          authTokenSecret: authTokenSecret
         )
         self.accountType = accountType
         completion(.success(accountType))
@@ -296,10 +297,10 @@ extension KNProfileHomeCoordinator {
       self.signInEmail(email: email, password: password, token: token, completion: completion)
     case .facebook(let name, let email, let icon, let accessToken):
       self.signInSocialWithData(type: "facebook", email: email, name: name, photo: icon, accessToken: accessToken, token: token, completion: completion)
-    case .twitter(let name, let email, let icon, let authToken):
-      self.signInSocialWithData(type: "twitter", email: email, name: name, photo: icon, accessToken: authToken, token: token, completion: completion)
+    case .twitter(let name, let email, let icon, let authToken, let authTokenSecret):
+      self.signInSocialWithData(type: "twitter", email: email, name: name, photo: icon, accessToken: authToken, secret: authTokenSecret, token: token, completion: completion)
     case .google(let name, let email, let icon, let accessToken):
-      self.signInSocialWithData(type: "facebook", email: email, name: name, photo: icon, accessToken: accessToken, token: token, completion: completion)
+      self.signInSocialWithData(type: "google", email: email, name: name, photo: icon, accessToken: accessToken, token: token, completion: completion)
     }
   }
 
@@ -334,7 +335,7 @@ extension KNProfileHomeCoordinator {
     }
   }
 
-  fileprivate func signInSocialWithData(type: String, email: String, name: String, photo: String, accessToken: String, token: String? = nil, completion: ((Bool) -> Void)?) {
+  fileprivate func signInSocialWithData(type: String, email: String, name: String, photo: String, accessToken: String, secret: String? = nil, token: String? = nil, completion: ((Bool) -> Void)?) {
     self.navigationController.displayLoading()
     KNSocialAccountsCoordinator.shared.signInSocial(
       type: type,
@@ -342,6 +343,7 @@ extension KNProfileHomeCoordinator {
       name: name,
       photo: photo,
       accessToken: accessToken,
+      secret: secret,
       twoFA: token
     ) { [weak self] result in
       guard let `self` = self else { return }
@@ -357,7 +359,7 @@ extension KNProfileHomeCoordinator {
           self.navigationController.showErrorTopBannerMessage(
             with: NSLocalizedString("error", value: "Error", comment: ""),
             message: message,
-            time: 1.5
+            time: 2.0
           )
           completion?(false)
         }
@@ -444,7 +446,7 @@ extension KNProfileHomeCoordinator {
           self.navigationController.showErrorTopBannerMessage(
             with: NSLocalizedString("error", value: "Error", comment: ""),
             message: data.1,
-            time: 1.5
+            time: 2.0
           )
         }
       case .failure:
@@ -494,8 +496,8 @@ extension KNProfileHomeCoordinator: KNConfirmSignUpViewControllerDelegate {
       switch accountType {
       case .facebook(let name, let email, let icon, let accessToken):
         self.sendConfirmSignUpRequest(type: "facebook", email: email, name: name, icon: icon, accessToken: accessToken, subscription: isSubscribe)
-      case .twitter(let name, let email, let icon, let authToken):
-        self.sendConfirmSignUpRequest(type: "twitter", email: email, name: name, icon: icon, accessToken: authToken, subscription: isSubscribe)
+      case .twitter(let name, let email, let icon, let authToken, let authTokenSecret):
+        self.sendConfirmSignUpRequest(type: "twitter", email: email, name: name, icon: icon, accessToken: authToken, secret: authTokenSecret, subscription: isSubscribe)
       case .google(let name, let email, let icon, let accessToken):
         self.sendConfirmSignUpRequest(type: "google", email: email, name: name, icon: icon, accessToken: accessToken, subscription: isSubscribe)
       default: break
@@ -503,13 +505,14 @@ extension KNProfileHomeCoordinator: KNConfirmSignUpViewControllerDelegate {
     }
   }
 
-  fileprivate func sendConfirmSignUpRequest(type: String, email: String, name: String, icon: String, accessToken: String, subscription: Bool) {
+  fileprivate func sendConfirmSignUpRequest(type: String, email: String, name: String, icon: String, accessToken: String, secret: String? = nil, subscription: Bool) {
     KNSocialAccountsCoordinator.shared.confirmSignUpSocial(
       type: type,
       email: email,
       name: name,
       photo: icon,
       accessToken: accessToken,
+      secret: secret,
       subscription: subscription) { [weak self] result in
         guard let `self` = self else { return }
         switch result {
@@ -528,7 +531,7 @@ extension KNProfileHomeCoordinator: KNConfirmSignUpViewControllerDelegate {
             self.navigationController.showWarningTopBannerMessage(
               with: NSLocalizedString("failed", comment: ""),
               message: message,
-              time: 1.5
+              time: 2.0
             )
           }
         case .failure:

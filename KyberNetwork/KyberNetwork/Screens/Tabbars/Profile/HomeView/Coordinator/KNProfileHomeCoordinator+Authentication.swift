@@ -37,6 +37,7 @@ extension KNProfileHomeCoordinator: KNSignUpViewControllerDelegate {
 extension KNProfileHomeCoordinator {
   func profileHomeViewController(_ controller: KNProfileHomeViewController, run event: KNSignInViewEvent) {
     self.isSignIn = true
+    self.isSubscribe = false
     switch event {
     case .forgotPassword:
       let forgotPassVC = KNForgotPasswordViewController()
@@ -392,6 +393,10 @@ extension KNProfileHomeCoordinator {
       return date?.timeIntervalSince1970 ?? 0.0
     }()
 
+    if self.navigationController.viewControllers.count > 1 {
+      // back to root view when user signed in successfully
+      self.navigationController.popToRootViewController(animated: true)
+    }
     // create and update user info
     let user = IEOUser(dict: userInfo)
     IEOUserStorage.shared.update(objects: [user])

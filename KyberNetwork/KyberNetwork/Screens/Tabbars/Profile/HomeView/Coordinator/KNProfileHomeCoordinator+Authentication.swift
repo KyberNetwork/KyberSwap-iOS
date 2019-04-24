@@ -297,7 +297,7 @@ extension KNProfileHomeCoordinator {
     case .twitter(let name, let email, let icon, let authToken, let authTokenSecret):
       self.signInSocialWithData(type: "twitter", email: email, name: name, photo: icon, accessToken: authToken, secret: authTokenSecret, token: token, completion: completion)
     case .google(let name, let email, let icon, let accessToken):
-      self.signInSocialWithData(type: "google", email: email, name: name, photo: icon, accessToken: accessToken, token: token, completion: completion)
+      self.signInSocialWithData(type: "google_oauth2", email: email, name: name, photo: icon, accessToken: accessToken, token: token, completion: completion)
     }
   }
 
@@ -495,7 +495,7 @@ extension KNProfileHomeCoordinator: KNConfirmSignUpViewControllerDelegate {
       case .twitter(let name, let email, let icon, let authToken, let authTokenSecret):
         self.sendConfirmSignUpRequest(type: "twitter", email: email, name: name, icon: icon, accessToken: authToken, secret: authTokenSecret, subscription: isSubscribe)
       case .google(let name, let email, let icon, let accessToken):
-        self.sendConfirmSignUpRequest(type: "google", email: email, name: name, icon: icon, accessToken: accessToken, subscription: isSubscribe)
+        self.sendConfirmSignUpRequest(type: "google_oauth2", email: email, name: name, icon: icon, accessToken: accessToken, subscription: isSubscribe)
       default: break
       }
     }

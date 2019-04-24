@@ -117,7 +117,7 @@ extension KNProfileHomeCoordinator {
     let loginManager = LoginManager()
     loginManager.logIn(readPermissions: [.publicProfile, .email], viewController: self.navigationController) { loginResult in
       switch loginResult {
-      case .failed(let error):
+      case .failed:
         completion(nil, true)
       case .cancelled:
         completion(nil, false)
@@ -360,7 +360,7 @@ extension KNProfileHomeCoordinator {
           )
           completion?(false)
         }
-      case .failure(let error):
+      case .failure:
         self.navigationController.showErrorTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
           message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: ""),

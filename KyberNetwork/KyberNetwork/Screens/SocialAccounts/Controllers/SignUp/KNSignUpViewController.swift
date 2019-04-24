@@ -93,7 +93,7 @@ class KNSignUpViewController: KNBaseViewController {
     self.passwordTextField.isSecureTextEntry = self.viewModel.isSecureText
     let image = self.viewModel.isSecureText ? UIImage(named: "hide_secure_text") : UIImage(named: "show_secure_text")
     self.secureTextButton.setImage(image, for: .normal)
-    self.passwordGuideTextLabel.text = "At least 8 characters including upper case, lower case, special character and digit.".toBeLocalised()
+    self.passwordGuideTextLabel.text = "At least 8 characters including upper case, lower case and digit.".toBeLocalised()
 
     self.subscribeButton.setImage(self.viewModel.isSubscribe ? UIImage(named: "check_box_icon") : nil, for: .normal)
     self.subscribeButton.rounded(color: self.viewModel.isSubscribe ? UIColor.clear : UIColor.Kyber.border, width: 1.0, radius: 2.5)
@@ -184,7 +184,7 @@ class KNSignUpViewController: KNBaseViewController {
     guard let password = self.passwordTextField.text, password.isValidPassword() else {
       self.showErrorTopBannerMessage(
         with: NSLocalizedString("error", value: "Error", comment: ""),
-        message: "Password must be at least eight characters including one uppercase letter, one special character, and alphanumeric characters.".toBeLocalised(),
+        message: "Password must be at least eight characters including one uppercase letter and alphanumeric characters.".toBeLocalised(),
         time: 2.0
       )
       return

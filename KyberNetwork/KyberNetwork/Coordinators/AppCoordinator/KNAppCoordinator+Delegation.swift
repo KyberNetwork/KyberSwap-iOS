@@ -113,6 +113,8 @@ extension KNAppCoordinator: KNTransactionStatusCoordinatorDelegate {
 // MARK: Add wallet coordinator delegate
 extension KNAppCoordinator: KNAddNewWalletCoordinatorDelegate {
   func addNewWalletCoordinator(add wallet: Wallet) {
+    // reset loading state
+    KNAppTracker.updateAllTransactionLastBlockLoad(0, for: wallet.address)
     if self.tabbarController == nil {
       self.startNewSession(with: wallet)
     } else {

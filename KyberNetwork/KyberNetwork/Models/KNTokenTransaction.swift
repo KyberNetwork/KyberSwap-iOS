@@ -69,6 +69,7 @@ class KNTokenTransaction: Object {
     self.value = internalDict["value"] as? String ?? ""
     if contractAddress.isEmpty && self.value != "0" {
       // ETH Transfer
+      self.contractAddress = eth.contract
       self.tokenName = eth.name
       self.tokenSymbol = eth.symbol
       self.tokenDecimal = "\(eth.decimals)"

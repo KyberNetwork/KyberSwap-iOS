@@ -93,10 +93,22 @@ struct KNHistoryTransactionCollectionViewModel {
   var displayedAmountString: String {
     guard let localObject = self.transaction.localizedOperations.first else { return "" }
     if self.isSwap {
-      let amountFrom: String = String(self.transaction.value.prefix(12))
+      let amountFrom: String = {
+        if let double = Double(self.transaction.value),
+          let string = NumberFormatterUtil.shared.swapAmountFormatter.string(from: NSNumber(value: double)) {
+          return string
+        }
+        return String(self.transaction.value.prefix(12))
+      }()
       let fromText: String = "\(amountFrom) \(localObject.symbol ?? "")"
 
-      let amountTo: String = String(localObject.value.prefix(12))
+      let amountTo: String = {
+        if let double = Double(localObject.value),
+          let string = NumberFormatterUtil.shared.swapAmountFormatter.string(from: NSNumber(value: double)) {
+          return string
+        }
+        return String(localObject.value.prefix(12))
+      }()
       let toText = "\(amountTo) \(localObject.name ?? "")"
 
       return "\(fromText) -> \(toText)"

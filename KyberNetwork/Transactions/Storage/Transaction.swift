@@ -112,11 +112,17 @@ extension Transaction {
     guard let localObject = self.localizedOperations.first, localObject.type == "transfer" else {
       return nil
     }
-    guard let contract = localObject.contract, !contract.isEmpty,
+    guard let contract = localObject.contract,
     let name = localObject.name, !name.isEmpty,
     let symbol = localObject.symbol, !symbol.isEmpty else { return nil }
+    let contractAddr: String = {
+      if !contract.isEmpty { return contract }
+      if symbol == "ETH" { return "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" }
+      return ""
+    }()
+    if contractAddr.isEmpty { return nil }
     return TokenObject(
-      contract: contract,
+      contract: contractAddr,
       name: name,
       symbol: symbol,
       decimals: localObject.decimals,
@@ -131,5 +137,45 @@ extension Transaction {
       return nil
     }
     return localObject.symbol
+  }
+}
+
+extension Transaction {
+  static func swapTransation(sendTx: Transaction, receiveTx: Transaction, curWallet: String) -> Transaction? {
+    if sendTx.id != receiveTx.id { return nil }
+    if sendTx.from.lowercased() != curWallet.lowercased() {
+      return Transaction.swapTransation(sendTx: receiveTx, receiveTx: sendTx, curWallet: curWallet)
+    }
+    if sendTx.from.lowercased() != curWallet.lowercased() || receiveTx.to.lowercased() != curWallet.lowercased() { return nil }
+    // must be one send, one receive
+    guard let srcToken = sendTx.getTokenObject(), let destToken = receiveTx.getTokenObject() else { return nil }
+    let destAddress = sendTx.to.lowercased()
+    let fromAmount = sendTx.value
+    let destAmount = receiveTx.value
+
+    let localObject = LocalizedOperationObject(
+      from: srcToken.contract,
+      to: destToken.contract,
+      contract: nil,
+      type: "exchange",
+      value: destAmount,
+      symbol: srcToken.symbol,
+      name: destToken.symbol,
+      decimals: destToken.decimals
+    )
+    return Transaction(
+      id: sendTx.id,
+      blockNumber: sendTx.blockNumber,
+      from: curWallet,
+      to: destAddress,
+      value: fromAmount,
+      gas: sendTx.gas,
+      gasPrice: sendTx.gasPrice,
+      gasUsed: sendTx.gasUsed,
+      nonce: sendTx.nonce,
+      date: sendTx.date,
+      localizedOperations: [localObject],
+      state: .completed
+    )
   }
 }

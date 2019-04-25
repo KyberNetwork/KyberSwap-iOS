@@ -81,7 +81,28 @@ class KNHistoryCoordinator: Coordinator {
   }
 
   func appCoordinatorTokensTransactionsDidUpdate() {
-    let transactions: [Transaction] = self.session.transactionStorage.transferNonePendingObjects
+    var transactions: [Transaction] = self.session.transactionStorage.transferNonePendingObjects
+    transactions.sort(by: { return $0.id < $1.id })
+    var processedTxs: [Transaction] = []
+    var id = 0
+    while id < transactions.count {
+      if id == transactions.count - 1 {
+        processedTxs.append(transactions[id])
+        break
+      }
+      if transactions[id].id == transactions[id + 1].id {
+        // merge 2 transactions
+        if let swap = Transaction.swapTransation(sendTx: transactions[id], receiveTx: transactions[id + 1], curWallet: self.currentWallet.address) {
+          processedTxs.append(swap)
+          id += 2
+          continue
+        }
+      }
+      processedTxs.append(transactions[id])
+      id += 1
+    }
+
+    transactions = processedTxs.sorted(by: { return $0.date > $1.date })
 
     let dates: [String] = {
       let dates = transactions.map { return self.dateFormatter.string(from: $0.date) }

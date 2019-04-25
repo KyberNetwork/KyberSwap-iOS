@@ -22,6 +22,14 @@ class NumberFormatterUtil {
     return formatter
   }()
 
+  lazy var swapAmountFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.minimumIntegerDigits = 1
+    formatter.maximumFractionDigits = 6
+    formatter.minimumFractionDigits = 0
+    return formatter
+  }()
+
   func displayPercentage(from number: Double) -> String {
     return self.percentageFormatter.string(from: NSNumber(value: number)) ?? "0.00"
   }

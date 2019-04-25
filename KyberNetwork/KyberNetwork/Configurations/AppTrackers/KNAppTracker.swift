@@ -187,6 +187,7 @@ class KNAppTracker {
     self.updateAllTransactionLastBlockLoad(0, for: address)
     self.updateTransactionLoadState(.none, for: address)
     self.updateTransactionNonce(0, address: address)
+    self.updateInternalTransactionLastBlockLoad(0, for: address)
   }
 
   static func resetAllAppTrackerData() {

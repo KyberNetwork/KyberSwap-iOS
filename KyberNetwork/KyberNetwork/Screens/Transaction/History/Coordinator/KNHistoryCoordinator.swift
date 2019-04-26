@@ -59,6 +59,7 @@ class KNHistoryCoordinator: Coordinator {
       let pendingTrans = self.session.transactionStorage.kyberPendingTransactions
       self.appCoordinatorTokensTransactionsDidUpdate()
       self.appCoordinatorPendingTransactionDidUpdate(pendingTrans)
+      self.rootViewController.coordinatorUpdateTokens(self.session.tokenStorage.tokens)
     }
     self.session.transacionCoordinator?.forceFetchTokenTransactions()
   }
@@ -74,6 +75,7 @@ class KNHistoryCoordinator: Coordinator {
     let address = self.session.wallet.address.description
     self.currentWallet = KNWalletStorage.shared.get(forPrimaryKey: address) ?? KNWalletObject(address: address)
     self.appCoordinatorTokensTransactionsDidUpdate()
+    self.rootViewController.coordinatorUpdateTokens(self.session.tokenStorage.tokens)
   }
 
   func appCoordinatorDidUpdateWalletObjects() {

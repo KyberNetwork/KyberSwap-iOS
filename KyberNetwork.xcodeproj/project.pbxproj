@@ -52,6 +52,8 @@
 		251ABCBD205790210069687F /* KNCustomRPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251ABCBB205790210069687F /* KNCustomRPC.swift */; };
 		251ABCBF205790B10069687F /* KNJSONLoaderUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251ABCBE205790B10069687F /* KNJSONLoaderUtil.swift */; };
 		251ABCC2205792170069687F /* UIColor+Kyber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251ABCC1205792170069687F /* UIColor+Kyber.swift */; };
+		251E22662271CBF40038679C /* KNTransactionFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251E22642271CBF30038679C /* KNTransactionFilterViewController.swift */; };
+		251E22672271CBF40038679C /* KNTransactionFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 251E22652271CBF30038679C /* KNTransactionFilterViewController.xib */; };
 		252B174B20D3A0CE005B282D /* KNCustomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252B174A20D3A0CE005B282D /* KNCustomToolbar.swift */; };
 		252B174E20D4319C005B282D /* KNCustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252B174D20D4319C005B282D /* KNCustomSegmentedControl.swift */; };
 		252EBD8121636D9A00609101 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 252EBD7F21636D9900609101 /* Localizable.stringsdict */; };
@@ -89,6 +91,8 @@
 		2546C6D5221167460076E52B /* KNCrashlyticsUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2546C6D4221167460076E52B /* KNCrashlyticsUtil.swift */; };
 		2546C6D7221185640076E52B /* TransactionItemState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2546C6D6221185630076E52B /* TransactionItemState.swift */; };
 		2546C6D92211871F0076E52B /* TrustDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2546C6D82211871F0076E52B /* TrustDocumentPickerViewController.swift */; };
+		25485B042272F938004B7454 /* KNTransactionFilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25485B022272F938004B7454 /* KNTransactionFilterTableViewCell.swift */; };
+		25485B052272F938004B7454 /* KNTransactionFilterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25485B032272F938004B7454 /* KNTransactionFilterTableViewCell.xib */; };
 		2549B286219EA3DA00B7564E /* config_env_rinkeby.json in Resources */ = {isa = PBXBuildFile; fileRef = 2549B285219EA3DA00B7564E /* config_env_rinkeby.json */; };
 		254BB32F211BEC8200B8E75D /* KWalletBalanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 254BB32D211BEC8200B8E75D /* KWalletBalanceViewController.swift */; };
 		254BB330211BEC8200B8E75D /* KWalletBalanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 254BB32E211BEC8200B8E75D /* KWalletBalanceViewController.xib */; };
@@ -615,6 +619,8 @@
 		251ABCBB205790210069687F /* KNCustomRPC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KNCustomRPC.swift; sourceTree = "<group>"; };
 		251ABCBE205790B10069687F /* KNJSONLoaderUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KNJSONLoaderUtil.swift; sourceTree = "<group>"; };
 		251ABCC1205792170069687F /* UIColor+Kyber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Kyber.swift"; sourceTree = "<group>"; };
+		251E22642271CBF30038679C /* KNTransactionFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNTransactionFilterViewController.swift; sourceTree = "<group>"; };
+		251E22652271CBF30038679C /* KNTransactionFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNTransactionFilterViewController.xib; sourceTree = "<group>"; };
 		252B174A20D3A0CE005B282D /* KNCustomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNCustomToolbar.swift; sourceTree = "<group>"; };
 		252B174D20D4319C005B282D /* KNCustomSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNCustomSegmentedControl.swift; sourceTree = "<group>"; };
 		252EBD8021636D9900609101 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = vi; path = vi.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -653,6 +659,8 @@
 		2546C6D4221167460076E52B /* KNCrashlyticsUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNCrashlyticsUtil.swift; sourceTree = "<group>"; };
 		2546C6D6221185630076E52B /* TransactionItemState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionItemState.swift; sourceTree = "<group>"; };
 		2546C6D82211871F0076E52B /* TrustDocumentPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrustDocumentPickerViewController.swift; sourceTree = "<group>"; };
+		25485B022272F938004B7454 /* KNTransactionFilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KNTransactionFilterTableViewCell.swift; sourceTree = "<group>"; };
+		25485B032272F938004B7454 /* KNTransactionFilterTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KNTransactionFilterTableViewCell.xib; sourceTree = "<group>"; };
 		2549B285219EA3DA00B7564E /* config_env_rinkeby.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = config_env_rinkeby.json; sourceTree = "<group>"; };
 		254BB32D211BEC8200B8E75D /* KWalletBalanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KWalletBalanceViewController.swift; sourceTree = "<group>"; };
 		254BB32E211BEC8200B8E75D /* KWalletBalanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = KWalletBalanceViewController.xib; sourceTree = "<group>"; };
@@ -1346,6 +1354,16 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		251E22632271CBDA0038679C /* FilterVC */ = {
+			isa = PBXGroup;
+			children = (
+				25485B012272F91C004B7454 /* Cell */,
+				251E22642271CBF30038679C /* KNTransactionFilterViewController.swift */,
+				251E22652271CBF30038679C /* KNTransactionFilterViewController.xib */,
+			);
+			path = FilterVC;
+			sourceTree = "<group>";
+		};
 		252B174920D3A0AC005B282D /* CustomToolBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1564,6 +1582,15 @@
 				2545C8FB2223F6F400CA99C5 /* KNAlertTableViewCell.xib */,
 			);
 			path = AlertTableViewCell;
+			sourceTree = "<group>";
+		};
+		25485B012272F91C004B7454 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				25485B022272F938004B7454 /* KNTransactionFilterTableViewCell.swift */,
+				25485B032272F938004B7454 /* KNTransactionFilterTableViewCell.xib */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		254BB34F211D9A2300B8E75D /* Confirms */ = {
@@ -2959,6 +2986,7 @@
 		25CE6F8C2073E03800A3A2F9 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				251E22632271CBDA0038679C /* FilterVC */,
 				257C9FC12078A9D900EE0128 /* TransactionCollectionHeader */,
 				257B84B02074E8C8003DD40E /* TransactionCollectionViewCell */,
 				25CE6F8F2073E0BC00A3A2F9 /* KNHistoryViewController.swift */,
@@ -3941,6 +3969,7 @@
 				25929C9420DA5CC10045CFA3 /* SFCompactText-MediumItalic.otf in Resources */,
 				25073D1F211AF20D00833C92 /* Montserrat-Black.ttf in Resources */,
 				25929C6920DA5C760045CFA3 /* SF-Pro-Display-HeavyItalic.otf in Resources */,
+				251E22672271CBF40038679C /* KNTransactionFilterViewController.xib in Resources */,
 				25929C5A20DA5C760045CFA3 /* SF-Pro-Display-Ultralight.otf in Resources */,
 				25929C5F20DA5C760045CFA3 /* SF-Pro-Display-BlackItalic.otf in Resources */,
 				257C9FCA2078F6A600EE0128 /* KNCreatePasswordViewController.xib in Resources */,
@@ -3957,6 +3986,7 @@
 				25929C5C20DA5C760045CFA3 /* SF-Pro-Text-LightItalic.otf in Resources */,
 				25117D3F2248D68300B5C495 /* KNAlertLeaderBoardViewController.xib in Resources */,
 				25C45AD420AD398C00CDA1FF /* KNImportJSONViewController.xib in Resources */,
+				25485B052272F938004B7454 /* KNTransactionFilterTableViewCell.xib in Resources */,
 				25073D1A211AF20D00833C92 /* Montserrat-ExtraLightItalic.ttf in Resources */,
 				2567B3F1216B10060006D963 /* index.html in Resources */,
 				25929C6D20DA5C760045CFA3 /* SF-Pro-Display-Heavy.otf in Resources */,
@@ -4128,26 +4158,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EB3184C0BC107081C6CC1497 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-KyberNetwork/Pods-KyberNetwork-resources.sh",
-				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
-				"${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TwitterKitResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-KyberNetwork/Pods-KyberNetwork-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F291FF6299FBB0600050DA49 /* [CP] Embed Pods Frameworks */ = {
@@ -4351,6 +4361,7 @@
 				2545C9002223FBD700CA99C5 /* KNManageAlertsViewController.swift in Sources */,
 				25EE4A7420C54F2F00E2282F /* KNAddNewWalletCoordinator.swift in Sources */,
 				25C45ABE20AC217500CDA1FF /* KNSupportedTokenCoordinator.swift in Sources */,
+				25485B042272F938004B7454 /* KNTransactionFilterTableViewCell.swift in Sources */,
 				25CC0A962057DD4E0009D0D5 /* KNExternalProvider.swift in Sources */,
 				25CC0A9D2057E2A90009D0D5 /* KNDraftExchangeTransaction.swift in Sources */,
 				29FF6D6B2011D2AF00A3011C /* InCoordinatorError.swift in Sources */,
@@ -4537,6 +4548,7 @@
 				255F6F2820BBCA6800EF808F /* KNWalletQRCodeCoordinator.swift in Sources */,
 				2502AC1D20947840007F23CD /* KNWalletStorage.swift in Sources */,
 				CCA4FE381FD428B300749AE4 /* JailbreakChecker.swift in Sources */,
+				251E22662271CBF40038679C /* KNTransactionFilterViewController.swift in Sources */,
 				25369F0620F88693007231FE /* KNWelcomeScreenViewModel.swift in Sources */,
 				25EE47EE21267B97002657DF /* KNAppStyle.swift in Sources */,
 				259D646322630DE000A9CA52 /* KNForgotPasswordViewController.swift in Sources */,

@@ -13,17 +13,31 @@ protocol KNHistoryViewControllerDelegate: class {
 }
 
 struct KNHistoryViewModel {
+  fileprivate lazy var dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy MMM dd"
+    return formatter
+  }()
+
   fileprivate(set) var tokens: [TokenObject] = KNSupportedTokenStorage.shared.supportedTokens
 
   fileprivate(set) var completedTxData: [String: [Transaction]] = [:]
   fileprivate(set) var completedTxHeaders: [String] = []
 
+  fileprivate(set) var displayingCompletedTxData: [String: [Transaction]] = [:]
+  fileprivate(set) var displayingCompletedTxHeaders: [String] = []
+
   fileprivate(set) var pendingTxData: [String: [Transaction]] = [:]
   fileprivate(set) var pendingTxHeaders: [String] = []
+
+  fileprivate(set) var displayingPendingTxData: [String: [Transaction]] = [:]
+  fileprivate(set) var displayingPendingTxHeaders: [String] = []
 
   fileprivate(set) var currentWallet: KNWalletObject
 
   fileprivate(set) var isShowingPending: Bool = true
+
+  fileprivate(set) var filters = KNTransactionFilter(from: nil, to: nil, isSend: true, isReceive: true, isSwap: true, tokens: [])
 
   init(
     tokens: [TokenObject] = KNSupportedTokenStorage.shared.supportedTokens,
@@ -40,6 +54,15 @@ struct KNHistoryViewModel {
     self.pendingTxHeaders = pendingTxHeaders
     self.currentWallet = currentWallet
     self.isShowingPending = true
+    self.filters = KNTransactionFilter(
+      from: nil,
+      to: nil,
+      isSend: true,
+      isReceive: true,
+      isSwap: true,
+      tokens: tokens.map({ return $0.symbol })
+    )
+    self.updateDisplayingData()
   }
 
   mutating func updateIsShowingPending(_ isShowingPending: Bool) {
@@ -48,16 +71,19 @@ struct KNHistoryViewModel {
 
   mutating func update(tokens: [TokenObject]) {
     self.tokens = tokens
+    self.updateDisplayingData()
   }
 
   mutating func update(pendingTxData: [String: [Transaction]], pendingTxHeaders: [String]) {
     self.pendingTxData = pendingTxData
     self.pendingTxHeaders = pendingTxHeaders
+    self.updateDisplayingData(isCompleted: false)
   }
 
   mutating func update(completedTxData: [String: [Transaction]], completedTxHeaders: [String]) {
     self.completedTxData = completedTxData
     self.completedTxHeaders = completedTxHeaders
+    self.updateDisplayingData(isPending: false)
   }
 
   mutating func updateCurrentWallet(_ currentWallet: KNWalletObject) {
@@ -65,8 +91,8 @@ struct KNHistoryViewModel {
   }
 
   var isEmptyStateHidden: Bool {
-    if self.isShowingPending { return !self.pendingTxHeaders.isEmpty }
-    return !self.completedTxHeaders.isEmpty
+    if self.isShowingPending { return !self.displayingPendingTxHeaders.isEmpty }
+    return !self.displayingCompletedTxHeaders.isEmpty
   }
 
   var emptyStateIconName: String {
@@ -92,26 +118,26 @@ struct KNHistoryViewModel {
   }
 
   var numberSections: Int {
-    if self.isShowingPending { return self.pendingTxHeaders.count }
-    return self.completedTxHeaders.count
+    if self.isShowingPending { return self.displayingPendingTxHeaders.count }
+    return self.displayingCompletedTxHeaders.count
   }
 
   func header(for section: Int) -> String {
     let header: String = {
-      if self.isShowingPending { return self.pendingTxHeaders[section] }
-      return self.completedTxHeaders[section]
+      if self.isShowingPending { return self.displayingPendingTxHeaders[section] }
+      return self.displayingCompletedTxHeaders[section]
     }()
     return header
   }
 
   func numberRows(for section: Int) -> Int {
     let header = self.header(for: section)
-    return (self.isShowingPending ? self.pendingTxData[header]?.count : self.completedTxData[header]?.count) ?? 0
+    return (self.isShowingPending ? self.displayingPendingTxData[header]?.count : self.displayingCompletedTxData[header]?.count) ?? 0
   }
 
   func completedTransaction(for row: Int, at section: Int) -> Transaction? {
     let header = self.header(for: section)
-    if let trans = self.completedTxData[header], trans.count >= row {
+    if let trans = self.displayingCompletedTxData[header], trans.count >= row {
       return trans[row]
     }
     return nil
@@ -119,10 +145,64 @@ struct KNHistoryViewModel {
 
   func pendingTransaction(for row: Int, at section: Int) -> Transaction? {
     let header = self.header(for: section)
-    if let trans = self.pendingTxData[header], trans.count >= row {
+    if let trans = self.displayingPendingTxData[header], trans.count >= row {
       return trans[row]
     }
     return nil
+  }
+
+  mutating func updateDisplayingData(isPending: Bool = true, isCompleted: Bool = true) {
+    let fromDate = self.filters.from ?? Date().addingTimeInterval(-200.0 * 360.0 * 24.0 * 60.0 * 60.0)
+    let toDate = self.filters.to ?? Date().addingTimeInterval(24.0 * 60.0 * 60.0)
+    if isPending {
+      self.displayingPendingTxHeaders = {
+        let data = self.pendingTxHeaders.filter({
+          let date = self.dateFormatter.date(from: $0) ?? Date()
+          return date >= fromDate && date <= toDate
+        })
+        return data
+      }()
+      self.displayingPendingTxData = [:]
+      self.displayingPendingTxHeaders.forEach({
+        var txs = self.pendingTxData[$0] ?? []
+        txs = txs.filter({ return self.isTransactionIncluded($0) })
+        if !txs.isEmpty { self.displayingPendingTxData[$0] = txs }
+      })
+      self.displayingPendingTxHeaders = self.displayingPendingTxHeaders.filter({ return self.displayingPendingTxData[$0] != nil })
+    }
+
+    if isCompleted {
+      self.displayingCompletedTxHeaders = {
+        let data = self.completedTxHeaders.filter({
+          let date = self.dateFormatter.date(from: $0) ?? Date()
+          return date >= fromDate && date <= toDate
+        })
+        return data
+      }()
+      self.displayingCompletedTxData = [:]
+      self.displayingCompletedTxHeaders.forEach({
+        var txs = self.completedTxData[$0] ?? []
+        txs = txs.filter({ return self.isTransactionIncluded($0) })
+        if !txs.isEmpty { self.displayingCompletedTxData[$0] = txs }
+      })
+      self.displayingCompletedTxHeaders = self.displayingCompletedTxHeaders.filter({ return self.displayingCompletedTxData[$0] != nil })
+    }
+  }
+
+  fileprivate func isTransactionIncluded(_ tx: Transaction) -> Bool {
+    let type = tx.localizedOperations.first?.type ?? ""
+    var isTokenIncluded: Bool = false
+    if type == "exchange" {
+      if !self.filters.isSwap { return false } // not swap
+      isTokenIncluded = self.filters.tokens.contains(tx.localizedOperations.first?.symbol ?? "") || self.filters.tokens.contains(tx.localizedOperations.first?.name ?? "")
+    } else {
+      // not include send, but it is a send tx
+      if !self.filters.isSend && tx.from.lowercased() == self.currentWallet.address.lowercased() { return false }
+      // not include receive, but it is a receive tx
+      if !self.filters.isReceive && tx.to.lowercased() == self.currentWallet.address.lowercased() { return false }
+      isTokenIncluded = self.filters.tokens.contains(tx.localizedOperations.first?.symbol ?? "")
+    }
+    return isTokenIncluded
   }
 
   var normalAttributes: [NSAttributedStringKey: Any] = [
@@ -134,6 +214,11 @@ struct KNHistoryViewModel {
     NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
     NSAttributedStringKey.foregroundColor: UIColor.Kyber.enygold,
   ]
+
+  mutating func updateFilters(_ filters: KNTransactionFilter) {
+    self.filters = filters
+    self.updateDisplayingData()
+  }
 }
 
 class KNHistoryViewController: KNBaseViewController {
@@ -247,6 +332,24 @@ class KNHistoryViewController: KNBaseViewController {
       self.delegate?.historyViewController(self, run: .dismiss)
     }
   }
+
+  @IBAction func filterButtonPressed(_ sender: Any) {
+    let tokenSymbols: [String] = {
+      return self.viewModel.tokens.sorted(by: {
+        if $0.isSupported && !$1.isSupported { return true }
+        if !$0.isSupported && $1.isSupported { return false }
+        return $0.value > $1.value
+      }).map({ return $0.symbol })
+    }()
+    let viewModel = KNTransactionFilterViewModel(
+      tokens: tokenSymbols,
+      filter: self.viewModel.filters
+    )
+    let filterVC = KNTransactionFilterViewController(viewModel: viewModel)
+    filterVC.loadViewIfNeeded()
+    filterVC.delegate = self
+    self.navigationController?.pushViewController(filterVC, animated: true)
+  }
 }
 
 extension KNHistoryViewController {
@@ -274,6 +377,10 @@ extension KNHistoryViewController {
     guard let currentWallet = KNWalletStorage.shared.get(forPrimaryKey: self.viewModel.currentWallet.address) else { return }
     self.viewModel.updateCurrentWallet(currentWallet)
     self.updateUIWhenDataDidChange()
+  }
+
+  func coordinatorUpdateTokens(_ tokens: [TokenObject]) {
+    self.viewModel.update(tokens: tokens)
   }
 }
 
@@ -364,5 +471,12 @@ extension KNHistoryViewController: UICollectionViewDataSource {
 extension KNHistoryViewController: KNHistoryTransactionCollectionViewCellDelegate {
   func historyTransactionCollectionViewCell(_ cell: KNHistoryTransactionCollectionViewCell, openDetails transaction: Transaction) {
     self.delegate?.historyViewController(self, run: .selectTransaction(transaction: transaction))
+  }
+}
+
+extension KNHistoryViewController: KNTransactionFilterViewControllerDelegate {
+  func transactionFilterViewController(_ controller: KNTransactionFilterViewController, apply filter: KNTransactionFilter) {
+    self.viewModel.updateFilters(filter)
+    self.updateUIWhenDataDidChange()
   }
 }

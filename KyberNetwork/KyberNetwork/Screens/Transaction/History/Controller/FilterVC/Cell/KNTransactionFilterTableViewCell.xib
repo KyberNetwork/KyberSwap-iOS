@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Medium.ttf">
+            <string>Montserrat-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="KNTransactionFilterTableViewCell" customModule="KyberNetwork" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cjJ-WG-0c2">
+                        <rect key="frame" x="0.0" y="4" width="86.5" height="31.5"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                        <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <state key="normal" title="WETH" image="filter_check_icon">
+                            <color key="titleColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="tokenButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="lT9-8f-QPy"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QX-Yi-K8M">
+                        <rect key="frame" x="96.5" y="4" width="86" height="31.5"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                        <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <state key="normal" title="WETH" image="filter_check_icon">
+                            <color key="titleColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="tokenButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="YUK-0h-Vo6"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r30-Rz-c8I">
+                        <rect key="frame" x="192.5" y="4" width="86.5" height="31.5"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                        <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <state key="normal" title="WETH" image="filter_check_icon">
+                            <color key="titleColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="tokenButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Mgy-5d-ebA"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kQ2-oe-qS6">
+                        <rect key="frame" x="289" y="4" width="86" height="31.5"/>
+                        <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                        <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <state key="normal" title="WETH" image="filter_check_icon">
+                            <color key="titleColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="tokenButtonPressed:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="3fr-Uc-3ta"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="r30-Rz-c8I" firstAttribute="centerY" secondItem="9QX-Yi-K8M" secondAttribute="centerY" id="704-9P-7X0"/>
+                    <constraint firstItem="kQ2-oe-qS6" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="91D-dB-DL1"/>
+                    <constraint firstItem="9QX-Yi-K8M" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="9j7-70-wHK"/>
+                    <constraint firstItem="r30-Rz-c8I" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="C6d-2v-UTa"/>
+                    <constraint firstAttribute="bottom" secondItem="cjJ-WG-0c2" secondAttribute="bottom" constant="8" id="UFO-sI-1kt"/>
+                    <constraint firstItem="r30-Rz-c8I" firstAttribute="leading" secondItem="9QX-Yi-K8M" secondAttribute="trailing" constant="10" id="ZBe-8j-UA8"/>
+                    <constraint firstItem="cjJ-WG-0c2" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="bXW-UL-Z04"/>
+                    <constraint firstItem="9QX-Yi-K8M" firstAttribute="centerY" secondItem="cjJ-WG-0c2" secondAttribute="centerY" id="dc8-Lg-hjR"/>
+                    <constraint firstItem="kQ2-oe-qS6" firstAttribute="width" secondItem="r30-Rz-c8I" secondAttribute="width" id="fd6-Wi-x6G"/>
+                    <constraint firstItem="cjJ-WG-0c2" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="j1e-Ou-eO8"/>
+                    <constraint firstItem="9QX-Yi-K8M" firstAttribute="leading" secondItem="cjJ-WG-0c2" secondAttribute="trailing" constant="10" id="kJU-PW-ivN"/>
+                    <constraint firstItem="9QX-Yi-K8M" firstAttribute="width" secondItem="cjJ-WG-0c2" secondAttribute="width" id="nhN-LG-qnb"/>
+                    <constraint firstAttribute="trailing" secondItem="kQ2-oe-qS6" secondAttribute="trailing" id="rQQ-EE-eP7"/>
+                    <constraint firstItem="r30-Rz-c8I" firstAttribute="width" secondItem="9QX-Yi-K8M" secondAttribute="width" id="sie-0L-nc7"/>
+                    <constraint firstItem="kQ2-oe-qS6" firstAttribute="centerY" secondItem="r30-Rz-c8I" secondAttribute="centerY" id="wE8-cf-FFJ"/>
+                    <constraint firstItem="kQ2-oe-qS6" firstAttribute="leading" secondItem="r30-Rz-c8I" secondAttribute="trailing" constant="10" id="zJ3-gY-Fcj"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outletCollection property="tokenButtons" destination="cjJ-WG-0c2" collectionClass="NSMutableArray" id="gVv-Dr-eUS"/>
+                <outletCollection property="tokenButtons" destination="9QX-Yi-K8M" collectionClass="NSMutableArray" id="Efx-J6-dqE"/>
+                <outletCollection property="tokenButtons" destination="r30-Rz-c8I" collectionClass="NSMutableArray" id="WF2-ek-Phl"/>
+                <outletCollection property="tokenButtons" destination="kQ2-oe-qS6" collectionClass="NSMutableArray" id="wSo-1e-PKl"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="filter_check_icon" width="10" height="8"/>
+    </resources>
+</document>

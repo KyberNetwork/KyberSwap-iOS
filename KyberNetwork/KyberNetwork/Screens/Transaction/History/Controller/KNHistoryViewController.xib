@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -40,13 +40,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="160"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Transactions" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYJ-ao-QW0">
-                            <rect key="frame" x="129.5" y="46" width="116.5" height="22"/>
+                            <rect key="frame" x="136.5" y="47" width="102" height="21"/>
                             <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n1R-53-YNK">
-                            <rect key="frame" x="16" y="46" width="38" height="22"/>
+                            <rect key="frame" x="16" y="46.5" width="16" height="22"/>
                             <state key="normal" image="back_white_icon"/>
                             <connections>
                                 <action selector="backButtonPressed:" destination="-1" eventType="touchUpInside" id="esS-rv-P2Q"/>
@@ -67,16 +67,29 @@
                                 <action selector="segmentedControlValueDidChange:" destination="-1" eventType="valueChanged" id="owZ-w1-ts3"/>
                             </connections>
                         </segmentedControl>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bHG-74-IjS">
+                            <rect key="frame" x="327" y="41.5" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="F4X-qz-Bek"/>
+                                <constraint firstAttribute="width" constant="32" id="j9Y-Mt-7hP"/>
+                            </constraints>
+                            <state key="normal" image="filter_icon"/>
+                            <connections>
+                                <action selector="filterButtonPressed:" destination="-1" eventType="touchUpInside" id="7Sb-lQ-xD8"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.058823529409999999" green="0.66666666669999997" blue="0.63529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="2QL-Po-GGO" firstAttribute="top" secondItem="GYJ-ao-QW0" secondAttribute="bottom" constant="24" id="2sN-bz-oI5"/>
                         <constraint firstAttribute="height" constant="160" id="88A-PP-VnU"/>
                         <constraint firstAttribute="bottom" secondItem="2QL-Po-GGO" secondAttribute="bottom" constant="22" id="Fcy-Xn-t8j"/>
+                        <constraint firstItem="bHG-74-IjS" firstAttribute="trailing" secondItem="2QL-Po-GGO" secondAttribute="trailing" id="N8F-sf-y7Y"/>
                         <constraint firstItem="GYJ-ao-QW0" firstAttribute="centerX" secondItem="gaQ-YO-jy8" secondAttribute="centerX" id="QLv-5r-OC9"/>
                         <constraint firstItem="n1R-53-YNK" firstAttribute="centerY" secondItem="GYJ-ao-QW0" secondAttribute="centerY" id="RPI-Uw-uMB"/>
                         <constraint firstItem="n1R-53-YNK" firstAttribute="leading" secondItem="gaQ-YO-jy8" secondAttribute="leading" constant="16" id="V3u-bQ-Yy9"/>
                         <constraint firstItem="2QL-Po-GGO" firstAttribute="leading" secondItem="gaQ-YO-jy8" secondAttribute="leading" constant="16" id="alW-rr-ZX9"/>
+                        <constraint firstItem="bHG-74-IjS" firstAttribute="centerY" secondItem="GYJ-ao-QW0" secondAttribute="centerY" id="iWQ-0z-Crx"/>
                         <constraint firstItem="2QL-Po-GGO" firstAttribute="centerX" secondItem="gaQ-YO-jy8" secondAttribute="centerX" id="nxV-z5-KXl"/>
                     </constraints>
                 </view>
@@ -94,7 +107,7 @@
                     <rect key="frame" x="0.0" y="216" width="375" height="451"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You do not have any pending transactions." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bv9-ei-Ioj">
-                            <rect key="frame" x="44" y="90" width="287" height="34.5"/>
+                            <rect key="frame" x="44" y="90" width="287" height="16.5"/>
                             <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                             <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
@@ -119,13 +132,13 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rates might change" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTR-To-g6P">
-                            <rect key="frame" x="74" y="42" width="165.5" height="20"/>
+                            <rect key="frame" x="74" y="42.5" width="143.5" height="19"/>
                             <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="16"/>
                             <color key="textColor" red="0.1803921568627451" green="0.22352941176470587" blue="0.3411764705882353" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rates for token swap are not final until swapping transactions are completed (mined)" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2F0-jD-9pg">
-                            <rect key="frame" x="74" y="67" width="267" height="51.5"/>
+                            <rect key="frame" x="74" y="66.5" width="267" height="49"/>
                             <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                             <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
@@ -200,6 +213,7 @@
     </objects>
     <resources>
         <image name="back_white_icon" width="38" height="19"/>
+        <image name="filter_icon" width="16" height="16"/>
         <image name="info_blue_icon" width="19" height="18"/>
     </resources>
 </document>

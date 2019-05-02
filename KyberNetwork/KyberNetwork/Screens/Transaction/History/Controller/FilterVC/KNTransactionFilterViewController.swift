@@ -29,6 +29,7 @@ class KNTransactionFilterViewModel {
     self.isSwap = filter.isSwap
     self.tokens = filter.tokens
     self.supportedTokens = tokens
+    if filter.tokens.count < self.supportedTokens.count / 2 { self.isSelectAll = false }
   }
 
   func updateFrom(date: Date?) {

@@ -37,7 +37,7 @@ struct KNHistoryViewModel {
 
   fileprivate(set) var isShowingPending: Bool = true
 
-  fileprivate(set) var filters = KNTransactionFilter(from: nil, to: nil, isSend: true, isReceive: true, isSwap: true, tokens: [])
+  fileprivate(set) var filters = KNAppTracker.getLastHistoryFilterData()
 
   init(
     tokens: [TokenObject] = KNSupportedTokenStorage.shared.supportedTokens,
@@ -54,14 +54,6 @@ struct KNHistoryViewModel {
     self.pendingTxHeaders = pendingTxHeaders
     self.currentWallet = currentWallet
     self.isShowingPending = true
-    self.filters = KNTransactionFilter(
-      from: nil,
-      to: nil,
-      isSend: true,
-      isReceive: true,
-      isSwap: true,
-      tokens: tokens.map({ return $0.symbol })
-    )
     self.updateDisplayingData()
   }
 
@@ -102,7 +94,11 @@ struct KNHistoryViewModel {
   var emptyStateDescLabelString: String {
     let noPendingTx = NSLocalizedString("you.do.not.have.any.pending.transactions", value: "You do not have any pending transactions.", comment: "")
     let noCompletedTx = NSLocalizedString("you.do.not.have.any.completed.transactions", value: "You do not have any completed transactions.", comment: "")
-    return self.isShowingPending ? noPendingTx : noCompletedTx
+    let noMatchingFound = NSLocalizedString("no.matching.data", value: "No matching data", comment: "")
+    if self.isShowingPending {
+      return self.pendingTxHeaders.isEmpty ? noPendingTx : noMatchingFound
+    }
+    return self.completedTxHeaders.isEmpty ? noCompletedTx : noMatchingFound
   }
 
   var isRateMightChangeHidden: Bool {
@@ -218,6 +214,15 @@ struct KNHistoryViewModel {
   mutating func updateFilters(_ filters: KNTransactionFilter) {
     self.filters = filters
     self.updateDisplayingData()
+    var json: JSONDictionary = [
+      "send": filters.isSend,
+      "receive": filters.isReceive,
+      "swap": filters.isSwap,
+      "tokens": filters.tokens,
+    ]
+    if let date = filters.from { json["from"] = date.timeIntervalSince1970 }
+    if let date = filters.to { json["to"] = date.timeIntervalSince1970 }
+    KNAppTracker.saveHistoryFilterData(json: json)
   }
 }
 

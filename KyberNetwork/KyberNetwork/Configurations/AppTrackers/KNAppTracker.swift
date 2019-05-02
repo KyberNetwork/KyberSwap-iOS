@@ -35,6 +35,8 @@ class KNAppTracker {
 
   static let kHasSentPushTokenKey: String = "kHasLoggedUserOutWithNativeSignInKey"
 
+  static let kHistoryFilterKey: String = "kHistoryFilterKey"
+
   static let userDefaults: UserDefaults = UserDefaults.standard
 
   static let minimumPriceAlertPercent: Double = -99.0
@@ -219,5 +221,47 @@ class KNAppTracker {
       userDefaults.removeObject(forKey: key)
     }
     userDefaults.synchronize()
+  }
+
+  static func saveHistoryFilterData(json: JSONDictionary) {
+    let key = "\(KNEnvironment.default.displayName)_\(kHistoryFilterKey)"
+    userDefaults.set(json, forKey: key)
+    userDefaults.synchronize()
+  }
+
+  static func getLastHistoryFilterData() -> KNTransactionFilter {
+    let key = "\(KNEnvironment.default.displayName)_\(kHistoryFilterKey)"
+    if let json = userDefaults.object(forKey: key) as? JSONDictionary {
+      let from = json["from"] as? TimeInterval
+      let to = json["to"] as? TimeInterval
+      let fromDate: Date? = {
+        if let date = from { return Date(timeIntervalSince1970: date) }
+        return nil
+      }()
+      let toDate: Date? = {
+        if let date = to { return Date(timeIntervalSince1970: date) }
+        return nil
+      }()
+      let isSend = json["send"] as? Bool ?? true
+      let isReceive = json["receive"] as? Bool ?? true
+      let isSwap = json["swap"] as? Bool ?? true
+      let tokens = json["tokens"] as? [String] ?? []
+      return KNTransactionFilter(
+        from: fromDate,
+        to: toDate,
+        isSend: isSend,
+        isReceive: isReceive,
+        isSwap: isSwap,
+        tokens: tokens
+      )
+    }
+    return KNTransactionFilter(
+      from: nil,
+      to: nil,
+      isSend: true,
+      isReceive: true,
+      isSwap: true,
+      tokens: KNSupportedTokenStorage.shared.supportedTokens.map({ return $0.symbol })
+    )
   }
 }

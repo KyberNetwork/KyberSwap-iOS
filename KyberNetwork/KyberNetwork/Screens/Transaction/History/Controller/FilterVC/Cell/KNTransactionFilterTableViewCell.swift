@@ -28,7 +28,9 @@ class KNTransactionFilterTableViewCell: UITableViewCell {
         $0.setTitle("", for: .normal)
         $0.backgroundColor = .clear
         $0.setImage(nil, for: .normal)
+        $0.isHidden = true
       } else {
+        $0.isHidden = false
         $0.setTitle(symbols[$0.tag], for: .normal)
         if selectedTokens.contains(symbols[$0.tag]) {
           $0.backgroundColor = .white

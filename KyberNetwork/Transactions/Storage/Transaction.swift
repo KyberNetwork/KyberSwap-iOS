@@ -150,6 +150,7 @@ extension Transaction {
     if sendTx.from.lowercased() != curWallet.lowercased() || receiveTx.to.lowercased() != curWallet.lowercased() { return nil }
     // must be one send, one receive
     guard let srcToken = sendTx.getTokenObject(), let destToken = receiveTx.getTokenObject() else { return nil }
+    if srcToken.symbol == destToken.symbol { return nil }
     let destAddress = sendTx.to.lowercased()
     let fromAmount = sendTx.value
     let destAmount = receiveTx.value

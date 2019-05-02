@@ -19,6 +19,7 @@ class KNTransactionFilterViewModel {
   private(set) var isSwap: Bool = false
   private(set) var tokens: [String] = []
   private(set) var supportedTokens: [String] = []
+  private(set) var isSelectAll: Bool = true
 
   init(tokens: [String], filter: KNTransactionFilter) {
     self.from = filter.from
@@ -82,6 +83,11 @@ class KNTransactionFilterViewModel {
     self.isSwap = true
     self.tokens = self.supportedTokens
   }
+
+  func updateSelectAll(_ isSelectAll: Bool) {
+    self.isSelectAll = isSelectAll
+    self.tokens = self.isSelectAll ? self.supportedTokens : []
+  }
 }
 
 protocol KNTransactionFilterViewControllerDelegate: class {
@@ -106,6 +112,7 @@ class KNTransactionFilterViewController: KNBaseViewController {
   @IBOutlet weak var receiveButton: UIButton!
   @IBOutlet weak var swapButton: UIButton!
 
+  @IBOutlet weak var selectButton: UIButton!
   @IBOutlet weak var tokenTextLabel: UILabel!
   @IBOutlet weak var tokensTableView: UITableView!
 
@@ -180,6 +187,7 @@ class KNTransactionFilterViewController: KNBaseViewController {
     self.tokensTableView.delegate = self
     self.tokensTableView.dataSource = self
     self.tokensTableView.reloadData()
+    self.tokensTableView.allowsSelection = false
 
     self.fromTextField.inputView = self.fromDatePicker
     self.toTextField.inputView = self.toDatePicker
@@ -197,6 +205,10 @@ class KNTransactionFilterViewController: KNBaseViewController {
   }
 
   fileprivate func updateUI() {
+    self.selectButton.setTitle(
+      self.viewModel.isSelectAll ? "Deselect All".toBeLocalised() : "Select All".toBeLocalised(),
+      for: .normal
+    )
     if self.viewModel.isSend {
       self.sendButton.rounded(color: UIColor.Kyber.enygold, width: 1.0, radius: 4.0)
       self.sendButton.setImage(UIImage(named: "filter_check_icon"), for: .normal)
@@ -230,7 +242,6 @@ class KNTransactionFilterViewController: KNBaseViewController {
     } else {
       self.fromTextField.text = ""
     }
-
     if let date = self.viewModel.to {
       self.toDatePicker.setDate(date, animated: false)
       self.toDatePickerDidChange(self.toDatePicker)
@@ -256,6 +267,11 @@ class KNTransactionFilterViewController: KNBaseViewController {
 
   @IBAction func swapButtonPressed(_ sender: Any) {
     self.viewModel.updateIsSwap(!self.viewModel.isSwap)
+    self.updateUI()
+  }
+
+  @IBAction func selectButtonPressed(_ sender: Any) {
+    self.viewModel.updateSelectAll(!self.viewModel.isSelectAll)
     self.updateUI()
   }
 

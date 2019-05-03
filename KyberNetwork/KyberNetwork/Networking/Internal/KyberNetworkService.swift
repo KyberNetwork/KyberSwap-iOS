@@ -130,7 +130,7 @@ enum UserInfoService {
   case getListAlerts(accessToken: String)
   case updateAlert(accessToken: String, jsonData: JSONDictionary)
   case getListAlertMethods(accessToken: String)
-  case setAlertMethods(accessToken: String, email: Bool, telegram: Bool, pushNoti: Bool)
+  case setAlertMethods(accessToken: String, email: [JSONDictionary], telegram: [JSONDictionary])
   case getLeaderBoardData(accessToken: String)
   case getLatestCampaignResult(accessToken: String)
 }
@@ -154,9 +154,9 @@ extension UserInfoService: TargetType {
     case .removeAnAlert(_, let alertID):
       return URL(string: "\(baseString)/api/alerts/\(alertID)")!
     case .getListAlertMethods:
-      return URL(string: "\(baseString)/api/alert_methods")!
+      return URL(string: "\(baseString)/api/get_alert_methods")!
     case .setAlertMethods:
-      return URL(string: "\(baseString)/api/set_alert_methods")!
+      return URL(string: "\(baseString)/api/update_alert_methods")!
     case .getLeaderBoardData:
       return URL(string: "\(baseString)/api/alerts/ranks")!
     case .getLatestCampaignResult:
@@ -193,11 +193,10 @@ extension UserInfoService: TargetType {
       json["id"] = nil
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .setAlertMethods(_, let email, let telegram, let pushNoti):
+    case .setAlertMethods(_, let email, let telegram):
       let json: JSONDictionary = [
         "email": email,
         "telegram": telegram,
-        "push_notification": pushNoti,
       ]
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
@@ -219,7 +218,7 @@ extension UserInfoService: TargetType {
       json["Authorization"] = accessToken
     case .updateAlert(let accessToken, _):
       json["Authorization"] = accessToken
-    case .setAlertMethods(let accessToken, _, _, _):
+    case .setAlertMethods(let accessToken, _, _):
       json["Authorization"] = accessToken
     case .getListAlerts(let accessToken):
       json["Authorization"] = accessToken

@@ -7,46 +7,28 @@ class KNNotificationMethodsViewController: KNBaseViewController {
   @IBOutlet weak var headerContainerView: UIView!
   @IBOutlet weak var navTitleLabel: UILabel!
   @IBOutlet weak var getAlertByTextLabel: UILabel!
-  @IBOutlet weak var pushNotificationTextLabel: UILabel!
-  @IBOutlet weak var pushNotiContainerView: UIView!
-  @IBOutlet weak var pushNotiButton: UIButton!
-  @IBOutlet weak var emailButton: UIButton!
+  
   @IBOutlet weak var emailTextLabel: UILabel!
-  @IBOutlet weak var emailContainerView: UIView!
-  @IBOutlet weak var telegramButton: UIButton!
-  @IBOutlet weak var telegramTextLabel: UILabel!
-  @IBOutlet weak var telegramContainerView: UIView!
+  @IBOutlet weak var emailTextField: UITextField!
 
-  fileprivate var isPushNotiEnabled: Bool = true
-  fileprivate var isEmailEnabled: Bool = true
-  fileprivate var isTelegramEnabled: Bool = true
+  @IBOutlet weak var telegramTextLabel: UILabel!
+  @IBOutlet weak var telegramTextField: UITextField!
+
+  fileprivate var emails: [JSONDictionary] = []
+  fileprivate var activeEmail: String?
+  fileprivate var telegrams: [JSONDictionary] = []
+  fileprivate var activeTelegram: String?
 
   override func viewDidLoad() {
     super.viewDidLoad()
     self.headerContainerView.applyGradient(with: UIColor.Kyber.headerColors)
     self.navTitleLabel.text = NSLocalizedString("Alert Method", comment: "")
-    self.pushNotificationTextLabel.text = NSLocalizedString("Push Notification", comment: "")
 
-    let tapPushNoti = UITapGestureRecognizer(target: self, action: #selector(self.pushNotiButtonPressed(_:)))
-    self.pushNotiContainerView.addGestureRecognizer(tapPushNoti)
-    self.pushNotiContainerView.isUserInteractionEnabled = true
-    self.pushNotiContainerView.isHidden = true
-    self.pushNotificationTextLabel.isHidden = true
-    self.pushNotiButton.isHidden = true
-
-    let tapEmail = UITapGestureRecognizer(target: self, action: #selector(self.emailButtonPressed(_:)))
-    self.emailContainerView.addGestureRecognizer(tapEmail)
-    self.emailContainerView.isUserInteractionEnabled = true
-    self.emailContainerView.isHidden = true
     self.emailTextLabel.isHidden = true
-    self.emailButton.isHidden = true
+    self.emailTextField.isHidden = true
 
-    let tapTelegram = UITapGestureRecognizer(target: self, action: #selector(self.telegramButtonPressed(_:)))
-    self.telegramContainerView.addGestureRecognizer(tapTelegram)
-    self.telegramContainerView.isUserInteractionEnabled = true
-    self.telegramContainerView.isHidden = true
     self.telegramTextLabel.isHidden = true
-    self.telegramButton.isHidden = true
+    self.telegramTextField.isHidden = true
 
     self.updateUIs()
   }
@@ -70,35 +52,26 @@ class KNNotificationMethodsViewController: KNBaseViewController {
       guard let `self` = self else { return }
       self.hideLoading()
       if error == nil {
-        self.isPushNotiEnabled = resp["push_notification"] as? Bool ?? false
-        self.isEmailEnabled = resp["email"] as? Bool ?? false
-        self.isTelegramEnabled = resp["telegram"] as? Bool ?? false
-        if resp["push_notification"] == nil {
-          self.pushNotiButton.isHidden = true
-          self.pushNotificationTextLabel.isHidden = true
-          self.pushNotiContainerView.isHidden = true
+        self.emails = resp["email"] as? [JSONDictionary] ?? []
+        self.telegrams = resp["telegram"] as? [JSONDictionary] ?? []
+        if let email = self.emails.first(where: { return ($0["active"] as? Bool ?? false) }) {
+          self.activeEmail = email["id"] as? String
         } else {
-          self.pushNotiButton.isHidden = false
-          self.pushNotificationTextLabel.isHidden = false
-          self.pushNotiContainerView.isHidden = false
+          self.activeEmail = "Not enabled".toBeLocalised()
         }
-        if resp["email"] == nil {
-          self.emailButton.isHidden = true
+        if resp["email"] == nil || self.emails.isEmpty {
           self.emailTextLabel.isHidden = true
-          self.emailContainerView.isHidden = true
+          self.emailTextField.isHidden = true
         } else {
-          self.emailButton.isHidden = false
           self.emailTextLabel.isHidden = false
-          self.emailContainerView.isHidden = false
+          self.emailTextField.isHidden = false
         }
-        if resp["telegram"] == nil {
-          self.telegramButton.isHidden = true
+        if resp["telegram"] == nil || self.telegrams.isEmpty {
           self.telegramTextLabel.isHidden = true
-          self.telegramContainerView.isHidden = true
+          self.telegramTextField.isHidden = true
         } else {
-          self.telegramButton.isHidden = false
           self.telegramTextLabel.isHidden = false
-          self.telegramContainerView.isHidden = false
+          self.telegramTextField.isHidden = false
         }
         self.updateUIs()
       } else {
@@ -123,48 +96,14 @@ class KNNotificationMethodsViewController: KNBaseViewController {
   }
 
   fileprivate func updateUIs() {
-    if self.isPushNotiEnabled {
-      self.pushNotiButton.setImage(UIImage(named: "check_box_icon"), for: .normal)
-      self.pushNotiButton.rounded(color: UIColor.clear, width: 1.0, radius: 4.0)
-    } else {
-      self.pushNotiButton.setImage(nil, for: .normal)
-      self.pushNotiButton.rounded(color: UIColor.Kyber.border, width: 1.0, radius: 4.0)
-    }
-    if self.isEmailEnabled {
-      self.emailButton.setImage(UIImage(named: "check_box_icon"), for: .normal)
-      self.emailButton.rounded(color: UIColor.clear, width: 1.0, radius: 4.0)
-    } else {
-      self.emailButton.setImage(nil, for: .normal)
-      self.emailButton.rounded(color: UIColor.Kyber.border, width: 1.0, radius: 4.0)
-    }
-    if self.isTelegramEnabled {
-      self.telegramButton.setImage(UIImage(named: "check_box_icon"), for: .normal)
-      self.telegramButton.rounded(color: UIColor.clear, width: 1.0, radius: 4.0)
-    } else {
-      self.telegramButton.setImage(nil, for: .normal)
-      self.telegramButton.rounded(color: UIColor.Kyber.border, width: 1.0, radius: 4.0)
-    }
+    
   }
 
-  @IBAction func pushNotiButtonPressed(_ sender: Any) {
-    self.isPushNotiEnabled = !self.isPushNotiEnabled
-    self.updateUIs()
-  }
-
-  @IBAction func emailButtonPressed(_ sender: Any) {
-    self.isEmailEnabled = !self.isEmailEnabled
-    self.updateUIs()
-  }
-
-  @IBAction func telegramButtonPressed(_ sender: Any) {
-    self.isTelegramEnabled = !self.isTelegramEnabled
-    self.updateUIs()
-  }
 
   @IBAction func saveButtonPressed(_ sender: Any) {
     guard let accessToken = IEOUserStorage.shared.user?.accessToken else { return }
     self.displayLoading(text: NSLocalizedString("Updating", comment: ""), animated: true)
-    KNPriceAlertCoordinator.shared.updateAlertMethods(accessToken: accessToken, email: self.isEmailEnabled, telegram: self.isTelegramEnabled, pushNoti: self.isPushNotiEnabled) { [weak self] (_, error) in
+    KNPriceAlertCoordinator.shared.updateAlertMethods(accessToken: accessToken, email: self.emails, telegram: self.telegrams) { [weak self] (message, error) in
       guard let `self` = self else { return }
       self.hideLoading()
       if error == nil {
@@ -176,7 +115,7 @@ class KNNotificationMethodsViewController: KNBaseViewController {
       } else {
         self.showSuccessTopBannerMessage(
           with: NSLocalizedString("error", value: "Error", comment: ""),
-          message: NSLocalizedString("Can not update alert methods!", comment: ""),
+          message: message,
           time: 1.5
         )
       }

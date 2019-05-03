@@ -247,9 +247,9 @@ class KNPriceAlertCoordinator: NSObject {
     }
   }
 
-  func updateAlertMethods(accessToken: String, email: Bool, telegram: Bool, pushNoti: Bool, completion: @escaping (String, String?) -> Void) {
+  func updateAlertMethods(accessToken: String, email: [JSONDictionary], telegram: [JSONDictionary], completion: @escaping (String, String?) -> Void) {
     DispatchQueue.global(qos: .background).async {
-      self.provider.request(.setAlertMethods(accessToken: accessToken, email: email, telegram: telegram, pushNoti: pushNoti)) { [weak self] result in
+      self.provider.request(.setAlertMethods(accessToken: accessToken, email: email, telegram: telegram)) { [weak self] result in
         guard let _ = self else { return }
         DispatchQueue.main.async {
           switch result {

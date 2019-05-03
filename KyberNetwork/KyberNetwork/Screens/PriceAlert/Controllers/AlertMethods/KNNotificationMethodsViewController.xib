@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,18 +17,13 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KNNotificationMethodsViewController" customModule="KyberNetwork" customModuleProvider="target">
             <connections>
-                <outlet property="emailButton" destination="x6i-aC-y5l" id="wTX-Fz-yC5"/>
-                <outlet property="emailContainerView" destination="47e-oK-1fI" id="0fo-yT-e2h"/>
-                <outlet property="emailTextLabel" destination="47O-de-e6y" id="oAb-re-lz6"/>
+                <outlet property="emailTextField" destination="fCz-Yy-8hk" id="BLw-b1-KjP"/>
+                <outlet property="emailTextLabel" destination="Kyr-U0-WNl" id="nJb-aq-mn7"/>
                 <outlet property="getAlertByTextLabel" destination="ZZx-Oe-tUH" id="J5R-nu-0db"/>
                 <outlet property="headerContainerView" destination="Z6j-bU-pvB" id="aBZ-38-fFW"/>
                 <outlet property="navTitleLabel" destination="VlY-D4-fnM" id="BDl-4O-kCr"/>
-                <outlet property="pushNotiButton" destination="Laz-gx-Isv" id="hnO-ra-aMD"/>
-                <outlet property="pushNotiContainerView" destination="vLK-IL-E1N" id="rdx-cR-zP2"/>
-                <outlet property="pushNotificationTextLabel" destination="34f-8C-xzv" id="a0K-U0-QZg"/>
-                <outlet property="telegramButton" destination="P7H-vg-SFZ" id="4oj-t0-QCp"/>
-                <outlet property="telegramContainerView" destination="r7O-41-rPi" id="Sll-hk-KfW"/>
-                <outlet property="telegramTextLabel" destination="M1j-jF-PBO" id="2vK-3y-0hf"/>
+                <outlet property="telegramTextField" destination="8vX-XD-Hvo" id="2qB-D3-012"/>
+                <outlet property="telegramTextLabel" destination="OJI-IG-O4f" id="Jqx-ss-Cuc"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -85,108 +80,55 @@
                     <color key="textColor" red="0.078431372549019607" green="0.098039215686274508" blue="0.15294117647058825" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Laz-gx-Isv">
-                    <rect key="frame" x="32" y="177.5" width="16" height="16"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="16" id="8M8-Xi-iWU"/>
-                        <constraint firstAttribute="width" constant="16" id="Yg8-7H-nac"/>
-                    </constraints>
-                    <state key="normal" image="check_box_icon"/>
-                    <connections>
-                        <action selector="pushNotiButtonPressed:" destination="-1" eventType="touchUpInside" id="e2z-sg-Wyr"/>
-                    </connections>
-                </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Push Notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="34f-8C-xzv">
-                    <rect key="frame" x="56" y="178" width="107" height="15"/>
-                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="12"/>
-                    <color key="textColor" red="0.35294117650000001" green="0.36862745099999999" blue="0.4039215686" alpha="1" colorSpace="calibratedRGB"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kyr-U0-WNl">
+                    <rect key="frame" x="32" y="189.5" width="40.5" height="17.5"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                    <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vLK-IL-E1N">
-                    <rect key="frame" x="32" y="169.5" width="311" height="32"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="32" id="aPC-0k-2JD"/>
-                    </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="47e-oK-1fI">
-                    <rect key="frame" x="32" y="217" width="311" height="32"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="32" id="BEw-gU-e3T"/>
-                    </constraints>
-                </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47O-de-e6y">
-                    <rect key="frame" x="56" y="225.5" width="35" height="15"/>
-                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="12"/>
-                    <color key="textColor" red="0.35294117650000001" green="0.36862745099999999" blue="0.4039215686" alpha="1" colorSpace="calibratedRGB"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Telegram" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OJI-IG-O4f">
+                    <rect key="frame" x="32" y="251" width="67" height="17.5"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                    <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6i-aC-y5l">
-                    <rect key="frame" x="32" y="225" width="16" height="16"/>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Not enable" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fCz-Yy-8hk">
+                    <rect key="frame" x="120" y="176.5" width="223" height="44"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="16" id="FeR-s2-TYK"/>
-                        <constraint firstAttribute="width" constant="16" id="iWP-dA-EsR"/>
+                        <constraint firstAttribute="height" constant="44" id="hA0-Lj-pcT"/>
                     </constraints>
-                    <state key="normal" image="check_box_icon"/>
-                    <connections>
-                        <action selector="emailButtonPressed:" destination="-1" eventType="touchUpInside" id="OGn-P3-ykp"/>
-                    </connections>
-                </button>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r7O-41-rPi">
-                    <rect key="frame" x="32" y="264.5" width="311" height="32"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <color key="textColor" red="0.078431372550000003" green="0.098039215690000001" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Not enable" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8vX-XD-Hvo">
+                    <rect key="frame" x="120" y="238" width="223" height="44"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="32" id="ak5-RS-AjG"/>
+                        <constraint firstAttribute="height" constant="44" id="Chg-nu-u8n"/>
                     </constraints>
-                </view>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Telegram" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M1j-jF-PBO">
-                    <rect key="frame" x="56" y="273" width="57.5" height="15"/>
-                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="12"/>
-                    <color key="textColor" red="0.35294117650000001" green="0.36862745099999999" blue="0.4039215686" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P7H-vg-SFZ">
-                    <rect key="frame" x="32" y="272.5" width="16" height="16"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="16" id="G0f-cX-pis"/>
-                        <constraint firstAttribute="width" constant="16" id="ulm-qu-niD"/>
-                    </constraints>
-                    <state key="normal" image="check_box_icon"/>
-                    <connections>
-                        <action selector="telegramButtonPressed:" destination="-1" eventType="touchUpInside" id="0vm-gM-Vzm"/>
-                    </connections>
-                </button>
+                    <color key="textColor" red="0.078431372550000003" green="0.098039215690000001" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
             </subviews>
             <color key="backgroundColor" red="0.96470588235294119" green="0.96862745098039216" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <gestureRecognizers/>
             <constraints>
                 <constraint firstItem="Z6j-bU-pvB" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="0FC-4O-wwa"/>
-                <constraint firstItem="r7O-41-rPi" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="2Bt-4l-Nkz"/>
-                <constraint firstItem="x6i-aC-y5l" firstAttribute="top" secondItem="34f-8C-xzv" secondAttribute="bottom" constant="32" id="2V0-WY-VZd"/>
                 <constraint firstItem="Z6j-bU-pvB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="44P-n7-OQj"/>
-                <constraint firstItem="47e-oK-1fI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="6bH-e6-3Bd"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="47e-oK-1fI" secondAttribute="trailing" constant="32" id="87D-nt-2kS"/>
-                <constraint firstItem="P7H-vg-SFZ" firstAttribute="top" secondItem="47O-de-e6y" secondAttribute="bottom" constant="32" id="8d9-Ax-oKv"/>
-                <constraint firstItem="vLK-IL-E1N" firstAttribute="centerY" secondItem="34f-8C-xzv" secondAttribute="centerY" id="8hw-9a-Pvk"/>
-                <constraint firstItem="34f-8C-xzv" firstAttribute="centerY" secondItem="Laz-gx-Isv" secondAttribute="centerY" id="9hU-dG-xo6"/>
                 <constraint firstItem="ZZx-Oe-tUH" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="Anz-je-cEW"/>
-                <constraint firstItem="47O-de-e6y" firstAttribute="leading" secondItem="x6i-aC-y5l" secondAttribute="trailing" constant="8" id="Byf-St-E9J"/>
+                <constraint firstItem="fCz-Yy-8hk" firstAttribute="centerY" secondItem="Kyr-U0-WNl" secondAttribute="centerY" id="Cck-hU-etE"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="8vX-XD-Hvo" secondAttribute="trailing" constant="32" id="HEo-DW-sCi"/>
+                <constraint firstItem="Kyr-U0-WNl" firstAttribute="top" secondItem="ZZx-Oe-tUH" secondAttribute="bottom" constant="44" id="KU2-wn-eDo"/>
+                <constraint firstItem="OJI-IG-O4f" firstAttribute="top" secondItem="Kyr-U0-WNl" secondAttribute="bottom" constant="44" id="OWC-SU-Ig6"/>
                 <constraint firstItem="Z6j-bU-pvB" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="OYl-2t-TuK"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="r7O-41-rPi" secondAttribute="trailing" constant="32" id="Q2q-Uy-F8Z"/>
-                <constraint firstItem="x6i-aC-y5l" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="QQE-rC-rlz"/>
+                <constraint firstItem="8vX-XD-Hvo" firstAttribute="leading" secondItem="fCz-Yy-8hk" secondAttribute="leading" id="Pbr-oz-5B9"/>
+                <constraint firstItem="Kyr-U0-WNl" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="QKa-1W-3DC"/>
                 <constraint firstItem="ZZx-Oe-tUH" firstAttribute="top" secondItem="Z6j-bU-pvB" secondAttribute="bottom" constant="44" id="RRl-Xl-bbh"/>
-                <constraint firstItem="34f-8C-xzv" firstAttribute="leading" secondItem="Laz-gx-Isv" secondAttribute="trailing" constant="8" id="Uio-ne-JdJ"/>
-                <constraint firstItem="Laz-gx-Isv" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="W48-Bs-yyL"/>
-                <constraint firstItem="M1j-jF-PBO" firstAttribute="centerY" secondItem="P7H-vg-SFZ" secondAttribute="centerY" id="YIO-Mc-CUm"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="vLK-IL-E1N" secondAttribute="trailing" constant="32" id="cSm-qN-Vka"/>
-                <constraint firstItem="r7O-41-rPi" firstAttribute="centerY" secondItem="M1j-jF-PBO" secondAttribute="centerY" id="dPb-1d-gPA"/>
-                <constraint firstItem="M1j-jF-PBO" firstAttribute="leading" secondItem="P7H-vg-SFZ" secondAttribute="trailing" constant="8" id="efg-VT-BoS"/>
-                <constraint firstItem="47O-de-e6y" firstAttribute="centerY" secondItem="x6i-aC-y5l" secondAttribute="centerY" id="hPv-kA-aw9"/>
-                <constraint firstItem="vLK-IL-E1N" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="iET-9y-0mc"/>
-                <constraint firstItem="P7H-vg-SFZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="kCd-1b-MpM"/>
-                <constraint firstItem="47e-oK-1fI" firstAttribute="centerY" secondItem="47O-de-e6y" secondAttribute="centerY" id="nbB-bJ-JCp"/>
-                <constraint firstItem="Laz-gx-Isv" firstAttribute="top" secondItem="ZZx-Oe-tUH" secondAttribute="bottom" constant="32" id="trg-RK-HRX"/>
+                <constraint firstItem="8vX-XD-Hvo" firstAttribute="centerY" secondItem="OJI-IG-O4f" secondAttribute="centerY" id="bht-yx-Waq"/>
+                <constraint firstItem="OJI-IG-O4f" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="32" id="g0W-oh-Der"/>
+                <constraint firstItem="fCz-Yy-8hk" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="120" id="wjn-6k-gih"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fCz-Yy-8hk" secondAttribute="trailing" constant="32" id="y4j-dK-OYF"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <connections>
@@ -203,7 +145,6 @@
     </objects>
     <resources>
         <image name="back_white_icon" width="38" height="19"/>
-        <image name="check_box_icon" width="24" height="24"/>
         <image name="save_alert_icon" width="18" height="14"/>
     </resources>
 </document>

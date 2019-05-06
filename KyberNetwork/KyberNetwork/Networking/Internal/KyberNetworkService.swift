@@ -170,7 +170,7 @@ extension UserInfoService: TargetType {
     switch self {
     case .getListAlerts, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult: return .get
     case .removeAnAlert: return .delete
-    case .setAlertMethods, .addPushToken, .updateAlert: return .patch
+    case .addPushToken, .updateAlert: return .patch
     default: return .post
     }
   }
@@ -194,10 +194,10 @@ extension UserInfoService: TargetType {
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
     case .setAlertMethods(_, let email, let telegram):
-      let json: JSONDictionary = [
-        "email": email,
-        "telegram": telegram,
-      ]
+      var json: JSONDictionary = [:]
+      if !email.isEmpty { json["emails"] = email }
+      if let tele = telegram.first { json["telegram"] = tele }
+      print(json)
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
     case .getListAlerts, .removeAnAlert, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult:

@@ -1,5 +1,6 @@
 // Copyright SIX DAY LLC. All rights reserved.
 
+//swiftlint:disable file_length
 import Moya
 import CryptoSwift
 
@@ -82,6 +83,7 @@ enum KNTrackerService {
   case getChartHistory(symbol: String, resolution: String, from: Int64, to: Int64, rateType: String)
   case getRates
   case getUserCap(address: String)
+  case swapSuggestion(address: String, tokens: JSONDictionary)
 }
 
 extension KNTrackerService: TargetType {
@@ -95,6 +97,8 @@ extension KNTrackerService: TargetType {
       return URL(string: baseURLString + url)!
     case .getRates:
       return URL(string: baseURLString + KNSecret.getChange)!
+    case .swapSuggestion:
+      return URL(string: KNSecret.swapSuggestionURL)!
     }
   }
 
@@ -103,11 +107,23 @@ extension KNTrackerService: TargetType {
   }
 
   var method: Moya.Method {
+    if case .swapSuggestion = self { return .post }
     return .get
   }
 
   var task: Task {
-    return .requestPlain
+    switch self {
+    case .swapSuggestion(let address, let tokens):
+      var json: JSONDictionary = [
+        "wallet_id": address,
+      ]
+      if !tokens.isEmpty { json["tokens"] = tokens }
+      print(json)
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
+    default:
+      return .requestPlain
+    }
   }
 
   var sampleData: Data {

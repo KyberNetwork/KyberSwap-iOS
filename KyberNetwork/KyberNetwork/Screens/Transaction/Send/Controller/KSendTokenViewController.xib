@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -217,7 +217,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DwD-Od-9c0">
-                            <rect key="frame" x="35" y="400" width="305" height="44"/>
+                            <rect key="frame" x="20" y="400" width="335" height="44"/>
                             <color key="backgroundColor" red="0.058823529409999999" green="0.66666666669999997" blue="0.63529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="vkQ-Ah-Zxj"/>
@@ -248,7 +248,7 @@
                         <constraint firstItem="6MZ-HX-07p" firstAttribute="top" secondItem="mKI-g6-kJR" secondAttribute="bottom" id="GhL-zJ-jrg"/>
                         <constraint firstItem="BwD-ua-ExG" firstAttribute="top" secondItem="7gF-Dg-ljr" secondAttribute="bottom" constant="16" id="H45-AE-bOv"/>
                         <constraint firstItem="WEJ-Se-4NU" firstAttribute="leading" secondItem="mKI-g6-kJR" secondAttribute="trailing" constant="10" id="Ldh-aN-uso"/>
-                        <constraint firstAttribute="trailing" secondItem="DwD-Od-9c0" secondAttribute="trailing" constant="35" id="MDP-eX-tVe"/>
+                        <constraint firstAttribute="trailing" secondItem="DwD-Od-9c0" secondAttribute="trailing" constant="20" id="MDP-eX-tVe"/>
                         <constraint firstItem="DwD-Od-9c0" firstAttribute="centerX" secondItem="BwD-ua-ExG" secondAttribute="centerX" id="NP4-fQ-ma4"/>
                         <constraint firstItem="BwD-ua-ExG" firstAttribute="leading" secondItem="ibe-Tm-lI1" secondAttribute="leading" id="XIb-au-H6y"/>
                         <constraint firstAttribute="trailing" secondItem="7gF-Dg-ljr" secondAttribute="trailing" id="Y1A-hr-Azh"/>
@@ -259,7 +259,7 @@
                         <constraint firstItem="ufh-Wh-g1B" firstAttribute="trailing" secondItem="WEJ-Se-4NU" secondAttribute="trailing" id="eaI-5X-pTD"/>
                         <constraint firstItem="ufh-Wh-g1B" firstAttribute="top" secondItem="6MZ-HX-07p" secondAttribute="bottom" constant="4" id="gw0-UA-mfh"/>
                         <constraint firstItem="6MZ-HX-07p" firstAttribute="centerX" secondItem="ibe-Tm-lI1" secondAttribute="centerX" id="hxZ-CA-aad"/>
-                        <constraint firstItem="DwD-Od-9c0" firstAttribute="leading" secondItem="ibe-Tm-lI1" secondAttribute="leading" constant="35" id="nFm-KJ-abk"/>
+                        <constraint firstItem="DwD-Od-9c0" firstAttribute="leading" secondItem="ibe-Tm-lI1" secondAttribute="leading" constant="20" id="nFm-KJ-abk"/>
                         <constraint firstItem="6MZ-HX-07p" firstAttribute="leading" secondItem="mKI-g6-kJR" secondAttribute="leading" id="rrq-qR-5eq"/>
                         <constraint firstAttribute="bottom" secondItem="DwD-Od-9c0" secondAttribute="bottom" constant="32" id="s5G-WC-Bjn"/>
                         <constraint firstItem="WEJ-Se-4NU" firstAttribute="centerY" secondItem="mKI-g6-kJR" secondAttribute="centerY" id="v0F-3b-gp6"/>

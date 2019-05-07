@@ -4,6 +4,7 @@ import UIKit
 import BigInt
 import Result
 import Crashlytics
+import Moya
 
 //swiftlint:disable file_length
 
@@ -24,6 +25,7 @@ protocol KSwapViewControllerDelegate: class {
   func kSwapViewController(_ controller: KSwapViewController, run event: KNBalanceTabHamburgerMenuViewEvent)
 }
 
+//swiftlint:disable type_body_length
 class KSwapViewController: KNBaseViewController {
 
   fileprivate var isViewSetup: Bool = false
@@ -61,6 +63,21 @@ class KSwapViewController: KNBaseViewController {
   @IBOutlet weak var bottomPaddingConstraintForScrollView: NSLayoutConstraint!
 
   @IBOutlet weak var continueButton: UIButton!
+
+  @IBOutlet var continueButtonBottomPaddingToContainerConstraint: NSLayoutConstraint!
+  @IBOutlet var continueButtonBottomPaddingToSuggestViewConstraint: NSLayoutConstraint!
+
+  @IBOutlet weak var swapSuggestionView: UIView!
+  @IBOutlet weak var suggestionTextLabel: UILabel!
+
+  @IBOutlet weak var firstSuggestButton: UIButton!
+  @IBOutlet weak var firstSuggestType: UIButton!
+
+  @IBOutlet weak var secondSuggestButton: UIButton!
+  @IBOutlet weak var secondSuggestType: UIButton!
+
+  @IBOutlet weak var thirdSuggestButton: UIButton!
+  @IBOutlet weak var thirdSuggestType: UIButton!
 
   fileprivate var estRateTimer: Timer?
   fileprivate var estGasLimitTimer: Timer?
@@ -169,6 +186,8 @@ class KSwapViewController: KNBaseViewController {
     )
 
     self.updateExchangeRateField()
+
+    self.loadSwapSuggestionIfNeeded()
   }
 
   override func viewWillDisappear(_ animated: Bool) {
@@ -192,6 +211,7 @@ class KSwapViewController: KNBaseViewController {
     self.setupHamburgerMenu()
     self.setupAdvancedSettingsView()
     self.setupContinueButton()
+    self.setupSwapSuggestionView()
   }
 
   fileprivate func setupTokensView() {
@@ -255,6 +275,93 @@ class KSwapViewController: KNBaseViewController {
       NSLocalizedString("continue", value: "Continue", comment: ""),
       for: .normal
     )
+  }
+
+  // MARK: Swap Suggestion
+  fileprivate func setupSwapSuggestionView() {
+    self.suggestionTextLabel.text = "Suggestion".toBeLocalised()
+    self.firstSuggestButton.rounded(
+      color: UIColor.Kyber.border,
+      width: 1.0,
+      radius: self.firstSuggestButton.frame.height / 2.0
+    )
+    self.firstSuggestType.rounded(radius: self.firstSuggestType.frame.height / 2.0)
+    self.secondSuggestButton.rounded(
+      color: UIColor.Kyber.border,
+      width: 1.0,
+      radius: self.firstSuggestButton.frame.height / 2.0
+    )
+    self.secondSuggestType.rounded(radius: self.secondSuggestType.frame.height / 2.0)
+    self.thirdSuggestButton.rounded(
+      color: UIColor.Kyber.border,
+      width: 1.0,
+      radius: self.firstSuggestButton.frame.height / 2.0
+    )
+    self.thirdSuggestType.rounded(radius: self.thirdSuggestType.frame.height / 2.0)
+
+    self.updateSwapSuggestionView()
+  }
+
+  fileprivate func updateSwapSuggestionView() {
+    if self.viewModel.isSwapSuggestionShown {
+      self.swapSuggestionView.isHidden = false
+      self.continueButtonBottomPaddingToContainerConstraint.constant = 164.0
+      self.continueButtonBottomPaddingToContainerConstraint.isActive = false
+      self.continueButtonBottomPaddingToSuggestViewConstraint.isActive = true
+
+      guard let suggestions = self.viewModel.swapSuggestion else { return }
+      self.updateSwapSuggestionButtonWithData(suggestButton: self.firstSuggestButton, typeButton: self.firstSuggestType, data: suggestions[0])
+      if suggestions.count > 1 {
+        self.updateSwapSuggestionButtonWithData(suggestButton: self.secondSuggestButton, typeButton: self.secondSuggestType, data: suggestions[1])
+      } else {
+        self.updateSwapSuggestionButtonWithData(suggestButton: self.secondSuggestButton, typeButton: self.secondSuggestType, data: nil)
+      }
+      if suggestions.count > 2 {
+        self.updateSwapSuggestionButtonWithData(suggestButton: self.thirdSuggestButton, typeButton: self.thirdSuggestType, data: suggestions[2])
+      } else {
+        self.updateSwapSuggestionButtonWithData(suggestButton: self.thirdSuggestButton, typeButton: self.thirdSuggestType, data: nil)
+      }
+    } else {
+      self.swapSuggestionView.isHidden = true
+      self.continueButtonBottomPaddingToContainerConstraint.constant = 32.0
+      self.continueButtonBottomPaddingToContainerConstraint.isActive = true
+      self.continueButtonBottomPaddingToSuggestViewConstraint.isActive = false
+    }
+    self.view.layoutIfNeeded()
+  }
+
+  fileprivate func updateSwapSuggestionButtonWithData(suggestButton: UIButton, typeButton: UIButton, data: JSONDictionary?) {
+    guard let json = data else {
+      suggestButton.isHidden = true
+      typeButton.isHidden = true
+      return
+    }
+    if let from = json["frm"] as? String, let to = json["to"] as? String {
+      suggestButton.setTitle("\(from)->\(to)", for: .normal)
+      suggestButton.isHidden = false
+
+      if let type = json["tags"] as? String {
+        typeButton.setTitle(type, for: .normal)
+        typeButton.isHidden = false
+        if type == "trending" {
+          typeButton.setImage(UIImage(named: "trending_icon"), for: .normal)
+          typeButton.setTitleColor(UIColor(red: 250, green: 101, blue: 102), for: .normal)
+        }
+        if type == "best rate" {
+          typeButton.setImage(UIImage(named: "best_rate_icon"), for: .normal)
+          typeButton.setTitleColor(UIColor.Kyber.blueGreen, for: .normal)
+        }
+        if type == "promoted" {
+          typeButton.setImage(UIImage(named: "promoted_icon"), for: .normal)
+          typeButton.setTitleColor(UIColor.Kyber.shamrock, for: .normal)
+        }
+      } else {
+        typeButton.isHidden = true
+      }
+    } else {
+      suggestButton.isHidden = true
+      typeButton.isHidden = true
+    }
   }
 
   @IBAction func hamburgerMenuPressed(_ sender: Any) {
@@ -356,6 +463,45 @@ class KSwapViewController: KNBaseViewController {
 
   @IBAction func screenEdgePanGestureAction(_ sender: UIScreenEdgePanGestureRecognizer) {
     self.hamburgerMenu.gestureScreenEdgePanAction(sender)
+  }
+
+  @IBAction func swapSuggestionButtonPressed(_ sender: UIButton) {
+    guard let suggestions = self.viewModel.swapSuggestion, suggestions.count > sender.tag else { return }
+    let suggest = suggestions[sender.tag]
+    guard let from = suggest["frm"] as? String,
+      let fromToken = KNSupportedTokenStorage.shared.supportedTokens.first(where: { $0.symbol == from }),
+      let to = suggest["to"] as? String,
+      let toToken = KNSupportedTokenStorage.shared.supportedTokens.first(where: { $0.symbol == to }) else { return }
+    // Update source and dest tokens
+    self.coordinatorUpdateSelectedToken(fromToken, isSource: true, isWarningShown: false)
+    self.coordinatorUpdateSelectedToken(toToken, isSource: false, isWarningShown: true)
+    if self.viewModel.from != fromToken { return } // can not update from token, should be fromToken is disabled
+    // Update source amount if needed
+    guard let amount = suggest["amt"] as? Double else { return }
+    guard let balance = self.viewModel.balances[fromToken.contract] else { return }
+
+    // Computing available balance, in case ETH need to minus tx fee
+    let availableBal: Double = {
+      let bal = Double(balance.value) / pow(10.0, Double(fromToken.decimals))
+      if fromToken.isETH {
+        let fee = Double(self.viewModel.feeBigInt) / pow(10.0, 18.0)
+        return max(0, bal - fee)
+      }
+      return bal
+    }()
+
+    // Rounded amount to at most 4 decimal digits
+    var amountFrom = min(amount, availableBal)
+    amountFrom = round(amountFrom * 10000.0) / 10000.0
+    if amountFrom == 0.0 { return } // no need to update if amount is zero to prevent showing warning
+    let amountString = "\(amountFrom)".removeGroupSeparator()
+
+    // Update source amount data
+    self.viewModel.updateFocusingField(true)
+    self.fromAmountTextField.text = amountString
+    self.viewModel.updateAmount(amountString, isSource: true)
+    self.updateViewAmountDidChange()
+    _ = self.showWarningDataInvalidIfNeeded()
   }
 
   @objc func keyboardSwapAllButtonPressed(_ sender: Any) {
@@ -498,6 +644,37 @@ class KSwapViewController: KNBaseViewController {
     }
     return false
   }
+
+  // Swap suggestion
+  fileprivate func loadSwapSuggestionIfNeeded() {
+    if self.viewModel.swapSuggestion != nil { return }
+    let provider = MoyaProvider<KNTrackerService>()
+    var tokens: JSONDictionary = [:]
+    KNSupportedTokenStorage.shared.supportedTokens.forEach { token in
+      if let bal = self.viewModel.balances[token.contract], !bal.value.isZero {
+        tokens[token.contract] = Double(bal.value) / pow(10.0, Double(token.decimals))
+      }
+    }
+    let address = self.viewModel.walletObject.address
+    DispatchQueue.global().async {
+      provider.request(.swapSuggestion(address: address, tokens: tokens)) { [weak self] result in
+        guard let `self` = self else { return }
+        DispatchQueue.main.async {
+          switch result {
+          case .success(let data):
+            do {
+              let json = try data.mapJSON(failsOnEmptyData: false) as? JSONDictionary ?? [:]
+              let keys = json.keys.sorted(by: { return $0 < $1 })
+              self.viewModel.swapSuggestion = keys.map({ return json[$0] as? JSONDictionary ?? [:] })
+              self.updateSwapSuggestionView()
+            } catch { }
+          case .failure(let error):
+            print("Error Swap Suggestion: \(error.prettyError)")
+          }
+        }
+      }
+    }
+  }
 }
 
 // MARK: Update UIs
@@ -620,6 +797,7 @@ extension KSwapViewController {
       currentWallet: self.viewModel.walletObject
     )
     self.hamburgerMenu.hideMenu(animated: false)
+    self.loadSwapSuggestionIfNeeded()
     self.view.layoutIfNeeded()
   }
 
@@ -973,9 +1151,15 @@ extension KSwapViewController: KAdvancedSettingsViewDelegate {
           self.view.layoutIfNeeded()
         }, completion: { _ in
           if self.advancedSettingsView.isExpanded {
+            let offSetY: CGFloat = {
+              if self.viewModel.isSwapSuggestionShown {
+                return self.scrollContainerView.contentSize.height - self.scrollContainerView.bounds.size.height - 160.0
+              }
+              return self.scrollContainerView.contentSize.height - self.scrollContainerView.bounds.size.height
+            }()
             let bottomOffset = CGPoint(
               x: 0,
-              y: self.scrollContainerView.contentSize.height - self.scrollContainerView.bounds.size.height
+              y: offSetY
             )
             self.scrollContainerView.setContentOffset(bottomOffset, animated: true)
           }

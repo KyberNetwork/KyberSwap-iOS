@@ -16,8 +16,8 @@ class KSwapViewModel {
   fileprivate(set) var from: TokenObject
   fileprivate(set) var to: TokenObject
 
-  fileprivate var balances: [String: Balance] = [:]
-  fileprivate var balance: Balance?
+  fileprivate(set) var balances: [String: Balance] = [:]
+  fileprivate(set) var balance: Balance?
 
   fileprivate(set) var amountFrom: String = ""
   fileprivate(set) var amountTo: String = ""
@@ -27,6 +27,12 @@ class KSwapViewModel {
   fileprivate(set) var estRate: BigInt?
   fileprivate(set) var slippageRate: BigInt?
   fileprivate(set) var minRatePercent: Double = 3.0
+
+  var isSwapSuggestionShown: Bool {
+    if let suggestions = self.swapSuggestion, !suggestions.isEmpty { return true }
+    return false
+  }
+  var swapSuggestion: [JSONDictionary]?
 
   var estimatedRateDouble: Double {
     guard let rate = self.estRate else { return 0.0 }
@@ -363,6 +369,7 @@ class KSwapViewModel {
     self.estimateGasLimit = KNGasConfiguration.calculateDefaultGasLimit(from: self.from, to: self.to)
     self.userCapInWei = BigInt(2).power(255)
     self.updateProdCachedRate()
+    self.swapSuggestion = nil
   }
 
   func updateWalletObject() {

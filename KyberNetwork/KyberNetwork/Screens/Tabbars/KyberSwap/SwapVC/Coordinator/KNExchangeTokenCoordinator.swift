@@ -206,6 +206,7 @@ extension KNExchangeTokenCoordinator {
       guard let `self` = self else { return }
       switch result {
       case .success(let txHash):
+        self.sendUserTxHashIfNeeded(txHash)
         let transaction = exchage.toTransaction(
           hash: txHash,
           fromAddr: self.session.wallet.address,
@@ -234,6 +235,19 @@ extension KNExchangeTokenCoordinator {
           object: error,
           userInfo: nil
         )
+      }
+    }
+  }
+
+  fileprivate func sendUserTxHashIfNeeded(_ txHash: String) {
+    guard let accessToken = IEOUserStorage.shared.user?.accessToken else { return }
+    let provider = MoyaProvider<UserInfoService>(plugins: [MoyaCacheablePlugin()])
+    provider.request(.sendTxHash(authToken: accessToken, txHash: txHash)) { result in
+      switch result {
+      case .success:
+        KNCrashlyticsUtil.logCustomEvent(withName: "kyberswap", customAttributes: ["tx_hash_sent": true])
+      case .failure:
+        KNCrashlyticsUtil.logCustomEvent(withName: "kyberswap", customAttributes: ["tx_hash_sent": false])
       }
     }
   }
@@ -592,7 +606,7 @@ extension KNExchangeTokenCoordinator: KSwapViewControllerDelegate {
     if let accessToken = IEOUserStorage.shared.user?.accessToken {
       // New user trade cap
       DispatchQueue.global(qos: .background).async {
-        let provider = MoyaProvider<UserInfoService>()
+        let provider = MoyaProvider<UserInfoService>(plugins: [MoyaCacheablePlugin()])
         provider.request(.getUserTradeCap(authToken: accessToken)) { result in
           DispatchQueue.main.async {
             completion(result)

@@ -149,6 +149,8 @@ enum UserInfoService {
   case setAlertMethods(accessToken: String, email: [JSONDictionary], telegram: [JSONDictionary])
   case getLeaderBoardData(accessToken: String)
   case getLatestCampaignResult(accessToken: String)
+  case getUserTradeCap(authToken: String)
+  case sendTxHash(authToken: String, txHash: String)
 }
 
 extension UserInfoService: MoyaCacheable {
@@ -177,6 +179,10 @@ extension UserInfoService: TargetType {
       return URL(string: "\(baseString)/api/alerts/ranks")!
     case .getLatestCampaignResult:
       return URL(string: "\(baseString)/api/alerts/campaign_prizes")!
+    case .getUserTradeCap:
+      return URL(string: "\(baseString)\(KNSecret.getUserTradeCapURL)")!
+    case .sendTxHash:
+      return URL(string: "\(baseString)\(KNSecret.sendTxHashURL)")!
     }
   }
 
@@ -184,7 +190,7 @@ extension UserInfoService: TargetType {
 
   var method: Moya.Method {
     switch self {
-    case .getListAlerts, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult: return .get
+    case .getListAlerts, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult, .getUserTradeCap: return .get
     case .removeAnAlert: return .delete
     case .addPushToken, .updateAlert: return .patch
     default: return .post
@@ -218,6 +224,14 @@ extension UserInfoService: TargetType {
       return .requestData(data)
     case .getListAlerts, .removeAnAlert, .getListAlertMethods, .getLeaderBoardData, .getLatestCampaignResult:
       return .requestPlain
+    case .getUserTradeCap:
+      return .requestPlain
+    case .sendTxHash(_, let txHash):
+      let json: JSONDictionary = [
+        "tx_hash": txHash,
+      ]
+      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
+      return .requestData(data)
     }
   }
   var sampleData: Data { return Data() }
@@ -245,6 +259,10 @@ extension UserInfoService: TargetType {
     case .getLeaderBoardData(let accessToken):
       json["Authorization"] = accessToken
     case .getLatestCampaignResult(let accessToken):
+      json["Authorization"] = accessToken
+    case .getUserTradeCap(let accessToken):
+      json["Authorization"] = accessToken
+    case .sendTxHash(let accessToken, _):
       json["Authorization"] = accessToken
     }
     return json
@@ -291,9 +309,9 @@ extension NativeSignInUpService: TargetType {
 
   var method: Moya.Method {
     switch self {
-    case .signUpEmail, .signInEmail, .resetPassword, .signInSocial, .confirmSignUpSocial, .refreshToken, .getUserAuthToken: return .post
     case .updatePassword: return .patch
     case .getUserInfo: return .get
+    default: return .post
     }
   }
 

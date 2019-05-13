@@ -178,7 +178,7 @@ class KSwapViewController: KNBaseViewController {
     self.getUserCapTimer?.invalidate()
     self.updateUserCapInWei()
     self.getUserCapTimer = Timer.scheduledTimer(
-      withTimeInterval: 30.0,
+      withTimeInterval: KNLoadingInterval.getUserTradeCapInterval,
       repeats: true,
       block: { [weak self] _ in
       self?.updateUserCapInWei()

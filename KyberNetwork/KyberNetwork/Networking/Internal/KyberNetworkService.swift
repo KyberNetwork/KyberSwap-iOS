@@ -1,6 +1,5 @@
 // Copyright SIX DAY LLC. All rights reserved.
 
-//swiftlint:disable file_length
 import Moya
 import CryptoSwift
 
@@ -426,7 +425,6 @@ enum ProfileKYCService {
     firstName: String, middleName: String, lastName: String,
     nativeFullName: String,
     gender: Bool, dob: String, nationality: String,
-    wallets: [(String, String)],
     residentialAddress: String, country: String, city: String, zipCode: String,
     proofAddress: String, proofAddressImageData: Data,
     sourceFund: String,
@@ -439,9 +437,6 @@ enum ProfileKYCService {
     docFrontImage: Data, docBackImage: Data?, docHoldingImage: Data
   )
   case submitKYC(accessToken: String)
-  case userWallets(accessToken: String)
-  case checkWalletExist(accessToken: String, wallet: String)
-  case addWallet(accessToken: String, label: String, address: String)
   case resubmitKYC(accessToken: String)
   case promoCode(promoCode: String, nonce: UInt)
 
@@ -450,9 +445,6 @@ enum ProfileKYCService {
     case .personalInfo: return KNSecret.personalInfoEndpoint
     case .identityInfo: return KNSecret.identityInfoEndpoint
     case .submitKYC: return KNSecret.submitKYCEndpoint
-    case .userWallets: return KNSecret.userWalletsEndpoint
-    case .checkWalletExist: return KNSecret.checkWalletsExistEndpoint
-    case .addWallet: return KNSecret.addWallet
     case .resubmitKYC: return KNSecret.resubmitKYC
     case .promoCode: return KNSecret.promoCode
     }
@@ -486,7 +478,6 @@ extension ProfileKYCService: TargetType {
       let gender,
       let dob,
       let nationality,
-      let wallets,
       let residentialAddress,
       let country,
       let city,
@@ -498,18 +489,6 @@ extension ProfileKYCService: TargetType {
       let industryCode,
       let taxCountry,
       let taxIDNo):
-      let arrJSON: String = {
-        if wallets.isEmpty { return "[]" }
-        var string = "["
-        for id in 0..<wallets.count {
-          string += "{\"label\": \"\(wallets[id].0)\", \"address\":\"\(wallets[id].1)\"}"
-          if id < wallets.count - 1 {
-            string += ","
-          }
-        }
-        string += "]"
-        return string
-      }()
       var json: JSONDictionary = [
         "first_name": firstName,
         "middle_name": middleName,
@@ -518,7 +497,6 @@ extension ProfileKYCService: TargetType {
         "gender": gender,
         "dob": dob,
         "nationality": nationality,
-        "wallets": arrJSON,
         "residential_address": residentialAddress,
         "country": country,
         "city": city,
@@ -554,21 +532,8 @@ extension ProfileKYCService: TargetType {
       }
       let data = try! JSONSerialization.data(withJSONObject: json, options: [])
       return .requestData(data)
-    case .userWallets, .resubmitKYC, .submitKYC:
+    case .resubmitKYC, .submitKYC:
       return .requestPlain
-    case .checkWalletExist(_, let wallet):
-      let json: JSONDictionary = [
-        "address": wallet,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
-    case .addWallet(_, let label, let address):
-      let json: JSONDictionary = [
-        "label": label,
-        "address": address,
-      ]
-      let data = try! JSONSerialization.data(withJSONObject: json, options: [])
-      return .requestData(data)
     case .promoCode(let promoCode, let nonce):
       let params: JSONDictionary = [
         "code": promoCode,
@@ -588,18 +553,12 @@ extension ProfileKYCService: TargetType {
     ]
     switch self {
     case .personalInfo(
-      let accessToken, _, _, _, _, _, _, _, _, _,
+      let accessToken, _, _, _, _, _, _, _, _,
       _, _, _, _, _, _, _, _, _, _):
       json["Authorization"] = accessToken
     case .identityInfo(let accessToken, _, _, _, _, _, _, _):
       json["Authorization"] = accessToken
     case .submitKYC(let accessToken):
-      json["Authorization"] = accessToken
-    case .userWallets(let accessToken):
-      json["Authorization"] = accessToken
-    case .checkWalletExist(let accessToken, _):
-      json["Authorization"] = accessToken
-    case .addWallet(let accessToken, _, _):
       json["Authorization"] = accessToken
     case .resubmitKYC(let accessToken):
       json["Authorization"] = accessToken

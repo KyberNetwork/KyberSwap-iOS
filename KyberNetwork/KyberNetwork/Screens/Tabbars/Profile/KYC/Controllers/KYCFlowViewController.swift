@@ -26,7 +26,6 @@ class KYCFlowViewModel {
   fileprivate(set) var gender: String = ""
   fileprivate(set) var dob: String = ""
   fileprivate(set) var nationality: String = ""
-  fileprivate(set) var wallets: [(String, String)] = []
   fileprivate(set) var residenceAddress: String = ""
   fileprivate(set) var residenceCountry: String = ""
   fileprivate(set) var residenceCity: String = ""
@@ -91,7 +90,6 @@ class KYCFlowViewModel {
       gender: details.gender ? "Male" : "Female",
       dob: details.dob,
       nationality: details.nationality,
-      wallets: self.wallets,
       residenceAddress: details.residentialAddress,
       residenceCountry: details.country,
       residenceCity: details.city,
@@ -128,10 +126,6 @@ class KYCFlowViewModel {
     }
   }
 
-  func updateWallets(_ wallets: [(String, String)]) {
-    self.wallets = wallets
-  }
-
   func updatePersonalInfo(
     firstName: String,
     middleName: String,
@@ -140,7 +134,6 @@ class KYCFlowViewModel {
     gender: String,
     dob: String,
     nationality: String,
-    wallets: [(String, String)],
     residenceAddress: String,
     residenceCountry: String,
     residenceCity: String,
@@ -160,7 +153,6 @@ class KYCFlowViewModel {
     self.gender = gender
     self.dob = dob
     self.nationality = nationality
-    self.wallets = wallets
     self.residenceAddress = residenceAddress
     self.residenceCountry = residenceCountry
     self.residenceCity = residenceCity
@@ -325,7 +317,6 @@ class KYCFlowViewController: KNBaseViewController {
         gender: self.viewModel.localisedGender,
         dob: self.viewModel.dob,
         nationality: self.viewModel.nationality,
-        wallets: self.viewModel.wallets,
         residenceAddress: self.viewModel.residenceAddress,
         country: self.viewModel.residenceCountry,
         city: self.viewModel.residenceCity,
@@ -419,7 +410,6 @@ class KYCFlowViewController: KNBaseViewController {
         gender: self.viewModel.localisedGender,
         dob: self.viewModel.dob,
         nationality: self.viewModel.nationality,
-        wallets: self.viewModel.wallets,
         residenceAddress: self.viewModel.residenceAddress,
         country: self.viewModel.residenceCountry,
         city: self.viewModel.residenceCity,
@@ -463,7 +453,6 @@ extension KYCFlowViewController: KYCPersonalInfoViewControllerDelegate {
       let gender,
       let dob,
       let nationality,
-      let wallets,
       let residentAddr,
       let countryOfResidence,
       let city,
@@ -483,7 +472,6 @@ extension KYCFlowViewController: KYCPersonalInfoViewControllerDelegate {
         gender: gender,
         dob: dob,
         nationality: nationality,
-        wallets: wallets,
         residenceAddress: residentAddr,
         residenceCountry: countryOfResidence,
         residenceCity: city,
@@ -508,7 +496,6 @@ extension KYCFlowViewController: KYCPersonalInfoViewControllerDelegate {
         gender: gender.lowercased() == "male",
         dob: dob,
         nationality: nationality,
-        wallets: wallets,
         residentialAddress: residentAddr,
         country: countryOfResidence,
         city: city,
@@ -541,9 +528,6 @@ extension KYCFlowViewController: KYCPersonalInfoViewControllerDelegate {
           self?.displayError(error: error)
         }
       }
-    case .updateWallets(let wallets):
-      self.viewModel.updateWallets(wallets)
-      self.submitInfoVC.updateUserWallets(wallets)
     }
   }
 }

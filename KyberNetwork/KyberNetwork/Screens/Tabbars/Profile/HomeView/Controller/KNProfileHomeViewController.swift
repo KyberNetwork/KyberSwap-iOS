@@ -1,9 +1,7 @@
 // Copyright SIX DAY LLC. All rights reserved.
 
-//swiftlint:disable file_length
 import UIKit
 import Moya
-import QRCodeReaderViewController
 import TrustCore
 import Crashlytics
 
@@ -52,9 +50,6 @@ protocol KNProfileHomeViewControllerDelegate: class {
 
 class KNProfileHomeViewController: KNBaseViewController {
 
-  let kWalletTableViewCellID: String = "kWalletTableViewCellID"
-  let kWalletCellRowHeight: CGFloat = 84.0
-
   @IBOutlet weak var navTitleLabel: UILabel!
   @IBOutlet weak var notSignInView: UIView!
 
@@ -73,7 +68,6 @@ class KNProfileHomeViewController: KNBaseViewController {
   @IBOutlet weak var signInHeaderView: UIView!
   @IBOutlet weak var topPaddingForSocialIcon: NSLayoutConstraint!
   @IBOutlet weak var myProfileTextLabel: UILabel!
-  @IBOutlet weak var myWalletsTextLabel: UILabel!
   @IBOutlet weak var signedInView: UIView!
   @IBOutlet weak var logOutButton: UIButton!
   @IBOutlet weak var userImageView: UIImageView!
@@ -98,24 +92,11 @@ class KNProfileHomeViewController: KNBaseViewController {
   @IBOutlet weak var listPriceAlertsContainerViewHeightConstraint: NSLayoutConstraint!
   @IBOutlet weak var priceAlertTableViewHeightConstraint: NSLayoutConstraint!
 
-  @IBOutlet weak var topPaddingConstraintForMyWalletsSection: NSLayoutConstraint!
-  @IBOutlet weak var noWalletTextLabel: UILabel!
-  @IBOutlet weak var walletsTableView: UITableView!
-  @IBOutlet weak var walletWarningMessageLabel: UILabel!
-  @IBOutlet weak var maximumWalletsTextLabel: UILabel!
-  @IBOutlet weak var heightConstraintWalletsTableView: NSLayoutConstraint!
-  @IBOutlet weak var addWalletContainer: UIView!
-  @IBOutlet weak var heightConstraintForAddWalletContainer: NSLayoutConstraint!
-  @IBOutlet weak var addWalletLabelTextField: UITextField!
-  @IBOutlet weak var addWalletAddressTextField: UITextField!
-  @IBOutlet weak var addWalletAddButton: UIButton!
   @IBOutlet weak var bottomPaddingConstraintForSignedInView: NSLayoutConstraint!
 
   weak var delegate: KNProfileHomeViewControllerDelegate?
   fileprivate var viewModel: KNProfileHomeViewModel
   fileprivate let signInViewModel: KNSignInViewModel
-
-  fileprivate var walletTimer: Timer?
 
   fileprivate let appStyle = KNAppStyleType.current
 
@@ -137,21 +118,11 @@ class KNProfileHomeViewController: KNBaseViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     self.updateUIUserDidSignedIn()
-    self.fetchWalletList()
-    self.walletTimer?.invalidate()
-    self.walletTimer = Timer.scheduledTimer(
-      withTimeInterval: KNEnvironment.default.isMainnet ? 60.0 : 10.0,
-      repeats: true,
-      block: { [weak self] _ in
-      self?.fetchWalletList()
-      }
-    )
   }
 
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
     self.view.endEditing(true)
-    self.walletTimer?.invalidate()
   }
 
   override func viewDidLayoutSubviews() {
@@ -211,8 +182,6 @@ class KNProfileHomeViewController: KNBaseViewController {
     self.signedInView.isHidden = !self.viewModel.isUserSignedIn
     self.myProfileTextLabel.text = NSLocalizedString("my.profile", value: "My Profile", comment: "")
     self.myProfileTextLabel.addLetterSpacing()
-    self.myWalletsTextLabel.text = NSLocalizedString("my.wallets", value: "My Wallet(s)", comment: "")
-    self.myWalletsTextLabel.addLetterSpacing()
     self.logOutButton.setTitle(NSLocalizedString("log.out", value: "Log Out", comment: ""), for: .normal)
     self.logOutButton.addTextSpacing()
     let descText: String = NSLocalizedString(
@@ -235,30 +204,6 @@ class KNProfileHomeViewController: KNBaseViewController {
     )
     self.userKYCStatusLabel.rounded(radius: 2.0)
 
-    self.noWalletTextLabel.text = NSLocalizedString("you.have.not.added.any.wallets.yet", value: "You haven't added any wallets yet.", comment: "")
-    self.noWalletTextLabel.addLetterSpacing()
-    self.maximumWalletsTextLabel.text = NSLocalizedString("maximum.three.wallets", value: "Maximum 3 wallets", comment: "")
-    self.maximumWalletsTextLabel.addLetterSpacing()
-    self.walletWarningMessageLabel.text = nil
-    self.walletsTableView.register(UITableViewCell.self, forCellReuseIdentifier: kWalletTableViewCellID)
-    self.walletsTableView.rowHeight = kWalletCellRowHeight
-    self.walletsTableView.delegate = self
-    self.walletsTableView.dataSource = self
-
-    self.addWalletLabelTextField.placeholder = NSLocalizedString("label", value: "Label", comment: "")
-    self.addWalletLabelTextField.addPlaceholderSpacing()
-    self.addWalletAddressTextField.placeholder = NSLocalizedString("address", value: "Address", comment: "")
-    self.addWalletAddressTextField.addPlaceholderSpacing()
-    self.addWalletAddButton.rounded(
-      color: UIColor.Kyber.border,
-      width: 1.0,
-      radius: KNAppStyleType.current.buttonRadius(for: self.addWalletAddButton.frame.height)
-    )
-    self.addWalletAddButton.setTitle(
-      NSLocalizedString("add", value: "Add", comment: ""),
-      for: .normal
-    )
-    self.addWalletAddButton.addTextSpacing()
     self.setupPriceAlertsView()
     self.updateUIUserDidSignedIn()
   }
@@ -276,29 +221,22 @@ class KNProfileHomeViewController: KNBaseViewController {
   }
 
   fileprivate func updatePriceAlertsView(tableViewHeight: CGFloat) {
-    if !KNAppTracker.isPriceAlertEnabled {
-      self.topPaddingConstraintForMyWalletsSection.constant = 1
-      self.priceAlertContainerView.isHidden = true
+    if tableViewHeight == 0.0 {
+      // no alerts
+      self.listPriceAlertsContainerView.isHidden = true
+      self.noPriceAlertContainerView.isHidden = false
+      self.priceAlertContainerViewHeightConstraint.constant = 160.0
     } else {
-      if tableViewHeight == 0.0 {
-        // no alerts
-        self.listPriceAlertsContainerView.isHidden = true
-        self.noPriceAlertContainerView.isHidden = false
-        self.priceAlertContainerViewHeightConstraint.constant = 160.0
-        self.topPaddingConstraintForMyWalletsSection.constant = 160.0
-      } else {
-        self.listPriceAlertsContainerView.isHidden = false
-        self.noPriceAlertContainerView.isHidden = true
-        // section height + table height + moreAlerts button height
-        self.priceAlertContainerViewHeightConstraint.constant = 60.0 + tableViewHeight + 56.0
-        self.topPaddingConstraintForMyWalletsSection.constant = 60.0 + tableViewHeight + 56.0
-        self.priceAlertTableViewHeightConstraint.constant = tableViewHeight
-        self.listPriceAlertsContainerViewHeightConstraint.constant = tableViewHeight + 56.0
-      }
-      self.moreAlertsButton.backgroundColor = KNAlertStorage.shared.alerts.count == 1 ? UIColor(red: 246, green: 247, blue: 250) : UIColor(red: 242, green: 243, blue: 246)
-      self.updateViewConstraints()
-      self.view.layoutIfNeeded()
+      self.listPriceAlertsContainerView.isHidden = false
+      self.noPriceAlertContainerView.isHidden = true
+      // section height + table height + moreAlerts button height
+      self.priceAlertContainerViewHeightConstraint.constant = 60.0 + tableViewHeight + 56.0
+      self.priceAlertTableViewHeightConstraint.constant = tableViewHeight
+      self.listPriceAlertsContainerViewHeightConstraint.constant = tableViewHeight + 56.0
     }
+    self.moreAlertsButton.backgroundColor = KNAlertStorage.shared.alerts.count == 1 ? UIColor(red: 246, green: 247, blue: 250) : UIColor(red: 242, green: 243, blue: 246)
+    self.updateViewConstraints()
+    self.view.layoutIfNeeded()
   }
 
   fileprivate func updateKYCStatusDescLabel(with string: String) {
@@ -316,12 +254,6 @@ class KNProfileHomeViewController: KNBaseViewController {
       return attributedString
     }()
     self.view.layoutIfNeeded()
-  }
-
-  fileprivate func fetchWalletList() {
-    self.viewModel.getUserWallets { _ in
-      self.updateWalletsData()
-    }
   }
 
   fileprivate func updateUIUserDidSignedIn() {
@@ -353,13 +285,6 @@ class KNProfileHomeViewController: KNBaseViewController {
       default: return "Unknown"
       }
     }()
-    if status == "Approved" || status == "Pending" || status == "Blocked" {
-      //swiftlint:disable line_length
-      self.walletWarningMessageLabel.text = NSLocalizedString("kyc.submit.wallet.warning.message", value: "We understand that you have submitted the wallet address as part of the verification process. As such, we regret to inform you that the submitted wallet address cannot be deleted or changed from your profile.", comment: "")
-      self.walletWarningMessageLabel.addLetterSpacing()
-    } else {
-      self.walletWarningMessageLabel.text = nil
-    }
     self.userKYCStatusLabel.text = "\(NSLocalizedString(status.lowercased(), value: status, comment: ""))  "
     self.userKYCStatusLabel.addLetterSpacing()
 
@@ -409,31 +334,10 @@ class KNProfileHomeViewController: KNBaseViewController {
       self.userKYCActionHeightConstraint.constant = self.userKYCActionButton.isHidden ? 0.0 : 44.0
       self.userKYCStatusContainerView.isHidden = false
     }
-    self.updateWalletsData()
     self.priceAlertTableView.updateView(
       with: KNAlertStorage.shared.alerts,
       isFull: false
     )
-  }
-
-  fileprivate func updateWalletsData() {
-    if self.viewModel.wallets.isEmpty {
-      self.noWalletTextLabel.isHidden = false
-      self.walletsTableView.isHidden = true
-      self.heightConstraintWalletsTableView.constant = 260.0
-      self.addWalletContainer.isHidden = false
-      self.heightConstraintForAddWalletContainer.constant = 200.0
-    } else {
-      let hasAddWalletView: Bool = self.viewModel.wallets.count < 3
-      let addWalletViewHeight: CGFloat = hasAddWalletView ? 200.0 : 0.0
-      self.heightConstraintWalletsTableView.constant = CGFloat(self.viewModel.wallets.count) * kWalletCellRowHeight + addWalletViewHeight
-      self.noWalletTextLabel.isHidden = true
-      self.walletsTableView.isHidden = false
-      self.addWalletContainer.isHidden = !hasAddWalletView
-      self.heightConstraintForAddWalletContainer.constant = addWalletViewHeight
-      self.walletsTableView.reloadData()
-    }
-    self.view.layoutIfNeeded()
   }
 
   @IBAction func forgotButtonPressed(_ sender: Any) {
@@ -501,62 +405,6 @@ class KNProfileHomeViewController: KNBaseViewController {
     self.delegate?.profileHomeViewController(self, run: .openVerification)
   }
 
-  @IBAction func addWalletScanQRCodePressed(_ sender: Any) {
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "add_wallet_scan_qr_code"])
-    let qrcodeReader = QRCodeReaderViewController()
-    qrcodeReader.delegate = self
-    self.present(qrcodeReader, animated: true, completion: nil)
-  }
-
-  @IBAction func addWalletAddButtonPressed(_ sender: Any) {
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "add_wallet_profile_view"])
-    guard let label = self.addWalletLabelTextField.text, !label.isEmpty else {
-      self.showWarningTopBannerMessage(
-        with: NSLocalizedString("invalid.input", value: "Invalid Input", comment: ""),
-        message: NSLocalizedString("please.enter.a.valid.wallet.label", value: "Please enter a valid wallet label", comment: ""),
-        time: 1.5
-      )
-      return
-    }
-    guard let address = self.addWalletAddressTextField.text, Address(string: address) != nil else {
-      self.showWarningTopBannerMessage(
-        with: NSLocalizedString("invalid.input", value: "Invalid Input", comment: ""),
-        message: NSLocalizedString("please.enter.a.valid.address", value: "Please enter a valid address", comment: ""),
-        time: 1.5
-      )
-      return
-    }
-    self.displayLoading(text: "\(NSLocalizedString("adding", value: "Invalid Adding", comment: ""))...", animated: true)
-    self.viewModel.addWallet(label: label, address: address) { [weak self] result in
-      guard let `self` = self else { return }
-      self.hideLoading()
-      switch result {
-      case .success(let resp):
-        let isAdded: Bool = resp.0
-        let message: String = resp.1
-        if isAdded {
-          self.showSuccessTopBannerMessage(
-            with: NSLocalizedString("success", value: "Success", comment: ""),
-            message: NSLocalizedString("your.wallet.has.been.added.successfully", value: "Your wallet has been added successfully!", comment: ""),
-            time: 1.5
-          )
-          self.fetchWalletList()
-        } else {
-          self.showErrorTopBannerMessage(
-            with: NSLocalizedString("failed", value: "Failed", comment: ""),
-            message: message,
-            time: 1.5
-          )
-        }
-      case .failure:
-        self.showWarningTopBannerMessage(
-          with: NSLocalizedString("error", value: "Error", comment: ""),
-          message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: "")
-        )
-      }
-    }
-  }
-
   @IBAction func addPriceAlertButtonPressed(_ sender: Any) {
     KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "add_alert"])
     self.delegate?.profileHomeViewController(self, run: .addPriceAlert)
@@ -578,79 +426,11 @@ extension KNProfileHomeViewController {
     self.notSignInView.isHidden = self.viewModel.isUserSignedIn
     self.signedInView.isHidden = !self.viewModel.isUserSignedIn
     self.updateUIUserDidSignedIn()
-    if isFirstTime { self.fetchWalletList() }
   }
 
   func coordinatorDidSignOut() {
-    self.viewModel.wallets = []
     self.notSignInView.isHidden = self.viewModel.isUserSignedIn
     self.signedInView.isHidden = !self.viewModel.isUserSignedIn
-  }
-}
-
-extension KNProfileHomeViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "open_address_on_etherscan"])
-    if indexPath.row < self.viewModel.wallets.count {
-      let address = self.viewModel.wallets[indexPath.row].1
-      self.openSafari(with: KNEnvironment.default.etherScanIOURLString + "address/\(address)")
-    }
-  }
-}
-
-extension KNProfileHomeViewController: UITableViewDataSource {
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
-  }
-
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return self.viewModel.wallets.count
-  }
-
-  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    return UIView()
-  }
-
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: kWalletTableViewCellID, for: indexPath)
-    cell.textLabel?.isUserInteractionEnabled = false
-    cell.tintColor = UIColor.Kyber.shamrock
-    let wallet = self.viewModel.wallets[indexPath.row]
-    cell.textLabel?.attributedText = {
-      let attributedString = NSMutableAttributedString()
-      let nameAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
-        NSAttributedStringKey.foregroundColor: UIColor.Kyber.mirage,
-        NSAttributedStringKey.kern: 0.0,
-      ]
-      let addressAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
-        NSAttributedStringKey.foregroundColor: UIColor.Kyber.grayChateau,
-        NSAttributedStringKey.kern: 0.0,
-      ]
-      attributedString.append(NSAttributedString(string: "    \(wallet.0)", attributes: nameAttributes))
-      let addressString: String = "      \(wallet.1.prefix(16))...\(wallet.1.suffix(10))"
-      attributedString.append(NSAttributedString(string: "\n\(addressString)", attributes: addressAttributes))
-      return attributedString
-    }()
-    cell.textLabel?.numberOfLines = 2
-    cell.backgroundColor = {
-      return indexPath.row % 2 == 0 ? UIColor(red: 242, green: 243, blue: 246) : UIColor.Kyber.whisper
-    }()
-    return cell
-  }
-}
-
-extension KNProfileHomeViewController: QRCodeReaderDelegate {
-  func readerDidCancel(_ reader: QRCodeReaderViewController!) {
-    reader.dismiss(animated: true, completion: nil)
-  }
-
-  func reader(_ reader: QRCodeReaderViewController!, didScanResult result: String!) {
-    reader.dismiss(animated: true) {
-      self.addWalletAddressTextField.text = result
-    }
   }
 }
 

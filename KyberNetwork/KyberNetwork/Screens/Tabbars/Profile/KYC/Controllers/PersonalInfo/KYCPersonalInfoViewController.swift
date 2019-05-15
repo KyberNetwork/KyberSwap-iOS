@@ -5,7 +5,6 @@
 import UIKit
 import Moya
 import Result
-import QRCodeReaderViewController
 import TrustCore
 import Photos
 import MobileCoreServices
@@ -15,12 +14,11 @@ import Crashlytics
 enum KYCPersonalInfoViewEvent {
   case next(
     firstName: String, middleName: String, lastName: String, nativeFullName: String,
-    gender: String, dob: String, nationality: String, wallets: [(String, String)],
+    gender: String, dob: String, nationality: String,
     residentAddr: String, countryOfResidence: String, city: String, postalCode: String,
     proofAddrType: String, proofAddrImage: UIImage,
     sourceFund: String, occupationCode: String?, industryCode: String?,
     taxCountry: String?, taxIDNumber: String?)
-  case updateWallets(_ wallets: [(String, String)])
 }
 
 enum KYCPersonalPickerType {
@@ -57,13 +55,11 @@ class KYCPersonalInfoViewModel {
   fileprivate(set) var gender: String = ""
   fileprivate(set) var dob: String = ""
 
-  fileprivate(set) var wallets: [(String, String)] = []
   fileprivate(set) var currentWallets: [(String, String)] = []
   fileprivate(set) var hasModifiedWallets: Bool = false
 
   init(user: IEOUser) {
     self.user = user
-    self.wallets = []
     let json = KNJSONLoaderUtil.jsonDataFromFile(with: "kyc_data") ?? [:]
     self.nationalities = json["nationalities"] as? [String] ?? []
     self.countries = json["countries"] as? [String] ?? []
@@ -73,85 +69,6 @@ class KYCPersonalInfoViewModel {
 
   func updateGender(_ gender: String) { self.gender = gender }
   func updateDoB(_ dob: String) { self.dob = dob }
-  func removeAddress(at id: Int) {
-    self.wallets.remove(at: id)
-    self.hasModifiedWallets = true
-  }
-
-  func updateWallets(_ wallets: [(String, String)]) {
-    self.wallets = wallets
-    self.currentWallets = wallets
-  }
-
-  @discardableResult
-  func addAddress(_ address: String, label: String) -> Bool {
-    guard self.wallets.first(where: { $0.1.lowercased() == address.lowercased() }) == nil else { return false }
-    self.wallets.append((label, address))
-    self.hasModifiedWallets = true
-    return true
-  }
-
-  @discardableResult
-  func updateAddress(_ address: String, label: String) -> Bool {
-    if let id = self.wallets.firstIndex(where: { $0.1.lowercased() == address.lowercased() }) {
-      if self.wallets[id].0 != label { self.hasModifiedWallets = true }
-      self.wallets[id] = (label, address)
-      return true
-    }
-    return false
-  }
-
-  func getUserWallets(completion: @escaping (Result<[(String, String)], AnyError>) -> Void) {
-    let provider = MoyaProvider<ProfileKYCService>(plugins: [MoyaCacheablePlugin()])
-    provider.request(.userWallets(accessToken: self.user.accessToken)) { result in
-      switch result {
-      case .success(let resp):
-        do {
-          _ = try resp.filterSuccessfulStatusCodes()
-          let json: JSONDictionary = try resp.mapJSON(failsOnEmptyData: false) as? JSONDictionary ?? [:]
-          let dataArr = json["data"] as? [JSONDictionary] ?? []
-          let values = dataArr.map({ ($0["label"] as? String ?? "", $0["address"] as? String ?? "") })
-          if !self.hasModifiedWallets {
-            self.wallets = values
-          }
-          self.currentWallets = values
-          KNNotificationUtil.postNotification(
-            for: kUserWalletsListUpdatedNotificationKey,
-            object: values,
-            userInfo: nil
-          )
-          completion(.success(values))
-        } catch let error {
-          completion(.failure(AnyError(error)))
-        }
-      case .failure(let error):
-        completion(.failure(AnyError(error)))
-      }
-    }
-  }
-
-  func checkWalletExist(wallet: String, completion: @escaping (Result<Bool, AnyError>) -> Void) {
-    guard self.wallets.first(where: { $0.1.lowercased() == wallet.lowercased() }) == nil else {
-      completion(.success(true))
-      return
-    }
-    let provider = MoyaProvider<ProfileKYCService>(plugins: [MoyaCacheablePlugin()])
-    provider.request(.checkWalletExist(accessToken: user.accessToken, wallet: wallet)) { result in
-      switch result {
-      case .success(let resp):
-        do {
-          _ = try resp.filterSuccessfulStatusCodes()
-          let json: JSONDictionary = try resp.mapJSON(failsOnEmptyData: false) as? JSONDictionary ?? [:]
-          let existed: Bool = json["wallet_existed"] as? Bool ?? false
-          completion(.success(!existed))
-        } catch let error {
-          completion(.failure(AnyError(error)))
-        }
-      case .failure(let error):
-        completion(.failure(AnyError(error)))
-      }
-    }
-  }
 }
 
 protocol KYCPersonalInfoViewControllerDelegate: class {
@@ -160,9 +77,6 @@ protocol KYCPersonalInfoViewControllerDelegate: class {
 
 //swiftlint:disable type_body_length
 class KYCPersonalInfoViewController: KNBaseViewController {
-
-  let kWalletTableViewCellID = "kWalletTableViewCellID"
-  let kWalletCellRowHeight: CGFloat = 84.0
 
   @IBOutlet weak var scrollView: UIScrollView!
   @IBOutlet weak var firstNameTextField: UITextField!
@@ -176,19 +90,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
   @IBOutlet weak var genderTextLabel: UILabel!
   @IBOutlet weak var maleTextLabel: UILabel!
   @IBOutlet weak var femaleTextLabel: UILabel!
-
-  @IBOutlet weak var mywalletsLabel: UILabel!
-  @IBOutlet weak var maximumWalletsLabel: UILabel!
-  @IBOutlet weak var walletWarningMessageLabel: UILabel!
-  @IBOutlet weak var walletsDataView: UIView!
-  @IBOutlet weak var walletsTableView: UITableView!
-  @IBOutlet weak var noWalletsTextLabel: UILabel!
-  @IBOutlet weak var heightConstraintWalletsDataView: NSLayoutConstraint!
-  @IBOutlet weak var addWalletContainerView: UIView!
-  @IBOutlet weak var heightConstraintForAddWalletView: NSLayoutConstraint!
-  @IBOutlet weak var addWalletButton: UIButton!
-  @IBOutlet weak var walletLabelTextField: UITextField!
-  @IBOutlet weak var walletAddressTextField: UITextField!
 
   @IBOutlet weak var addressSeparatorView: UIView!
   @IBOutlet weak var residentialAddressTextLabel: UILabel!
@@ -288,14 +189,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
     self.setupUI()
   }
 
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    self.viewModel.getUserWallets { _ in
-      self.updateWalletsData()
-      self.delegate?.kycPersonalInfoViewController(self, run: .updateWallets(self.viewModel.currentWallets))
-    }
-  }
-
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     self.optionalDataView.layoutSubviews()
@@ -332,16 +225,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
     self.dateOfBirthTextField.addPlaceholderSpacing()
     self.nationalityTextField.placeholder = NSLocalizedString("nationality", value: "Nationality", comment: "")
     self.nationalityTextField.addPlaceholderSpacing()
-    self.mywalletsLabel.text = NSLocalizedString("my.wallets", value: "My wallet(s)", comment: "")
-    self.mywalletsLabel.addLetterSpacing()
-    self.maximumWalletsLabel.text = NSLocalizedString("maximum.three.wallets", value: "Maximum 3 wallets", comment: "")
-    self.maximumWalletsLabel.addLetterSpacing()
-    self.walletWarningMessageLabel.text = NSLocalizedString("kyc.submit.wallet.warning.message.personal.info", value: "", comment: "You can only delete/edit your wallets here. Once your profile is submitted for review, you won't be able to do so.")
-    self.walletWarningMessageLabel.addLetterSpacing()
-    self.walletLabelTextField.placeholder = NSLocalizedString("label", value: "Label", comment: "")
-    self.walletLabelTextField.addPlaceholderSpacing()
-    self.walletAddressTextField.placeholder = NSLocalizedString("address", value: "Address", comment: "")
-    self.walletAddressTextField.addPlaceholderSpacing()
     self.maleButton.rounded(
       color: UIColor.Kyber.border,
       width: 1.0,
@@ -368,24 +251,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
   }
 
   fileprivate func setupWalletsDataView() {
-    self.addWalletButton.rounded(
-      color: UIColor.Kyber.border,
-      width: 1.0,
-      radius: KNAppStyleType.current.buttonRadius(for: self.addWalletButton.frame.height)
-    )
-    self.addWalletButton.setTitle(
-      NSLocalizedString("add", value: "Add", comment: ""),
-      for: .normal
-    )
-    self.noWalletsTextLabel.text = NSLocalizedString("you.have.not.added.any.wallets.yet", value: "You haven't added any wallets yet.", comment: "")
-    self.noWalletsTextLabel.addLetterSpacing()
-
-    self.walletsTableView.register(UITableViewCell.self, forCellReuseIdentifier: kWalletTableViewCellID)
-    self.walletsTableView.rowHeight = kWalletCellRowHeight
-    self.walletsTableView.delegate = self
-    self.walletsTableView.dataSource = self
-    self.updateWalletsData()
-
     self.nextButton.setTitle(NSLocalizedString("next", value: "Next", comment: ""), for: .normal)
     self.nextButton.applyGradient()
     self.nextButton.rounded(radius: KNAppStyleType.current.buttonRadius(for: self.nextButton.frame.height))
@@ -532,62 +397,8 @@ class KYCPersonalInfoViewController: KNBaseViewController {
     self.fakeTextField.becomeFirstResponder()
   }
 
-  @IBAction func qrcodeButtonPressed(_ sender: Any) {
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "qrcode_button"])
-    let qrcodeReader = QRCodeReaderViewController()
-    qrcodeReader.delegate = self
-    self.present(qrcodeReader, animated: true, completion: nil)
-  }
-
   @IBAction func uploadProofOfAddressDocButtonPressed(_ sender: Any) {
     self.openImagePickerController()
-  }
-
-  @IBAction func addWalletButtonPressed(_ sender: Any) {
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "add_wallet_personal_info"])
-    guard let label = self.walletLabelTextField.text, !label.isEmpty else {
-      self.showWarningTopBannerMessage(
-        with: NSLocalizedString("invalid.input", value: "Invalid Input", comment: ""),
-        message: NSLocalizedString("please.enter.a.valid.wallet.label", value: "Please enter a valid wallet label", comment: ""),
-        time: 1.5
-      )
-      return
-    }
-    guard let address = self.walletAddressTextField.text, Address(string: address) != nil else {
-      self.showWarningTopBannerMessage(
-        with: NSLocalizedString("invalid.input", value: "Invalid Input", comment: ""),
-        message: NSLocalizedString("please.enter.a.valid.address", value: "Please enter a valid address", comment: ""),
-        time: 1.5
-      )
-      return
-    }
-    self.displayLoading(text: NSLocalizedString("checking", value: "Checking", comment: ""), animated: true)
-    self.viewModel.checkWalletExist(wallet: address) { [weak self] result in
-      guard let `self` = self else { return }
-      self.hideLoading()
-      switch result {
-      case .success(let ok):
-        if ok {
-          var updated = self.viewModel.updateAddress(address, label: label)
-          if !updated {
-            // in case user has removed this wallet and added again
-            updated = self.viewModel.addAddress(address, label: label)
-          }
-          self.updateWalletsData()
-        } else {
-          self.showWarningTopBannerMessage(
-            with: NSLocalizedString("error", value: "Error", comment: ""),
-            message: NSLocalizedString("address.has.already.been.taken", value: "Address has already been taken", comment: ""),
-            time: 1.5
-          )
-        }
-      case .failure:
-        self.showWarningTopBannerMessage(
-          with: NSLocalizedString("error", value: "Error", comment: ""),
-          message: NSLocalizedString("some.thing.went.wrong.please.try.again", value: "Something went wrong. Please try again", comment: "")
-        )
-      }
-    }
   }
 
   //swiftlint:disable function_body_length
@@ -741,7 +552,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
       gender: self.viewModel.gender,
       dob: self.viewModel.dob,
       nationality: nationality,
-      wallets: self.viewModel.wallets,
       residentAddr: residenceAddr,
       countryOfResidence: countryOfResidence,
       city: city,
@@ -801,26 +611,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
     }
 
     self.fakeTextField.becomeFirstResponder()
-  }
-
-  fileprivate func updateWalletsData() {
-    if self.viewModel.wallets.isEmpty {
-      self.noWalletsTextLabel.isHidden = false
-      self.walletsTableView.isHidden = true
-      self.heightConstraintWalletsDataView.constant = 260.0
-      self.heightConstraintForAddWalletView.constant = 200.0
-      self.addWalletContainerView.isHidden = false
-    } else {
-      // Only allow add up to 3 wallets
-      let hasAddWallet: Bool = self.viewModel.wallets.count < 3
-      let addWalletHeight: CGFloat = hasAddWallet ? 200.0 : 0.0
-      self.heightConstraintWalletsDataView.constant = CGFloat(self.viewModel.wallets.count) * kWalletCellRowHeight + addWalletHeight
-      self.addWalletContainerView.isHidden = !hasAddWallet
-      self.heightConstraintForAddWalletView.constant = addWalletHeight
-      self.noWalletsTextLabel.isHidden = true
-      self.walletsTableView.isHidden = false
-      self.walletsTableView.reloadData()
-    }
   }
 
   func updatePersonalInfoView(with details: UserKYCDetailsInfo) {
@@ -888,81 +678,6 @@ class KYCPersonalInfoViewController: KNBaseViewController {
     self.imagePicker.sourceType = .photoLibrary
     self.imagePicker.delegate = self
     self.navigationController?.present(self.imagePicker, animated: true, completion: nil)
-  }
-}
-
-extension KYCPersonalInfoViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-    let id = indexPath.row
-    if id < self.viewModel.wallets.count && self.viewModel.wallets.count < 3 {
-      let wallet = self.viewModel.wallets[id]
-      self.walletLabelTextField.text = wallet.0
-      self.walletAddressTextField.text = wallet.1
-    }
-  }
-}
-
-extension KYCPersonalInfoViewController: UITableViewDataSource {
-  func numberOfSections(in tableView: UITableView) -> Int {
-    return 1
-  }
-
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return self.viewModel.wallets.count
-  }
-
-  func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-    return UIView()
-  }
-
-  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    return true
-  }
-
-  func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-    let deleteAction = UITableViewRowAction(style: .destructive, title: NSLocalizedString("remove", value: "Remove", comment: "")) { (_, _) in
-      self.removeAddress(at: indexPath)
-    }
-    deleteAction.backgroundColor = UIColor.Kyber.fire
-    return [deleteAction]
-  }
-
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: kWalletTableViewCellID, for: indexPath)
-    cell.textLabel?.isUserInteractionEnabled = false
-    let wallets = self.viewModel.wallets
-    cell.tintColor = UIColor.Kyber.shamrock
-    let wallet = wallets[indexPath.row]
-    cell.textLabel?.attributedText = {
-      let attributedString = NSMutableAttributedString()
-      let nameAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
-        NSAttributedStringKey.foregroundColor: UIColor.Kyber.mirage,
-        NSAttributedStringKey.kern: 0.0,
-      ]
-      let addressAttributes: [NSAttributedStringKey: Any] = [
-        NSAttributedStringKey.font: UIFont.Kyber.medium(with: 14),
-        NSAttributedStringKey.foregroundColor: UIColor.Kyber.grayChateau,
-        NSAttributedStringKey.kern: 0.0,
-      ]
-      attributedString.append(NSAttributedString(string: "    \(wallet.0)", attributes: nameAttributes))
-      let addressString: String = "      \(wallet.1.prefix(16))...\(wallet.1.suffix(10))"
-      attributedString.append(NSAttributedString(string: "\n\(addressString)", attributes: addressAttributes))
-      return attributedString
-    }()
-    cell.textLabel?.numberOfLines = 2
-    cell.backgroundColor = {
-      return indexPath.row % 2 == 0 ? UIColor(red: 242, green: 243, blue: 246) : UIColor.Kyber.whisper
-    }()
-    return cell
-  }
-
-  fileprivate func removeAddress(at indexPath: IndexPath) {
-    KNCrashlyticsUtil.logCustomEvent(withName: "profile_kyc", customAttributes: ["value": "remove_wallet_address"])
-    self.viewModel.removeAddress(at: indexPath.row)
-    self.walletsTableView.deleteRows(at: [indexPath], with: .automatic)
-    self.updateWalletsData()
   }
 }
 
@@ -1051,18 +766,6 @@ extension KYCPersonalInfoViewController: UITextFieldDelegate {
       return false
     }
     return true
-  }
-}
-
-extension KYCPersonalInfoViewController: QRCodeReaderDelegate {
-  func readerDidCancel(_ reader: QRCodeReaderViewController!) {
-    reader.dismiss(animated: true, completion: nil)
-  }
-
-  func reader(_ reader: QRCodeReaderViewController!, didScanResult result: String!) {
-    reader.dismiss(animated: true) {
-      self.walletAddressTextField.text = result
-    }
   }
 }
 

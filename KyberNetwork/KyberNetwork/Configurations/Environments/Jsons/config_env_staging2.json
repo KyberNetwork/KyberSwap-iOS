@@ -33,8 +33,7 @@
       "decimals": 18,
       "usd_id": "ethereum",
       "gasLimit": "0",
-      "sp_limit_order": true,
-      "is_quote": true
+      "sp_limit_order": true
     },
     "WETH": {
       "name": "Wrapped Ether",

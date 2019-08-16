@@ -13,7 +13,7 @@ class KNSplashScreenViewController: KNBaseViewController {
     super.viewDidLoad()
     self.view.applyGradient(with: UIColor.Kyber.backgroundColors)
     //TODO: Remove in prod build
-    //self.debugInfoView.isHidden = isDebug
+    self.debugInfoView.isHidden = true
     self.versionLabel.text = "Version: \(Bundle.main.versionNumber ?? "")"
     self.networkLabel.text = "Network: \(KNEnvironment.default.displayName)"
     self.splashLogoImageView.image = nil

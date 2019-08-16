@@ -34,7 +34,7 @@ platform :ios do
 
   desc "Increase build number"
   lane :increase_build do
-    ensure_git_branch(branch: "develop")
+    ensure_git_branch(branch: "release")
     ensure_git_status_clean
     git_pull
     increment_build_number()
@@ -44,8 +44,8 @@ platform :ios do
     git_commit(path: ["./*.plist", "KyberNetwork.xcodeproj/project.pbxproj"], message: "Increase build number " + build_number + " version " + version_number)
     push_to_git_remote(
       remote: "origin",
-      local_branch: "develop",
-      remote_branch: "develop",
+      local_branch: "release",
+      remote_branch: "release",
       tags: false
     )
 
@@ -53,7 +53,7 @@ platform :ios do
 
   desc "Increase version and build number"
   lane :increase_version do
-    ensure_git_branch(branch: "develop")
+    ensure_git_branch(branch: "release")
     ensure_git_status_clean
     git_pull
     increment_build_number()
@@ -64,8 +64,8 @@ platform :ios do
     git_commit(path: ["./*.plist", "KyberNetwork.xcodeproj/project.pbxproj"], message: "Increase version and build number " + build_number + " version " + version_number)
     push_to_git_remote(
       remote: "origin",
-      local_branch: "develop",
-      remote_branch: "develop",
+      local_branch: "release",
+      remote_branch: "release",
       tags: false
     )
 
@@ -73,7 +73,7 @@ platform :ios do
 
   desc "TestFlight deployment to itunes connect"
   lane :beta do
-    ensure_git_branch(branch: "develop")
+    ensure_git_branch(branch: "release")
     ensure_git_status_clean
     git_pull
     cocoapods(use_bundle_exec: false)
@@ -101,15 +101,15 @@ platform :ios do
     git_commit(path: ["./*.plist", "KyberNetwork.xcodeproj/project.pbxproj"], message: "Increase build number " + build_number + " version " + version_number)
     push_to_git_remote(
       remote: "origin",
-      local_branch: "develop",
-      remote_branch: "develop",
+      local_branch: "release",
+      remote_branch: "release",
       tags: false
     )
   end
 
   desc "Upload current build to TestFlight"
   lane :upload_testflight do
-    ensure_git_branch(branch: "develop")
+    ensure_git_branch(branch: "release")
     ensure_git_status_clean
     old_build_number = get_build_number(xcodeproj: "KyberNetwork.xcodeproj")
     notification(subtitle: "Built Successfully!", message: "Start uploading build " + old_build_number + " to TestFlight.")
@@ -124,8 +124,8 @@ platform :ios do
     git_commit(path: ["./*.plist", "KyberNetwork.xcodeproj/project.pbxproj"], message: "Increase build number " + build_number + " version " + version_number)
     push_to_git_remote(
       remote: "origin",
-      local_branch: "develop",
-      remote_branch: "develop",
+      local_branch: "release",
+      remote_branch: "release",
       tags: false
     )
   end

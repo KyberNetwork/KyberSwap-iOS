@@ -3466,6 +3466,7 @@
 		2912CCF71F6A830700C6CBE3 /* KyberNetwork */ = {
 			isa = PBXGroup;
 			children = (
+				C6F8C13E2341EA0A003F6779 /* GoogleService-Info.plist */,
 				251ABC9F20578D980069687F /* KyberNetwork */,
 				29E6E0681FE897BB0079265A /* Browser */,
 				29AD8A0A1F93FBB7008E10E7 /* Foundation */,
@@ -4344,6 +4345,7 @@
 				25929C6E20DA5C760045CFA3 /* SF-Pro-Display-Thin.otf in Resources */,
 				2596873B211EA4360080A33F /* KAdvancedSettingsView.xib in Resources */,
 				25929C9520DA5CC10045CFA3 /* SFCompactText-Heavy.otf in Resources */,
+				C6F8C13F2341EA0A003F6779 /* GoogleService-Info.plist in Resources */,
 				25F1BAD921BBA7D200A36900 /* config_env_ropsten2.json in Resources */,
 				259BF5C321918B50004D70F9 /* kyc_occupation_code.json in Resources */,
 				25929C5920DA5C760045CFA3 /* SF-Pro-Display-BoldItalic.otf in Resources */,

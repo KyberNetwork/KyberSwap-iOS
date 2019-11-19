@@ -127,6 +127,15 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - OneSignal (2.9.5)
+  - PromiseKit (6.11.0):
+    - PromiseKit/CorePromise (= 6.11.0)
+    - PromiseKit/Foundation (= 6.11.0)
+    - PromiseKit/UIKit (= 6.11.0)
+  - PromiseKit/CorePromise (6.11.0)
+  - PromiseKit/Foundation (6.11.0):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.11.0):
+    - PromiseKit/CorePromise
   - Protobuf (3.9.2)
   - QRCodeReaderViewController (4.0.2)
   - Realm (3.19.0):
@@ -138,6 +147,7 @@ PODS:
   - SAMKeychain (1.5.3)
   - SeedStackViewController (0.4.0)
   - SipHash (1.2.2)
+  - Starscream (3.1.0)
   - StatefulViewController (3.0)
   - SwiftChart (1.0.1)
   - SwiftLint (0.29.4)
@@ -156,6 +166,10 @@ PODS:
   - TwitterCore (3.2.0)
   - TwitterKit (3.4.2):
     - TwitterCore (>= 3.2.0)
+  - WalletConnect (0.1.0):
+    - CryptoSwift
+    - PromiseKit
+    - Starscream
 
 DEPENDENCIES:
   - APIKit (~> 3.2.1)
@@ -194,6 +208,7 @@ DEPENDENCIES:
   - TrustCore (~> 0.0.7)
   - TrustKeystore (~> 0.4.2)
   - TwitterKit (~> 3.4.2)
+  - WalletConnect (from `https://github.com/trustwallet/wallet-connect-swift`, branch `master`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -234,6 +249,7 @@ SPEC REPOS:
     - MSCircularSlider
     - nanopb
     - OneSignal
+    - PromiseKit
     - Protobuf
     - QRCodeReaderViewController
     - Realm
@@ -242,6 +258,7 @@ SPEC REPOS:
     - SAMKeychain
     - SeedStackViewController
     - SipHash
+    - Starscream
     - StatefulViewController
     - SwiftChart
     - SwiftLint
@@ -251,6 +268,16 @@ SPEC REPOS:
     - TrustKeystore
     - TwitterCore
     - TwitterKit
+
+EXTERNAL SOURCES:
+  WalletConnect:
+    :branch: master
+    :git: https://github.com/trustwallet/wallet-connect-swift
+
+CHECKOUT OPTIONS:
+  WalletConnect:
+    :commit: 91d07ea796ce81d49e5c7b9b068d52d563f986ac
+    :git: https://github.com/trustwallet/wallet-connect-swift
 
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
@@ -290,6 +317,7 @@ SPEC CHECKSUMS:
   MSCircularSlider: 70759318a899279d7923aa0f454f3ba0fe448642
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   OneSignal: ccdeb961882f8668305e5b694e2cb7cb325fc907
+  PromiseKit: e4863d06976e7dee5e41c04fc7371c16b3600292
   Protobuf: 67fb42ba613def994e61854de2b3164f13790cc4
   QRCodeReaderViewController: e8f27d035b3e72b1d4b1c61ff66458287e3be0ff
   Realm: 995d585bcf699aaff226715886c849a29dd3d07f
@@ -298,6 +326,7 @@ SPEC CHECKSUMS:
   SAMKeychain: 483e1c9f32984d50ca961e26818a534283b4cd5c
   SeedStackViewController: 45e88ca1493a610e74d661d3feced7098f72dbd3
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
+  Starscream: 08172b481e145289c4930cb567230fb55897cfa4
   StatefulViewController: 4803bf900d44de26074344998e10e041113b5931
   SwiftChart: ba767a678d568a5ee22d419e146a0582865e1aff
   SwiftLint: 73f2ecfd0f6d812c8cb9a73c00fe809bc2504585
@@ -307,7 +336,8 @@ SPEC CHECKSUMS:
   TrustKeystore: ba8a33ccd7b6a46dfe25f209253d6ba13da6655c
   TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
   TwitterKit: 5e4f41d70b9abdb41df5467f52d7aa2c0fd26ebb
+  WalletConnect: 20ca9cb4372f9b15cc67a416b751d0fe8ab2fe89
 
-PODFILE CHECKSUM: 45589e7c4df988cacb90d7f8d26c6a19e226ffcb
+PODFILE CHECKSUM: e67535624fd0c9d7b2b38a87c77ae4b5a64e4592
 
 COCOAPODS: 1.5.3

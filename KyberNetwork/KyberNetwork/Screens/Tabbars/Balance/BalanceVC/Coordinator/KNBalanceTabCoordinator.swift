@@ -246,6 +246,7 @@ extension KNBalanceTabCoordinator: KWalletBalanceViewControllerDelegate {
       self.openSendTokenView(with: from)
     case .selectAllTransactions:
       self.openHistoryTransactionView()
+    default: break // TODO
     }
   }
 

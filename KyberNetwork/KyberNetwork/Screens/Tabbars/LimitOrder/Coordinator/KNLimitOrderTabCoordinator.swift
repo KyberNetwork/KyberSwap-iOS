@@ -225,6 +225,7 @@ extension KNLimitOrderTabCoordinator: KNCreateLimitOrderViewControllerDelegate {
       self.openPromoCodeView()
     case .selectAllTransactions:
       self.openHistoryTransactionsView()
+    default: break // TODO
     }
   }
 

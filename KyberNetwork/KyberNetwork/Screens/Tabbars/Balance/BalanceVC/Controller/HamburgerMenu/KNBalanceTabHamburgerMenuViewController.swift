@@ -11,6 +11,7 @@ enum KNBalanceTabHamburgerMenuViewEvent {
   case selectSendToken
   case selectAllTransactions
   case selectPromoCode
+  case selectWalletConnect
 }
 
 protocol KNBalanceTabHamburgerMenuViewControllerDelegate: class {
@@ -92,6 +93,9 @@ class KNBalanceTabHamburgerMenuViewController: KNBaseViewController {
   @IBOutlet weak var walletListTableView: UITableView!
   @IBOutlet weak var walletListTableViewHeightConstraint: NSLayoutConstraint!
 
+  @IBOutlet weak var walletConnectLabel: UILabel!
+  @IBOutlet weak var walletConnectView: UIView!
+
   @IBOutlet weak var sendTokenButton: UIButton!
   @IBOutlet weak var hamburgerMenuViewTrailingConstraint: NSLayoutConstraint!
 
@@ -152,6 +156,9 @@ class KNBalanceTabHamburgerMenuViewController: KNBaseViewController {
     self.promoCodeTextLabel.text = NSLocalizedString("kybercode", value: "KyberCode", comment: "").uppercased()
     let promoTapGesture = UITapGestureRecognizer(target: self, action: #selector(self.promoCodeTapped(_:)))
     self.promoCodeContainerView.addGestureRecognizer(promoTapGesture)
+
+    let walletConnectGesture = UITapGestureRecognizer(target: self, action: #selector(self.walletConnectTapped(_:)))
+    self.walletConnectView.addGestureRecognizer(walletConnectGesture)
 
     self.mywalletsTextLabel.text = NSLocalizedString("my.wallets", value: "My wallet(s)", comment: "").uppercased()
     self.update(transactions: self.viewModel.pendingTransactions)
@@ -215,6 +222,13 @@ class KNBalanceTabHamburgerMenuViewController: KNBaseViewController {
       self.delegate?.balanceTabHamburgerMenuViewController(self, run: .selectPromoCode)
     }
     KNCrashlyticsUtil.logCustomEvent(withName: "hamburger_menu", customAttributes: ["type": "kybercode"])
+  }
+
+  @objc func walletConnectTapped(_ sender: Any?) {
+    self.hideMenu(animated: true) {
+      self.delegate?.balanceTabHamburgerMenuViewController(self, run: .selectWalletConnect)
+    }
+    KNCrashlyticsUtil.logCustomEvent(withName: "hamburger_menu", customAttributes: ["type": "wallet_connect"])
   }
 
   @objc func backgroundViewTap(_ recognizer: UITapGestureRecognizer) {

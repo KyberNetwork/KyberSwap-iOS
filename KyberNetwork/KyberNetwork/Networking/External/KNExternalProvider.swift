@@ -143,6 +143,83 @@ class KNExternalProvider {
     }
   }
 
+  func sendTxWalletConnect(txData: JSONDictionary, completion: @escaping (Result<String?, AnyError>) -> Void) {
+    guard let value = (txData["value"] as? String ?? "").fullBigInt(decimals: 0),
+      let from = txData["from"] as? String, let to = txData["to"] as? String,
+      let gasPrice = (txData["gasPrice"] as? String ?? "").fullBigInt(decimals: 0),
+      let gasLimit = (txData["gasLimit"] as? String ?? "").fullBigInt(decimals: 0),
+      from.lowercased() == self.account.address.description.lowercased(),
+      !gasPrice.isZero, !gasLimit.isZero else {
+      completion(.success(nil))
+      return
+    }
+
+    // Parse data from hex string
+    let dataParse: Data? = {
+      let string = (txData["data"] as? String ?? "").drop0x
+      if string.isEmpty { return Data() }
+      var data = Data(capacity: string.count / 2)
+
+      let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)
+      regex.enumerateMatches(in: string, range: NSRange(string.startIndex..., in: string)) { match, _, _ in
+        let byteString = (string as NSString).substring(with: match!.range)
+        let num = UInt8(byteString, radix: 16)!
+        data.append(num)
+      }
+
+      guard !data.isEmpty else { return nil }
+
+      return data
+    }()
+    guard let data = dataParse else {
+      completion(.success(nil))
+      return
+    }
+
+    guard let toAddr = Address(string: to) else {
+      completion(.success(nil))
+      return
+    }
+    self.getTransactionCount { [weak self] txCountResult in
+      guard let `self` = self else {
+        completion(.success(nil))
+        return
+      }
+      switch txCountResult {
+      case .success:
+        let signTx = SignTransaction(
+          value: value,
+          account: self.account,
+          to: toAddr,
+          nonce: self.minTxCount,
+          data: data,
+          gasPrice: gasPrice,
+          gasLimit: gasLimit,
+          chainID: KNEnvironment.default.chainID
+        )
+        self.signTransactionData(from: signTx) { [weak self] signResult in
+          switch signResult {
+          case .success(let signData):
+            KNGeneralProvider.shared.sendSignedTransactionData(signData, completion: { [weak self] result in
+              guard let `self` = self else { return }
+              switch result {
+              case .success(let txHash):
+                self.minTxCount += 1
+                completion(.success(txHash))
+              case .failure(let error):
+                completion(.failure(error))
+              }
+            })
+          case .failure(let error):
+            completion(.failure(error))
+          }
+        }
+      case .failure(let error):
+        completion(.failure(error))
+      }
+    }
+  }
+
   func getReceipt(for transaction: KNTransaction, completion: @escaping (Result<KNTransaction, AnyError>) -> Void) {
     let request = KNGetTransactionReceiptRequest(hash: transaction.id)
     Session.send(EtherServiceRequest(batch: BatchFactory().create(request))) { [weak self] result in

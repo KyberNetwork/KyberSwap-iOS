@@ -3,6 +3,8 @@
 import UIKit
 import BigInt
 import Crashlytics
+import QRCodeReaderViewController
+import WalletConnect
 
 protocol KNBalanceTabCoordinatorDelegate: class {
   func balanceTabCoordinatorShouldOpenExchange(for tokenObject: TokenObject, isReceived: Bool)
@@ -11,7 +13,7 @@ protocol KNBalanceTabCoordinatorDelegate: class {
   func balanceTabCoordinatorDidSelectPromoCode()
 }
 
-class KNBalanceTabCoordinator: Coordinator {
+class KNBalanceTabCoordinator: NSObject, Coordinator {
 
   let navigationController: UINavigationController
   private(set) var session: KNSession
@@ -246,7 +248,10 @@ extension KNBalanceTabCoordinator: KWalletBalanceViewControllerDelegate {
       self.openSendTokenView(with: from)
     case .selectAllTransactions:
       self.openHistoryTransactionView()
-    default: break // TODO
+    case .selectWalletConnect:
+      let qrcode = QRCodeReaderViewController()
+      qrcode.delegate = self
+      self.navigationController.present(qrcode, animated: true, completion: nil)
     }
   }
 
@@ -345,5 +350,29 @@ extension KNBalanceTabCoordinator: KNTokenChartCoordinatorDelegate {
 extension KNBalanceTabCoordinator: KNHistoryCoordinatorDelegate {
   func historyCoordinatorDidClose() {
 //    self.historyCoordinator = nil
+  }
+}
+
+extension KNBalanceTabCoordinator: QRCodeReaderDelegate {
+  func readerDidCancel(_ reader: QRCodeReaderViewController!) {
+    reader.dismiss(animated: true, completion: nil)
+  }
+
+  func reader(_ reader: QRCodeReaderViewController!, didScanResult result: String!) {
+    reader.dismiss(animated: true) {
+      guard let session = WCSession.from(string: result) else {
+        self.navigationController.showTopBannerView(
+          with: "Invalid session".toBeLocalised(),
+          message: "Your session is invalid, please try with another QR code".toBeLocalised(),
+          time: 1.5
+        )
+        return
+      }
+      let controller = KNWalletConnectViewController(
+        wcSession: session,
+        knSession: self.session
+      )
+      self.navigationController.present(controller, animated: true, completion: nil)
+    }
   }
 }

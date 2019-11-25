@@ -300,13 +300,13 @@ extension KNPasscodeViewController {
         value: "PIN is not set on the device",
         comment: ""
       )
-    case LAError.touchIDLockout.rawValue:
+    case LAError.biometryLockout.rawValue:
       return NSLocalizedString(
         "too.many.failed.attempts",
         value: "Too many failed attempts. Please try to use PIN",
         comment: ""
       )
-    case LAError.touchIDNotAvailable.rawValue:
+    case LAError.biometryNotAvailable.rawValue:
       return NSLocalizedString(
         "touchid.faceid.is.not.available",
         value: "TouchID/FaceID is not available on the device",

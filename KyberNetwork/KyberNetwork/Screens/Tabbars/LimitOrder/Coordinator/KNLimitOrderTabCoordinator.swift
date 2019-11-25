@@ -8,6 +8,8 @@ import TrustCore
 import Result
 import Moya
 import APIKit
+import QRCodeReaderViewController
+import WalletConnect
 
 protocol KNLimitOrderTabCoordinatorDelegate: class {
   func limitOrderTabCoordinatorDidSelectWallet(_ wallet: KNWalletObject)
@@ -16,7 +18,7 @@ protocol KNLimitOrderTabCoordinatorDelegate: class {
   func limitOrderTabCoordinatorDidSelectPromoCode()
 }
 
-class KNLimitOrderTabCoordinator: Coordinator {
+class KNLimitOrderTabCoordinator: NSObject, Coordinator {
 
   let navigationController: UINavigationController
   var session: KNSession
@@ -225,7 +227,10 @@ extension KNLimitOrderTabCoordinator: KNCreateLimitOrderViewControllerDelegate {
       self.openPromoCodeView()
     case .selectAllTransactions:
       self.openHistoryTransactionsView()
-    default: break // TODO
+    case .selectWalletConnect:
+      let qrcode = QRCodeReaderViewController()
+      qrcode.delegate = self
+      self.navigationController.present(qrcode, animated: true, completion: nil)
     }
   }
 
@@ -921,6 +926,30 @@ extension KNLimitOrderTabCoordinator: KNConvertSuggestionViewControllerDelegate 
           }
         }
       }
+    }
+  }
+}
+
+extension KNLimitOrderTabCoordinator: QRCodeReaderDelegate {
+  func readerDidCancel(_ reader: QRCodeReaderViewController!) {
+    reader.dismiss(animated: true, completion: nil)
+  }
+
+  func reader(_ reader: QRCodeReaderViewController!, didScanResult result: String!) {
+    reader.dismiss(animated: true) {
+      guard let session = WCSession.from(string: result) else {
+        self.navigationController.showTopBannerView(
+          with: "Invalid session".toBeLocalised(),
+          message: "Your session is invalid, please try with another QR code".toBeLocalised(),
+          time: 1.5
+        )
+        return
+      }
+      let controller = KNWalletConnectViewController(
+        wcSession: session,
+        knSession: self.session
+      )
+      self.navigationController.present(controller, animated: true, completion: nil)
     }
   }
 }

@@ -52,7 +52,7 @@ class KNWalletConnectViewController: KNBaseViewController {
 
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    self.interactor?.disconnect()
+    self.interactor?.killSession().cauterize()
   }
 
   func connect(session: WCSession) {
@@ -60,6 +60,8 @@ class KNWalletConnectViewController: KNBaseViewController {
     if interactor.state == .connected { interactor.disconnect() }
     let accounts = [self.knSession.wallet.address.description]
     let chainId = KNEnvironment.default.chainID
+
+    interactor.killSession().cauterize()
 
     interactor.onError = { [weak self] error in
       self?.displayError(error: error)
@@ -87,7 +89,7 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
 
     interactor.eth.onSign = { [weak self] (id, payload) in
-      let alert = UIAlertController(title: payload.method, message: payload.message, preferredStyle: .alert)
+      let alert = UIAlertController(title: "Sign data".toBeLocalised(), message: payload.message, preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: { _ in
           self?.interactor?.rejectRequest(id: id, message: "User canceled").cauterize()
       }))
@@ -121,7 +123,17 @@ class KNWalletConnectViewController: KNBaseViewController {
       return
     }
 
-    let message = "Transfer \(value.string(decimals: 18, minFractionDigits: 0, maxFractionDigits: 6)) to \(to). Please check data below: \(json)"
+    let message: String = {
+      if let networkProxy = KNEnvironment.default.knCustomRPC?.networkAddress.lowercased(),
+        networkProxy == to.lowercased() {
+        return "Interact with Kyber Network Proxy: transfer \(value.string(decimals: 18, minFractionDigits: 0, maxFractionDigits: 6)) ETH to \(to). Please check your transaction details carefully."
+      }
+      if let token = KNSupportedTokenStorage.shared.supportedTokens.first(where: { return $0.contract.lowercased() == to.lowercased() }) {
+        if value.isZero { return "Interact with \(token.symbol) contract. Please check your transaction details carefully." }
+        return "Interact with \(token.symbol): transfer \(value.string(decimals: 18, minFractionDigits: 0, maxFractionDigits: 6)) ETH to \(to). Please check your transaction details carefully."
+      }
+      return "Transfer \(value.string(decimals: 18, minFractionDigits: 0, maxFractionDigits: 6)) ETH to \(to). Please check your transaction details carefully."
+    }()
     let alert = UIAlertController(title: "Approve transaction", message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "Reject", style: .destructive, handler: { _ in
       self.interactor?.rejectRequest(id: id, message: "").cauterize()
@@ -135,6 +147,12 @@ class KNWalletConnectViewController: KNBaseViewController {
         case .success(let txHash):
           if let txID = txHash {
             self.interactor?.approveRequest(id: id, result: txID).cauterize()
+            let tx = Transaction.getTransactionFromJsonWalletConnect(
+              json: json,
+              hash: txID,
+              nonce: self.knSession.externalProvider.minTxCount - 1
+            )
+            self.knSession.addNewPendingTransaction(tx)
             self.showTopBannerView(with: "Broadcasted", message: "Your transaction has been broadcasted successfully!", time: 2.0) {
               self.openSafari(with: KNEnvironment.default.etherScanIOURLString + "tx/\(txID)")
             }

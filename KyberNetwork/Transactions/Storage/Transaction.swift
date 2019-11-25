@@ -95,6 +95,41 @@ class Transaction: Object {
 }
 
 extension Transaction {
+  // get transaction from json for wallet connect
+  static func getTransactionFromJsonWalletConnect(json: JSONDictionary, hash: String, nonce: Int) -> Transaction {
+    let value = (json["value"] as? String ?? "").fullBigInt(decimals: 0) ?? BigInt(0)
+    let gasLimit = (json["gasLimit"] as? String ?? "").fullBigInt(decimals: 0)?.string(decimals: 0, minFractionDigits: 0, maxFractionDigits: 0) ?? ""
+    let gasPrice = (json["gasPrice"] as? String ?? "").fullBigInt(decimals: 0)?.string(decimals: 0, minFractionDigits: 0, maxFractionDigits: 0) ?? ""
+
+    let eth = KNSupportedTokenStorage.shared.ethToken
+    let localised = LocalizedOperationObject(
+      from: eth.contract,
+      to: "",
+      contract: nil,
+      type: "transfer",
+      value: value.string(decimals: eth.decimals, minFractionDigits: 0, maxFractionDigits: eth.decimals),
+      symbol: eth.symbol,
+      name: eth.name,
+      decimals: eth.decimals
+    )
+    return Transaction(
+      id: hash,
+      blockNumber: 0,
+      from: json["from"] as? String ?? "",
+      to: json["to"] as? String ?? "",
+      value: value.string(decimals: eth.decimals, minFractionDigits: 0, maxFractionDigits: eth.decimals),
+      gas: gasLimit,
+      gasPrice: gasPrice,
+      gasUsed: gasLimit,
+      nonce: "\(nonce)",
+      date: Date(),
+      localizedOperations: [localised],
+      state: .pending
+    )
+  }
+}
+
+extension Transaction {
     var operation: LocalizedOperationObject? {
         return localizedOperations.first
     }

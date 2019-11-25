@@ -31,8 +31,8 @@ extension KNTransactionReceipt {
           let address = log["address"] as? String ?? ""
           let topics = log["topics"] as? [String] ?? []
           let data = log["data"] as? String ?? ""
-          if address == customRPC.networkAddress.lowercased(),
-            topics.first == customRPC.tradeTopic {
+          if address.lowercased() == customRPC.networkAddress.lowercased(),
+          topics.first == customRPC.tradeTopic {
             return data
           }
         }

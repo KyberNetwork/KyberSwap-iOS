@@ -6,6 +6,10 @@ import BigInt
 
 class KNWalletConnectViewController: KNBaseViewController {
 
+  let kTransferPrefix = "a9059cbb"
+  let kApprovePrefix = "095ea7b3"
+  let kTradeWithHintPrefix = "29589f61"
+
   let clientMeta = WCPeerMeta(name: "WalletConnect SDK", url: "https://github.com/TrustWallet/wallet-connect-swift")
   let wcSession: WCSession
   let knSession: KNSession
@@ -64,7 +68,13 @@ class KNWalletConnectViewController: KNBaseViewController {
     interactor.killSession().cauterize()
 
     interactor.onError = { [weak self] error in
-      self?.displayError(error: error)
+      let alert = UIAlertController(title: "Error", message: "Do you want to re-connect?", preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+      alert.addAction(UIAlertAction(title: "Reconnect", style: .default, handler: { _ in
+        guard let session = self?.wcSession else { return }
+        self?.connect(session: session)
+      }))
+      self?.present(alert, animated: true, completion: nil)
     }
 
     interactor.onSessionRequest = { [weak self] (id, peerParam) in
@@ -84,8 +94,14 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
 
     interactor.onDisconnect = { [weak self] (error) in
-      if let error = error {
-        self?.displayError(error: error)
+      if error != nil {
+        let alert = UIAlertController(title: "Error", message: "Do you want to re-connect?", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Reconnect", style: .default, handler: { _ in
+          guard let session = self?.wcSession else { return }
+          self?.connect(session: session)
+        }))
+        self?.present(alert, animated: true, completion: nil)
       }
       self?.connectionStatusUpdated(false)
     }
@@ -126,6 +142,7 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
 
     let message: String = {
+      if let msg = self.tryParseTransactionData(json) { return msg }
       if let networkProxy = KNEnvironment.default.knCustomRPC?.networkAddress.lowercased(),
         networkProxy == to.lowercased() {
         return "Interact with Kyber Network Proxy: transfer \(value.string(decimals: 18, minFractionDigits: 0, maxFractionDigits: 6)) ETH to \(to). Please check your transaction details carefully."
@@ -149,12 +166,11 @@ class KNWalletConnectViewController: KNBaseViewController {
         case .success(let txHash):
           if let txID = txHash {
             self.interactor?.approveRequest(id: id, result: txID).cauterize()
-            let tx = Transaction.getTransactionFromJsonWalletConnect(
+            self.addTransactionToPendingListIfNeeded(
               json: json,
               hash: txID,
               nonce: self.knSession.externalProvider.minTxCount - 1
             )
-            self.knSession.addNewPendingTransaction(tx)
             self.showTopBannerView(with: "Broadcasted", message: "Your transaction has been broadcasted successfully!", time: 2.0) {
               self.openSafari(with: KNEnvironment.default.etherScanIOURLString + "tx/\(txID)")
             }
@@ -219,6 +235,143 @@ class KNWalletConnectViewController: KNBaseViewController {
       self.dismiss(animated: true, completion: nil)
     }))
     self.present(alert, animated: true, completion: nil)
+  }
+
+  fileprivate func tryParseTransactionData(_ json: JSONDictionary) -> String? {
+    let data = (json["data"] as? String ?? "").drop0x
+    let to = (json["to"] as? String ?? "").lowercased()
+    let value = (json["value"] as? String ?? "").fullBigInt(decimals: 0) ?? BigInt(0)
+    if data.isEmpty {
+      return "Transfer \(value.string(decimals: 18, minFractionDigits: 0, maxFractionDigits: 6)) ETH to \(to)"
+    }
+    if data.starts(with: kApprovePrefix),
+      let token = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == to }) {
+      let address = data.substring(to: 72).substring(from: 32).add0x.lowercased()
+      let contractName: String = {
+        if let networkAddr = KNEnvironment.default.knCustomRPC?.networkAddress, networkAddr.lowercased() == address {
+          return "Kyber Network Proxy"
+        }
+        if let limitOrder = KNEnvironment.default.knCustomRPC?.limitOrderAddress, limitOrder.lowercased() == address {
+          return "KyberSwap Limit Order"
+        }
+        return address
+      }()
+      return "You need to grant permission for \(contractName) to interact with \(token.symbol)"
+    }
+    if data.starts(with: kTransferPrefix),
+      let token = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == to }) {
+      let address = data.substring(to: 72).substring(from: 32).add0x.lowercased()
+      let amount = data.substring(from: 72).add0x.fullBigInt(decimals: 0) ?? BigInt(0)
+      return "Transfer \(amount.string(decimals: token.decimals, minFractionDigits: 0, maxFractionDigits: min(token.decimals, 6))) \(token.symbol) to \(address)"
+    }
+    if data.starts(with: kTradeWithHintPrefix),
+      let networkAddr = KNEnvironment.default.knCustomRPC?.networkAddress, networkAddr.lowercased() == to {
+      // swap
+      let fromToken = data.substring(to: 8 + 64).substring(from: 8 + 24).add0x.lowercased()
+      let fromAmount = data.substring(to: 8 + 64 * 2).substring(from: 8 + 64).add0x.fullBigInt(decimals: 0) ?? BigInt(0)
+      let toToken = data.substring(to: 8 + 64 * 3).substring(from: 8 + 24 + 64 * 2).add0x.lowercased()
+      guard let from = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == fromToken }),
+        let to = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == toToken }) else {
+          return nil
+      }
+      return "Swap \(fromAmount.string(decimals: from.decimals, minFractionDigits: 0, maxFractionDigits: min(6, from.decimals))) \(from.symbol) to \(to.symbol)"
+    }
+    return nil
+  }
+
+  fileprivate func addTransactionToPendingListIfNeeded(json: JSONDictionary, hash: String, nonce: Int) {
+    let data = (json["data"] as? String ?? "").drop0x
+    let value = (json["value"] as? String ?? "").fullBigInt(decimals: 0) ?? BigInt(0)
+    let gasLimit: String = {
+      let gasBigInt = (json["gasLimit"] as? String ?? "").fullBigInt(decimals: 0) ?? BigInt(0)
+      return gasBigInt.string(decimals: 0, minFractionDigits: 0, maxFractionDigits: 0).removeGroupSeparator()
+    }()
+    let gasPrice: String = {
+      let gasBigInt = (json["gasPrice"] as? String ?? "").fullBigInt(decimals: 0) ?? BigInt(0)
+      return gasBigInt.string(decimals: 0, minFractionDigits: 0, maxFractionDigits: 0).removeGroupSeparator()
+    }()
+    let to = (json["to"] as? String ?? "").lowercased()
+    let from = json["from"] as? String ?? ""
+    if data.isEmpty || data.starts(with: kTransferPrefix) {
+      // transfer
+      let (token, amount, toAddr): (TokenObject, BigInt, String) = {
+        guard !data.isEmpty, let token = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == to }) else {
+          return (KNSupportedTokenStorage.shared.ethToken, value, to)
+        }
+        let address = data.substring(to: 72).substring(from: 32).add0x.lowercased()
+        let amount = data.substring(from: 72).add0x.fullBigInt(decimals: 0) ?? BigInt(0)
+        return (token, amount, address)
+      }()
+      let localised = LocalizedOperationObject(
+        from: token.contract,
+        to: "",
+        contract: nil,
+        type: "transfer",
+        value: amount.fullString(decimals: token.decimals),
+        symbol: token.symbol,
+        name: token.name,
+        decimals: token.decimals
+      )
+      let tx = Transaction(
+        id: hash,
+        blockNumber: 0,
+        from: from,
+        to: toAddr,
+        value: amount.fullString(decimals: token.decimals),
+        gas: gasLimit,
+        gasPrice: gasPrice,
+        gasUsed: gasLimit,
+        nonce: "\(nonce)",
+        date: Date(),
+        localizedOperations: [localised],
+        state: .pending
+      )
+      self.knSession.addNewPendingTransaction(tx)
+    } else if data.starts(with: kTradeWithHintPrefix) {
+      // swap
+      guard let networkAddr = KNEnvironment.default.knCustomRPC?.networkAddress, networkAddr.lowercased() == to else {
+        return
+      }
+      // swap
+      let fromToken = data.substring(to: 8 + 64).substring(from: 8 + 24).add0x.lowercased()
+      let fromAmount = data.substring(to: 8 + 64 * 2).substring(from: 8 + 64).add0x.fullBigInt(decimals: 0) ?? BigInt(0)
+      let toToken = data.substring(to: 8 + 64 * 3).substring(from: 8 + 24 + 64 * 2).add0x.lowercased()
+      guard let tokenFrom = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == fromToken }),
+        let tokenTo = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == toToken }) else {
+          return
+      }
+      let minRate: BigInt = {
+        let rate = data.substring(to: 8 + 64 * 6).substring(from: 8 + 64 * 5).add0x
+        return (rate.fullBigInt(decimals: 0) ?? BigInt(0)) / BigInt(10).power(18 - tokenTo.decimals)
+      }()
+      // expected min amount
+      let expectedAmount = fromAmount * minRate / BigInt(10).power(tokenFrom.decimals)
+      let localObject = LocalizedOperationObject(
+        from: tokenFrom.contract,
+        to: tokenTo.contract,
+        contract: nil,
+        type: "exchange",
+        value: expectedAmount.fullString(decimals: tokenTo.decimals),
+        symbol: tokenFrom.symbol,
+        name: tokenTo.symbol,
+        decimals: tokenTo.decimals
+      )
+      let tx = Transaction(
+        id: hash,
+        blockNumber: 0,
+        from: from,
+        to: to,
+        value: fromAmount.fullString(decimals: tokenFrom.decimals),
+        gas: gasLimit,
+        gasPrice: gasPrice,
+        gasUsed: gasLimit,
+        nonce: "\(nonce)",
+        date: Date(),
+        localizedOperations: [localObject],
+        state: .pending
+      )
+      self.knSession.addNewPendingTransaction(tx)
+    }
   }
 }
 

@@ -100,7 +100,7 @@
                                 <constraint firstAttribute="height" constant="1" id="Mk3-km-1Ci"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dEY-wR-O7z">
+                        <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dEY-wR-O7z">
                             <rect key="frame" x="0.0" y="96" width="260" height="1"/>
                             <color key="backgroundColor" red="0.49803921569999998" green="0.68627450980000004" blue="0.67843137249999996" alpha="0.10000000000000001" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -111,7 +111,7 @@
                             <rect key="frame" x="0.0" y="97" width="260" height="52"/>
                             <subviews>
                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PROMO CODE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tTA-En-JM5">
-                                    <rect key="frame" x="20" y="18" width="95.5" height="16.5"/>
+                                    <rect key="frame" x="20" y="17.5" width="103.5" height="17.5"/>
                                     <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                                     <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -147,7 +147,7 @@
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MY WALLET(S)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jM8-51-5zC">
-                                    <rect key="frame" x="20" y="18" width="95.5" height="16.5"/>
+                                    <rect key="frame" x="20" y="17.5" width="104" height="17.5"/>
                                     <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                                     <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
@@ -195,13 +195,13 @@
                             <rect key="frame" x="0.0" y="204" width="260" height="52"/>
                             <subviews>
                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WALLET CONNECT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ltr-W6-b81">
-                                    <rect key="frame" x="20" y="18" width="125.5" height="16.5"/>
+                                    <rect key="frame" x="20" y="17.5" width="135.5" height="17.5"/>
                                     <fontDescription key="fontDescription" name="Montserrat-Medium" family="Montserrat" pointSize="14"/>
                                     <color key="textColor" red="0.18039215689999999" green="0.22352941179999999" blue="0.3411764706" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wallet_connect_icon" translatesAutoresizingMaskIntoConstraints="NO" id="eRJ-Yf-ujN">
-                                    <rect key="frame" x="187" y="0.0" width="52" height="52"/>
+                                    <rect key="frame" x="213" y="13" width="26" height="26"/>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

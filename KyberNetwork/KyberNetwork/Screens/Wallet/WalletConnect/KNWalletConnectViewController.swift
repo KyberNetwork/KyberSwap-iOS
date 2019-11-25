@@ -84,7 +84,9 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
 
     interactor.onDisconnect = { [weak self] (error) in
-      if let error = error { print(error) }
+      if let error = error {
+        self?.displayError(error: error)
+      }
       self?.connectionStatusUpdated(false)
     }
 
@@ -178,22 +180,30 @@ class KNWalletConnectViewController: KNBaseViewController {
   }
 
   func signEth(id: Int64, payload: WCEthereumSignPayload) {
-    switch payload {
-    case .personalSign(let data, _):
-      if case .real(let account) = self.knSession.wallet.type {
-        self.displayLoading(text: "Signing...", animated: true)
-        let result = self.knSession.keystore.signPersonalMessage(data, for: account)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-          switch result {
-          case .success(let data):
-            self.interactor?.approveRequest(id: id, result: data.hexEncoded).cauterize()
-          case .failure(let error):
-            self.interactor?.rejectRequest(id: id, message: error.prettyError).cauterize()
-            self.displayError(error: error)
-          }
+    let signData: Data = {
+        switch payload {
+        case .sign(let data, _):
+            return data
+        case .personalSign(let data, _):
+            let prefix = "\u{19}Ethereum Signed Message:\n\(data.count)".data(using: .utf8)!
+            return prefix + data
+        case .signTypeData(_, let data, _):
+            return data
+        }
+    }()
+    if case .real(let account) = self.knSession.wallet.type {
+      self.displayLoading(text: "Signing...", animated: true)
+      let result = self.knSession.keystore.signMessage(signData, for: account)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        self.hideLoading()
+        switch result {
+        case .success(let data):
+          self.interactor?.approveRequest(id: id, result: data.hexEncoded).cauterize()
+        case .failure(let error):
+          self.interactor?.rejectRequest(id: id, message: error.prettyError).cauterize()
+          self.displayError(error: error)
         }
       }
-    default: break
     }
   }
 

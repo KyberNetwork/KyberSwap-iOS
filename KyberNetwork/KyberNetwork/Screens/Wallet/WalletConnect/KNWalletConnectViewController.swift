@@ -415,16 +415,18 @@ extension KNWalletConnectViewController: QRCodeReaderDelegate {
   }
 
   func reader(_ reader: QRCodeReaderViewController!, didScanResult result: String!) {
-    guard let newSession = WCSession.from(string: result) else {
-      self.showTopBannerView(
-        with: "Invalid session".toBeLocalised(),
-        message: "Your session is invalid, please try with another QR code".toBeLocalised(),
-        time: 1.5
-      )
-      return
+    reader.dismiss(animated: true) {
+      guard let newSession = WCSession.from(string: result) else {
+        self.showTopBannerView(
+          with: "Invalid session".toBeLocalised(),
+          message: "Your session is invalid, please try with another QR code".toBeLocalised(),
+          time: 1.5
+        )
+        return
+      }
+      self.interactor?.killSession().cauterize()
+      self.wcSession = newSession
+      self.connect(session: newSession)
     }
-    self.interactor?.killSession().cauterize()
-    self.wcSession = newSession
-    self.connect(session: newSession)
   }
 }

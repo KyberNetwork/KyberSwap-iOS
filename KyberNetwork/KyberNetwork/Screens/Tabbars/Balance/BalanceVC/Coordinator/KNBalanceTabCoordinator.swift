@@ -199,6 +199,12 @@ extension KNBalanceTabCoordinator {
     if self.sendTokenCoordinator?.coordinatorDidUpdateTransaction(tx, txID: txID) == true { return true }
     return self.tokenChartCoordinator?.coordinatorDidUpdateTransaction(tx, txID: txID) ?? false
   }
+
+  func appCoordinatorWillTerminate() {
+    if let topVC = self.navigationController.topViewController?.presentedViewController as? KNWalletConnectViewController {
+      topVC.applicationWillTerminate()
+    }
+  }
 }
 
 // MARK: New Design K Wallet Balance delegation

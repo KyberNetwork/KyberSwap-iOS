@@ -204,6 +204,12 @@ extension KNExchangeTokenCoordinator {
     }
     return self.sendTokenCoordinator?.coordinatorDidUpdateTransaction(tx, txID: txID) ?? false
   }
+
+  func appCoordinatorWillTerminate() {
+    if let topVC = self.navigationController.topViewController?.presentedViewController as? KNWalletConnectViewController {
+      topVC.applicationWillTerminate()
+    }
+  }
 }
 
 // MARK: Network requests

@@ -92,6 +92,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     self.coordinator.appWillEnterForeground()
   }
 
+  func applicationWillTerminate(_ application: UIApplication) {
+    self.coordinator.appWillTerminate()
+  }
+
   func application(_ application: UIApplication, shouldAllowExtensionPointIdentifier extensionPointIdentifier: UIApplicationExtensionPointIdentifier) -> Bool {
     if extensionPointIdentifier == UIApplicationExtensionPointIdentifier.keyboard {
       return false

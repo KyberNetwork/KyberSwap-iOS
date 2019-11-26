@@ -187,6 +187,12 @@ extension KNAppCoordinator {
     self.loadBalanceCoordinator?.pause()
   }
 
+  func appWillTerminate() {
+    self.balanceTabCoordinator?.appCoordinatorWillTerminate()
+    self.exchangeCoordinator?.appCoordinatorWillTerminate()
+    self.limitOrderCoordinator?.appCoordinatorWillTerminate()
+  }
+
   func appDidReceiveLocalNotification(transactionHash: String) {
     let urlString = KNEnvironment.default.etherScanIOURLString + "tx/\(transactionHash)"
     if self.transactionStatusCoordinator != nil {

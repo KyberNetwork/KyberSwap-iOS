@@ -3,6 +3,7 @@
 import UIKit
 import WalletConnect
 import BigInt
+import QRCodeReaderViewController
 
 class KNWalletConnectViewController: KNBaseViewController {
 
@@ -11,10 +12,9 @@ class KNWalletConnectViewController: KNBaseViewController {
   let kTradeWithHintPrefix = "29589f61"
 
   let clientMeta = WCPeerMeta(name: "WalletConnect SDK", url: "https://github.com/TrustWallet/wallet-connect-swift")
-  let wcSession: WCSession
+  fileprivate var wcSession: WCSession
   let knSession: KNSession
   fileprivate var interactor: WCInteractor?
-  var recoverSession: Bool = false
 
   private var backgroundTaskId: UIBackgroundTaskIdentifier?
   private weak var backgroundTimer: Timer?
@@ -69,11 +69,14 @@ class KNWalletConnectViewController: KNBaseViewController {
 
     interactor.onError = { [weak self] error in
       let alert = UIAlertController(title: "Error", message: "Do you want to re-connect?", preferredStyle: .alert)
-      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
       alert.addAction(UIAlertAction(title: "Reconnect", style: .default, handler: { _ in
         guard let session = self?.wcSession else { return }
         self?.connect(session: session)
       }))
+      alert.addAction(UIAlertAction(title: "Scan QR Code", style: .default, handler: { action in
+        self?.scanQRCodeButtonPressed(action)
+      }))
+      alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
       self?.present(alert, animated: true, completion: nil)
     }
 
@@ -100,6 +103,9 @@ class KNWalletConnectViewController: KNBaseViewController {
         alert.addAction(UIAlertAction(title: "Reconnect", style: .default, handler: { _ in
           guard let session = self?.wcSession else { return }
           self?.connect(session: session)
+        }))
+        alert.addAction(UIAlertAction(title: "Scan QR Code", style: .default, handler: { action in
+          self?.scanQRCodeButtonPressed(action)
         }))
         self?.present(alert, animated: true, completion: nil)
       }
@@ -229,12 +235,34 @@ class KNWalletConnectViewController: KNBaseViewController {
   }
 
   @IBAction func backButtonPressed(_ sender: Any) {
+    if self.interactor?.state != .connected {
+      self.dismiss(animated: true, completion: nil)
+      return
+    }
+
     let alert = UIAlertController(title: "Disconnect session?", message: "Do you want to disconnect this session?", preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     alert.addAction(UIAlertAction(title: "Disconnect", style: .default, handler: { _ in
       self.dismiss(animated: true, completion: nil)
     }))
     self.present(alert, animated: true, completion: nil)
+  }
+
+  @IBAction func scanQRCodeButtonPressed(_ sender: Any) {
+    if interactor?.state == .connected {
+      let alert = UIAlertController(title: "Disconnect current session?", message: "Do you want to disconnect your current session and start a new one?", preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: nil))
+      alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+        let qrCode = QRCodeReaderViewController()
+        qrCode.delegate = self
+        self.present(qrCode, animated: true, completion: nil)
+      }))
+      self.present(alert, animated: true, completion: nil)
+    } else {
+      let qrCode = QRCodeReaderViewController()
+      qrCode.delegate = self
+      self.present(qrCode, animated: true, completion: nil)
+    }
   }
 
   fileprivate func tryParseTransactionData(_ json: JSONDictionary) -> String? {
@@ -376,23 +404,27 @@ class KNWalletConnectViewController: KNBaseViewController {
 }
 
 extension KNWalletConnectViewController {
-  func applicationDidEnterBackground(_ application: UIApplication) {
-    print("<== applicationDidEnterBackground")
-    if self.interactor?.state != .connected { return }
-    self.pauseInteractor()
+  func applicationWillTerminate() {
+    self.interactor?.killSession().cauterize()
+  }
+}
+
+extension KNWalletConnectViewController: QRCodeReaderDelegate {
+  func readerDidCancel(_ reader: QRCodeReaderViewController!) {
+    reader.dismiss(animated: true, completion: nil)
   }
 
-  func applicationWillEnterForeground(_ application: UIApplication) {
-    print("==> applicationWillEnterForeground")
-    if self.recoverSession {
-      DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-        self.interactor?.resume()
-      }
+  func reader(_ reader: QRCodeReaderViewController!, didScanResult result: String!) {
+    guard let newSession = WCSession.from(string: result) else {
+      self.showTopBannerView(
+        with: "Invalid session".toBeLocalised(),
+        message: "Your session is invalid, please try with another QR code".toBeLocalised(),
+        time: 1.5
+      )
+      return
     }
-  }
-
-  func pauseInteractor() {
-    self.recoverSession = true
-    self.interactor?.pause()
+    self.interactor?.killSession().cauterize()
+    self.wcSession = newSession
+    self.connect(session: newSession)
   }
 }

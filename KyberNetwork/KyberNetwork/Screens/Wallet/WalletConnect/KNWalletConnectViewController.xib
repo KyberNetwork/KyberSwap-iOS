@@ -54,16 +54,29 @@
                                 <action selector="backButtonPressed:" destination="-1" eventType="touchUpInside" id="ugq-Nb-CEW"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFj-vk-WaS">
+                            <rect key="frame" x="352" y="37" width="46" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="36" id="YzV-X9-2wb"/>
+                                <constraint firstAttribute="width" constant="46" id="zig-vf-mGC"/>
+                            </constraints>
+                            <state key="normal" image="wallet_connect_icon_white"/>
+                            <connections>
+                                <action selector="scanQRCodeButtonPressed:" destination="-1" eventType="touchUpInside" id="ZNT-39-Slp"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" red="0.058823529409999999" green="0.66666666669999997" blue="0.63529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="vWz-e4-9HN" firstAttribute="centerY" secondItem="gKr-Ev-KIk" secondAttribute="centerY" id="DMp-vB-Q97"/>
+                        <constraint firstItem="TFj-vk-WaS" firstAttribute="centerY" secondItem="gKr-Ev-KIk" secondAttribute="centerY" id="H9a-7w-7MB"/>
                         <constraint firstAttribute="height" constant="82" id="Iih-Sg-PKj"/>
                         <constraint firstItem="gKr-Ev-KIk" firstAttribute="leading" secondItem="qJs-4h-Qp3" secondAttribute="leading" constant="64" id="c8v-Uq-5dM"/>
                         <constraint firstAttribute="bottom" secondItem="gKr-Ev-KIk" secondAttribute="bottom" constant="16" id="fjR-Cp-1lL"/>
                         <constraint firstItem="vWz-e4-9HN" firstAttribute="leading" secondItem="qJs-4h-Qp3" secondAttribute="leading" constant="16" id="uX8-gB-ZBZ"/>
                         <constraint firstAttribute="trailing" secondItem="gKr-Ev-KIk" secondAttribute="trailing" constant="64" id="v8U-eE-li4"/>
                         <constraint firstItem="gKr-Ev-KIk" firstAttribute="centerX" secondItem="qJs-4h-Qp3" secondAttribute="centerX" id="x74-gX-NYi"/>
+                        <constraint firstAttribute="trailing" secondItem="TFj-vk-WaS" secondAttribute="trailing" constant="16" id="xKG-M4-cUS"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="KyberSwap" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OPt-HO-3RI">
@@ -147,5 +160,6 @@
     </objects>
     <resources>
         <image name="back_white_icon" width="38" height="19"/>
+        <image name="wallet_connect_icon_white" width="26" height="26"/>
     </resources>
 </document>

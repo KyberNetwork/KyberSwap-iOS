@@ -68,6 +68,7 @@ class KNWalletConnectViewController: KNBaseViewController {
     interactor.killSession().cauterize()
 
     interactor.onError = { [weak self] error in
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["error_type": "error"])
       let alert = UIAlertController(title: "Error", message: "Do you want to re-connect?", preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "Reconnect", style: .default, handler: { _ in
         guard let session = self?.wcSession else { return }
@@ -85,18 +86,22 @@ class KNWalletConnectViewController: KNBaseViewController {
       let message = [peer.description, peer.url].joined(separator: "\n")
       self?.nameTextLabel.text = peer.name
       self?.urlLabel.text = peer.url
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["url": peer.url])
       self?.logoImageView.setImage(with: peer.icons.first ?? "", placeholder: nil)
       let alert = UIAlertController(title: peer.name, message: message, preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "Reject", style: .destructive, handler: { _ in
-          self?.interactor?.rejectSession().cauterize()
+        KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["reject": peer.url])
+        self?.interactor?.rejectSession().cauterize()
       }))
       alert.addAction(UIAlertAction(title: "Approve", style: .default, handler: { _ in
-          self?.interactor?.approveSession(accounts: accounts, chainId: chainId).cauterize()
+        KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["approve": peer.url])
+        self?.interactor?.approveSession(accounts: accounts, chainId: chainId).cauterize()
       }))
       self?.show(alert, sender: nil)
     }
 
     interactor.onDisconnect = { [weak self] (error) in
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["error_type": "disconnect"])
       if error != nil {
         let alert = UIAlertController(title: "Error", message: "Do you want to re-connect?", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -113,17 +118,21 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
 
     interactor.eth.onSign = { [weak self] (id, payload) in
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["data_type": "sign_data"])
       let alert = UIAlertController(title: "Sign data".toBeLocalised(), message: payload.message, preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: { _ in
-          self?.interactor?.rejectRequest(id: id, message: "User canceled").cauterize()
+        KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["sign_data": "reject"])
+        self?.interactor?.rejectRequest(id: id, message: "User canceled").cauterize()
       }))
       alert.addAction(UIAlertAction(title: "Sign", style: .default, handler: { _ in
-          self?.signEth(id: id, payload: payload)
+        KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["sign_data": "approve"])
+        self?.signEth(id: id, payload: payload)
       }))
       self?.present(alert, animated: true, completion: nil)
     }
 
     interactor.eth.onTransaction = { [weak self] (id, event, transaction) in
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["data_type": "tx_data"])
       let data = try! JSONEncoder().encode(transaction)
       self?.sendTransaction(id, data: data)
     }
@@ -161,9 +170,11 @@ class KNWalletConnectViewController: KNBaseViewController {
     }()
     let alert = UIAlertController(title: "Approve transaction", message: message, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "Reject", style: .destructive, handler: { _ in
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["sign_tx": "reject"])
       self.interactor?.rejectRequest(id: id, message: "").cauterize()
     }))
     alert.addAction(UIAlertAction(title: "Approve", style: .default, handler: { _ in
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["sign_tx": "approve"])
       self.displayLoading(text: "Submitting...", animated: true)
       self.knSession.externalProvider.sendTxWalletConnect(txData: json) { [weak self] result in
         guard let `self` = self else { return }
@@ -274,6 +285,7 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
     if data.starts(with: kApprovePrefix),
       let token = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == to }) {
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["transaction_type": "approve"])
       let address = data.substring(to: 72).substring(from: 32).add0x.lowercased()
       let contractName: String = {
         if let networkAddr = KNEnvironment.default.knCustomRPC?.networkAddress, networkAddr.lowercased() == address {
@@ -288,12 +300,14 @@ class KNWalletConnectViewController: KNBaseViewController {
     }
     if data.starts(with: kTransferPrefix),
       let token = self.knSession.tokenStorage.tokens.first(where: { return $0.contract.lowercased() == to }) {
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["transaction_type": "transfer"])
       let address = data.substring(to: 72).substring(from: 32).add0x.lowercased()
       let amount = data.substring(from: 72).add0x.fullBigInt(decimals: 0) ?? BigInt(0)
       return "Transfer \(amount.string(decimals: token.decimals, minFractionDigits: 0, maxFractionDigits: min(token.decimals, 6))) \(token.symbol) to \(address)"
     }
     if data.starts(with: kTradeWithHintPrefix),
       let networkAddr = KNEnvironment.default.knCustomRPC?.networkAddress, networkAddr.lowercased() == to {
+      KNCrashlyticsUtil.logCustomEvent(withName: "wallet_connect", customAttributes: ["transaction_type": "swap"])
       // swap
       let fromToken = data.substring(to: 8 + 64).substring(from: 8 + 24).add0x.lowercased()
       let fromAmount = data.substring(to: 8 + 64 * 2).substring(from: 8 + 64).add0x.fullBigInt(decimals: 0) ?? BigInt(0)

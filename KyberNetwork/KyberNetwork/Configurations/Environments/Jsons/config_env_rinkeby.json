@@ -70,10 +70,6 @@
   "networkId": 4,
   "chainName": "Rinkeby",
   "faucet": "https://faucet.kyber.network/",
-  "server_logs": {
-    "url": "rinkeby.etherscan.io",
-    "api_key": "D8YAEQ3V4THAPDA9YSB1YGA1QY9KAMHY6M"
-  },
   "gasstation_endpoint": "https://ethgasstation.info/json/ethgasAPI.json",
   "tracker": "https://tracker.kyber.network",
   "ethermon_wrapper": "0xf1f149ee80118c909d970b5cd39a11b2d5498c6e",

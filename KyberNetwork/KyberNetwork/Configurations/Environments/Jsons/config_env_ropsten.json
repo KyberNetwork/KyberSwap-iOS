@@ -285,10 +285,6 @@
   "networkId": 3,
   "chainName": "Ropsten",
   "faucet":"https://faucet.kyber.network/",
-  "server_logs": {
-    "url": "ropsten.etherscan.io",
-    "api_key": "D8YAEQ3V4THAPDA9YSB1YGA1QY9KAMHY6M"
-  },
   "gasstation_endpoint": "https://ethgasstation.info/json/ethgasAPI.json",
   "tracker":"https://tracker.kyber.network",
   "ens_address": "0x112234455c3a32fd11230c42e7bccd4a84e02010"

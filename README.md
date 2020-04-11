@@ -1,5 +1,7 @@
 # KyberSwap for iOS
 
+Note: We have move to new repo [here](https://github.com/KyberSwap/KyberSwap-iOS)
+
 
 ### Download app on AppStore 
 [<img src="https://kyberswap.com/app/images/apple_store.svg">](https://itunes.apple.com/us/app/kyberswap/id1453691309)
